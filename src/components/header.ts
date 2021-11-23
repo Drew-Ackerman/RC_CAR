@@ -1,5 +1,5 @@
 import { Key } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, findByLinkText, pageHasLoaded, TextInput, WebComponent } from "../lib";
+import { Browser, Button, elementIsVisible, findByCSS, findById, findByLinkText, pageHasLoaded, TextInput, WebComponent } from "../lib";
 import { AccountHomePage } from "../pages/AccountHomePage";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductSearchPage } from "../pages/ProductSearchPage";
@@ -30,6 +30,9 @@ export class Header{
 
     @findById('searchBox')
     public SearchBoxInput : TextInput;
+
+    @findByLinkText('Logout')
+    public LogoutButton: Button;
 
     /**
      * Click the account button
@@ -65,5 +68,19 @@ export class Header{
         await this.SearchBoxInput.type(Key.ENTER);
         await this.browser.wait(pageHasLoaded(ProductSearchPage));
         return new ProductSearchPage(this.browser);
+    }
+
+    public async logout(){
+        if(await this.AccountButton.isDisplayed()){
+            await this.AccountButton.click();
+            await this.browser.wait(elementIsVisible(()=>this.LogoutButton));
+            await this.LogoutButton.click();
+
+            await this.browser.wait(elementIsVisible(()=>this.LoginButton));
+        }
+        else{
+            throw Error('The account button is not displayed in the header bar');
+        }
+        
     }
 };
