@@ -21,7 +21,7 @@ export class LoginPage extends Page{
     @findById('login')
     public LoginForm : WebComponent;
 
-    @findByCSS("type=['submit']")
+    @findByCSS("button[type='submit']")
     public SignInButton : Button;
 
     @findByCSS("a[href='/Account-Help']")
