@@ -67,6 +67,14 @@ export class ProductSearchPage extends Page {
         super(browser);
     }
 
+    public async getActiveFilters(): Promise<Array<string>>{
+        let filterDiv = await this.browser.findElement({className:"filtervalues"})
+        let filters = await filterDiv.findElements({css:'a'});
+        let promises = filters.map(async (filter) => {return await filter.getText()})
+        let filterTexts = Promise.all(promises);
+        return filterTexts;
+    };
+
     public async findAllProductsOnPage(): Promise<Array<ProductCard>>{
         let products = await this.PageProducts.getElements();
         let productCards = await products.map((element) => {
