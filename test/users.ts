@@ -15,7 +15,6 @@ function createDemoEmail(){
     return `demo${getRandomInt()}@rcwilley.com`;
 }
 
-
 /**
  * A smoke test suite to ensure basic site functionality 
  * is operational.
@@ -59,6 +58,21 @@ describe('Users', () => {
         let productPage = await homePage.Search('');
         let productList = await productPage.findAllProductsOnPage();
         expect(productList).to.have.length.greaterThan(0);
+    });
+
+    it('Should allow a product search on tags', async() => {
+        let homePage = new HomePage(browser);
+        homePage.navigate();
+        let productPage = await homePage.Search('Electronics');
+        expect(productPage.MainPageTitle.getText()).to.eventually.contain('Electronics');
+    });
+
+    it('Should set mutliple filters on a complex search', async() => {
+        let homePage = new HomePage(browser);
+        homePage.navigate();
+        let productPage = await homePage.Search('Gray Chair');
+        let filters = await productPage.getActiveFilters();
+        expect(filters).to.have.length.greaterThan(0);
     });
 
     it('Should allow a product to be checked out', async () => {
