@@ -85,7 +85,9 @@ export class Browser{
     public async takeScreenshot(path:string): Promise<void>{
         return this.driver.takeScreenshot().then( function(image) {
             writeFile(path, image, 'base64', function(err) {
-                console.log(err);
+                if(err){
+                    throw Error(`Error writing screenshot to file: ${err}`);
+                }
             });
         });
     };

@@ -40,6 +40,13 @@ export class AccountCreationPage extends Page {
         super(browser);
     }
     
+    /**
+     * Fill out the form to create a new account.
+     * @param email 
+     * @param password 
+     * @param answer 
+     * @returns The personal profile page that should appear upon successful account creation
+     */
     public async CreateNewAccount(email:string, password:string, answer:string): Promise<ViewPersonalProfile>{
         await this.EmailAddressInput.type(email);
         await this.NewPasswordInput.type(password);
@@ -55,6 +62,10 @@ export class AccountCreationPage extends Page {
         return new ViewPersonalProfile(this.browser);
     }
 
+    /**
+     * The page is laoded when the url contains certain text
+     * @returns wait condition
+     */
     public loadCondition(): WaitCondition {
         return urlContainsValue(this.browser, 'Create-Account-Action');
     }

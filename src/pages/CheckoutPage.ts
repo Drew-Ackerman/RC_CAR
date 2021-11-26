@@ -1,21 +1,35 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, Button, findByCSS, findById, Page, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 
+/**
+ * @description The delivery choices available during checkout
+ */
 export const enum DeliveryChoices {
     InStore,
     Delivery
 }
 
+/**
+ * @description The account types available during checkout
+ */
 export const enum AccountTypes {
     Account,
     Guest
 }
 
+/**
+ * @description The shipping options available for when delivery is done.
+ */
 export const enum ShippingOptions {
     FreeCurbside,
     InHome,
     InHomeAndBlueRewards
 }
+
+
+/**
+ * @class POM for checkout
+ */
 export class CheckoutPage extends Page {
     
     private findGuestLoginButton(browser:Browser): Promise<WebElement>{
@@ -110,6 +124,10 @@ export class CheckoutPage extends Page {
         return urlContainsValue(this.browser, 'Proceed-To-Checkout');
     }
 
+    /**
+     * Complete the account selection section.
+     * @param accountType 
+     */
     public async selectAccountType(accountType: AccountTypes){
         if(accountType == AccountTypes.Account){
             await this.AccountLoginButton.click();
@@ -119,9 +137,13 @@ export class CheckoutPage extends Page {
         }
     }
 
-    
-    public async selectDelivery(deliveryType: DeliveryChoices, shippingOption: ShippingOptions){
-        if(deliveryType == DeliveryChoices.Delivery){
+    /**
+     * Fillout delivery
+     * @param deliveryOption The delivery option
+     * @param shippingOption The shipping option
+     */
+    public async selectDelivery(deliveryOption: DeliveryChoices, shippingOption: ShippingOptions){
+        if(deliveryOption == DeliveryChoices.Delivery){
             //Default radio button, dont need to click it.
             //Fill out address then.
             await this.FirstNameField.type('Demo');
@@ -138,6 +160,11 @@ export class CheckoutPage extends Page {
         await this.DeliveryContinueButton.click();
     }
 
+    /**
+     * Fillout the contact info
+     * @param email 
+     * @param phone 
+     */
     public async fillOutContactInfo(email:string, phone:string){
         await this.EmailInput.type(email);
         await this.HomePhoneInput.type(phone);
@@ -145,6 +172,12 @@ export class CheckoutPage extends Page {
         await this.WorkPhoneInput.type(phone);
     }
 
+    /**
+     * Fillout the payment details section. 
+     * @param ccNumber 
+     * @param cardExp 
+     * @param csc 
+     */
     public async inputPaymentDetails(ccNumber:string, cardExp:string, csc:string){
         await this.CreditCardNumberInput.type(ccNumber);
         await this.CreditCardExpirationInput.type(ccNumber);

@@ -4,7 +4,7 @@ import { SupportedBrowsers } from "../config";
 import { LoginPage } from "../src/pages/LoginPage";
 import { fail } from "assert";
 import path = require("path");
-import { mkdir } from "fs";
+import { accessSync, constants, mkdirSync } from "fs";
 
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
@@ -43,15 +43,6 @@ describe('Users', () => {
         let viewPersonalProfilePage = await accountCreationPage.CreateNewAccount(demoEmail, password, 'answer');
         await viewPersonalProfilePage.CompleteUserData('Demo', 'Demo', '1111111111', 'DemoStreet', 'DemoTown', 'UT', '84405');
         return expect(browser.currentUrl()).to.eventually.contain('account/Home');
-    });
-
-    it('Should be able to login from the home page', async() => {
-        let homePage = new HomePage(browser);
-        await homePage.navigate();
-        let loginPage = await homePage.GoToLoginPage() as LoginPage;
-        await loginPage.Login(demoEmail, password);
-        return expect(browser.currentUrl()).to.eventually.contain('account/Home');
-
     });
 
     it('Should be able to search for products', async() => {
@@ -105,9 +96,17 @@ describe('Users', () => {
             let testResultsDirectory = path.join(testDirectory, 'results');
 
             //Create the directory, if it exists then thats okay
-            mkdir(testResultsDirectory, {recursive:true}, (err) => {
-                console.log("Error making directory for", err);
-            });
+            try{
+                accessSync(testResultsDirectory, constants.R_OK | constants.W_OK);
+            }catch(err){
+                //Dir doesnt exist
+                try{
+                mkdirSync(testResultsDirectory)
+                } catch(err){
+                    console.log("Error making directory for", err)
+                }
+            }
+
             let screenshotPath = path.join(testResultsDirectory, `${friendlyTestName}.png`)
             await browser.takeScreenshot(screenshotPath);
         }

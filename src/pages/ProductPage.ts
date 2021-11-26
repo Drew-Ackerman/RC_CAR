@@ -28,33 +28,52 @@ export class ProductPage extends Page {
     @findByClass('priceBlock')
     private Price: WebComponent;
 
-    // @findById('prodName')
-    // private ProductName: WebComponent;
-
     private product: ProductCard;
     constructor(protected browser: Browser){
         super(browser);
     };
     
+    /**
+     * 
+     * @returns The page is loaded when the Add to Cart button is visible on the page.
+     */
     public loadCondition(): WaitCondition {
         return elementIsVisible(() => this.AddToCardButton);
     }
 
+    /**
+     * 
+     * @param product The product that should be on this page.
+     * @returns 
+     */
     public attachProduct(product: ProductCard): ProductPage{
         this.product = product;
         return this;
     }
 
+    /**
+     * Add the product to the cart by clicking the corresponding button
+     * @returns Return a shopping cart page
+     */
     public async addToCart(): Promise<ShoppingCartPage>{
         await this.AddToCardButton.click();
         await this.browser.wait(pageHasLoaded(ShoppingCartPage));
         return new ShoppingCartPage(this.browser);
     }
 
+    /**
+     * 
+     * @returns Get the product details on this page
+     */
     public async getProductDetails(): Promise<ProductDetails>{
         return new ProductDetails(await (await this.SKU.getText()).split(':')?.pop()?.trim() || "Sku not found", await this.Price.getText(), await (await this.browser.findElement(this.findProductNameText)).getText());
     }
 
+    /**
+     * 
+     * @param product Determine if the product on this page is what should be on this page. 
+     * @returns True if the product that should be on this page matches the product that is on this page.
+     */
     public async hasTheProduct(product:ProductDetails): Promise<boolean>{
         var pageProductDetails = await this.getProductDetails();
         let sameProduct = await pageProductDetails.equalTo(product);

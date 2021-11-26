@@ -70,6 +70,9 @@ export class Header{
         return new ProductSearchPage(this.browser);
     }
 
+    /**
+     * @description Logout of the site
+     */
     public async logout(){
         if(await this.AccountButton.isDisplayed()){
             await this.AccountButton.click();
