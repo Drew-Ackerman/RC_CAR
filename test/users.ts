@@ -3,6 +3,8 @@ import { Browser, getRandomInt } from "../src/lib";
 import { SupportedBrowsers } from "../config";
 import { LoginPage } from "../src/pages/LoginPage";
 import { fail } from "assert";
+import path = require("path");
+import { mkdir } from "fs";
 
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
@@ -91,7 +93,24 @@ describe('Users', () => {
     /**
      * After all tests are run
      */
-    afterEach(async () => {
+    afterEach(async function () {
+
+        //Check if the test that just ran was not successful
+        if(this.currentTest?.state !== 'passed'){
+            //Record the screen and place that data somewhere          
+            let friendlyTestName = this.currentTest?.title.split(' ').join('_'); //Replace spaces with underscores
+
+            let testFilePath = this.test?.file || ""; //The full file path of the currently running test
+            let testDirectory = path.dirname(testFilePath);
+            let testResultsDirectory = path.join(testDirectory, 'results');
+
+            //Create the directory, if it exists then thats okay
+            mkdir(testResultsDirectory, {recursive:true}, (err) => {
+                console.log("Error making directory for", err);
+            });
+            let screenshotPath = path.join(testResultsDirectory, `${friendlyTestName}.png`)
+            await browser.takeScreenshot(screenshotPath);
+        }
         await browser.close();
     });
 });
