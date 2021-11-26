@@ -59,7 +59,6 @@ export class WebComponents {
 
     public async getDisplayed(){
         let e = await this.elements;
-        console.log('e',e);
         e.forEach( (element) => {
             console.log(element);
         });

@@ -1,6 +1,4 @@
 import 'reflect-metadata';
-import { WebElement, WebElementPromise } from 'selenium-webdriver';
-import { WebComponent } from '.';
 
 //Effectively a promise to pause, be sure to await it. 
 /**

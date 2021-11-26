@@ -1,4 +1,3 @@
-import { timeStamp } from "console";
 import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findAllByClass, findByClass, Page, pageHasLoaded, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { ProductPage } from "./ProductPage";
@@ -67,6 +66,10 @@ export class ProductSearchPage extends Page {
         super(browser);
     }
 
+    /**
+     * 
+     * @returns The filters selected on the products page.
+     */
     public async getActiveFilters(): Promise<Array<string>>{
         let filterDiv = await this.browser.findElement({className:"filtervalues"})
         let filters = await filterDiv.findElements({css:'a'});
@@ -75,6 +78,10 @@ export class ProductSearchPage extends Page {
         return filterTexts;
     };
 
+    /**
+     * 
+     * @returns A promise to an array of products that are on the page
+     */
     public async findAllProductsOnPage(): Promise<Array<ProductCard>>{
         let products = await this.PageProducts.getElements();
         let productCards = await products.map((element) => {
@@ -83,12 +90,24 @@ export class ProductSearchPage extends Page {
         return productCards;
     }
 
+    /**
+     * All products are listed in a card format on the search page. 
+     * To get to that products page the card is clicked. To ensure the 
+     * product page is loaded correctly, the product card and its related 
+     * data is sent to the page. 
+     * @param product The product to select from the search page
+     * @returns The products page
+     */
     public async selectProduct(product: ProductCard): Promise<ProductPage>{
         await product.Click();
         await this.browser.wait(pageHasLoaded(ProductPage));
         return new ProductPage(this.browser).attachProduct(product);
     }
 
+    /**
+     * 
+     * @returns Page is loaded when the main page title is visible. 
+     */
     public loadCondition(): WaitCondition {
         return elementIsVisible(() => this.MainPageTitle);
     }
