@@ -2,7 +2,7 @@ import 'chromedriver'
 import { Builder, ThenableWebDriver, WebElementPromise, ByHash, until, WebElement } from 'selenium-webdriver';
 import { WaitCondition } from './conditions';
 import { SupportedBrowsers } from '../../config';
-
+import { write, writeFile } from 'fs';
 
 /**
  * @classdesc A wrapper for the selenium browser driver. 
@@ -16,6 +16,24 @@ export class Browser{
      */
     public constructor(private browserName: SupportedBrowsers){
         this.driver = new Builder().forBrowser(browserName).build();
+    }
+
+    /**
+     * @returns A list of available browser window handles. 
+     */
+    get WindowHandles(): Promise<Array<string>> {
+        return this.driver.getAllWindowHandles();
+    }
+
+    /**
+     * @returns The handle for the currently focused window.
+     */
+    get CurrentWindowHandle(): Promise<string> {
+        return this.driver.getWindowHandle();
+    }
+
+    get PageTitle(): Promise<string> {
+        return this.driver.getTitle();
     }
 
     /**
@@ -55,11 +73,22 @@ export class Browser{
     }
 
     /**
-     * Clear browser cookies.
+     * @description Clear browser cookies.
      */
     public async clearCookies(): Promise<void>{
         await this.driver.manage().deleteAllCookies();
     }
+
+    /**
+     * @returns Take a screenshot ans save it to a location. 
+     */
+    public async takeScreenshot(path:string): Promise<void>{
+        return this.driver.takeScreenshot().then( function(image) {
+            writeFile(path, image, 'base64', function(err) {
+                console.log(err);
+            });
+        });
+    };
 
     /**
      * @param seconds The amount of seconds to sleep for
