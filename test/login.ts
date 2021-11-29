@@ -33,6 +33,17 @@ describe('The login page', () => {
         browser = await new Browser(SupportedBrowsers.Chrome);
     });
 
+    it('Should allow an account to be created', async() => {
+        let homePage = new HomePage(browser);
+        homePage.navigate();
+        let loginPage = await homePage.GoToLoginPage() as LoginPage;
+        let accountHelpPage = await loginPage.setupNewAccount();
+        let accountCreationPage = await accountHelpPage.gotoAccountCreation();
+        let viewPersonalProfilePage = await accountCreationPage.CreateNewAccount(demoEmail, password, 'answer');
+        await viewPersonalProfilePage.CompleteUserData('Demo', 'Demo', '1111111111', 'DemoStreet', 'DemoTown', 'UT', '84405');
+        return expect(browser.currentUrl()).to.eventually.contain('account/Home');
+    });
+
     it('Should allow customers to login', async() => {
         let homePage = new HomePage(browser);
         await homePage.navigate();
