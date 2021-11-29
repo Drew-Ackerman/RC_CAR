@@ -1,8 +1,8 @@
 import 'chromedriver'
-import { Builder, ThenableWebDriver, WebElementPromise, ByHash, until, WebElement } from 'selenium-webdriver';
+import { Builder, ThenableWebDriver, WebElementPromise, ByHash, WebElement, IWebDriverCookie, IWebDriverOptionsCookie} from 'selenium-webdriver';
 import { WaitCondition } from './conditions';
 import { SupportedBrowsers } from '../../config';
-import { write, writeFile } from 'fs';
+import { writeFile } from 'fs';
 
 /**
  * @classdesc A wrapper for the selenium browser driver. 
@@ -54,6 +54,11 @@ export class Browser{
         return this.driver.findElement(selectorHash);
     }
 
+    /**
+     * 
+     * @param selectorHash 
+     * @returns 
+     */
     public findElements(selectorHash: ByHash ): Promise<WebElement[]> {
         return this.driver.findElements(selectorHash);
     }
@@ -77,6 +82,39 @@ export class Browser{
      */
     public async clearCookies(): Promise<void>{
         await this.driver.manage().deleteAllCookies();
+    }
+
+    /**
+     * Adds a cookie to the current browser. 
+     * @param cookie A selenium cookie object 
+     */
+    public async addCookie(cookie: IWebDriverOptionsCookie): Promise<void>{
+        await this.driver.manage().addCookie(cookie);
+    }
+
+    /**
+     * Deletes a cookie with the specified name. If the cookie doesnt exist, then
+     * nothing happens. 
+     * @param name The name of the cookie to delete
+     */
+    public deleteCookie(name: string): Promise<void>{
+        return this.driver.manage().deleteCookie(name);
+    }
+
+    /**
+     * @param name Name of the cookie
+     * @returns The cookie if it exists, else null.
+     */
+    public getCookie(name:string): Promise<IWebDriverCookie>{
+        return this.driver.manage().getCookie(name);
+    }
+
+    /**
+     * 
+     * @returns An array of existing cookies.
+     */
+    public getCookies(): Promise<Array<IWebDriverCookie>>{
+        return this.driver.manage().getCookies();
     }
 
     /**
