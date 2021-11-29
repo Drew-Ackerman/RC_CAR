@@ -31,6 +31,7 @@ describe('The login page', () => {
      */
     beforeEach(async () => {
         browser = await new Browser(SupportedBrowsers.Chrome);
+        browser.addCookie({name:"SiteSessionId", value:'34632632462346'});
     });
 
     it('Should allow an account to be created', async() => {
