@@ -34,17 +34,6 @@ describe('Users', () => {
         browser = await new Browser(SupportedBrowsers.Chrome);
     });
 
-    it('Should be able to create an account', async() => {
-        let homePage = new HomePage(browser);
-        homePage.navigate();
-        let loginPage = await homePage.GoToLoginPage() as LoginPage;
-        let accountHelpPage = await loginPage.setupNewAccount();
-        let accountCreationPage = await accountHelpPage.gotoAccountCreation();
-        let viewPersonalProfilePage = await accountCreationPage.CreateNewAccount(demoEmail, password, 'answer');
-        await viewPersonalProfilePage.CompleteUserData('Demo', 'Demo', '1111111111', 'DemoStreet', 'DemoTown', 'UT', '84405');
-        return expect(browser.currentUrl()).to.eventually.contain('account/Home');
-    });
-
     it('Should be able to search for products', async() => {
         let homePage = new HomePage(browser);
         homePage.navigate();
