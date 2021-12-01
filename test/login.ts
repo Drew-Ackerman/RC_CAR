@@ -1,5 +1,5 @@
 import { HomePage } from "../src/pages";
-import { Browser, getRandomInt } from "../src/lib";
+import { Browser } from "../src/lib";
 import { config, SupportedBrowsers } from "../config";
 import { LoginPage } from "../src/pages/LoginPage";
 import { snapshot } from "../src/lib/snapshot";
@@ -11,8 +11,13 @@ var expect = chai.expect;
 
 require("chromedriver");
 
+/**
+ * Collision will occur if multiple calls are made within one second due
+ * to conversion of the time to seconds. 
+ * @returns A generated email address to use. 
+ */
 function createDemoEmail(){
-    return `demo${getRandomInt()}@rcwilley.com`;
+    return `demo${Math.floor(Date.now()/1000)}@rcwilley.com`;
 }
 
 /**

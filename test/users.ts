@@ -1,7 +1,6 @@
 import { HomePage } from "../src/pages";
-import { Browser, getRandomInt } from "../src/lib";
+import { Browser } from "../src/lib";
 import { SupportedBrowsers } from "../config";
-import { LoginPage } from "../src/pages/LoginPage";
 import { fail } from "assert";
 import { snapshot } from "../src/lib/snapshot";
 
@@ -12,10 +11,6 @@ var expect = chai.expect;
 
 require("chromedriver");
 
-function createDemoEmail(){
-    return `demo${getRandomInt()}@rcwilley.com`;
-}
-
 /**
  * A smoke test suite to ensure basic site functionality 
  * is operational.
@@ -23,8 +18,6 @@ function createDemoEmail(){
 describe('Users', () => {  
 
     let browser: Browser;
-    const demoEmail: string = createDemoEmail();
-    const password: string = 'Password1!';
 
     /**
      * Before all tests are run
