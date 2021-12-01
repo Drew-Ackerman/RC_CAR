@@ -1,6 +1,7 @@
 import { Browser } from ".";
 import { accessSync, constants, mkdirSync } from "fs";
 import path = require("path");
+const addContext = require('mochawesome/addContext');
 
 export async function snapshot(testContext:Mocha.Context, browser: Browser){
     //Record the screen and place that data somewhere          
@@ -8,20 +9,24 @@ export async function snapshot(testContext:Mocha.Context, browser: Browser){
 
     let testFilePath = testContext.test?.file || ""; //The full file path of the currently running test
     let testDirectory = path.dirname(testFilePath);
-    let testResultsDirectory = path.join(testDirectory, 'results');
+    let mochawesomeDir = path.join(testDirectory, '../../mochawesome-report/assets/screenshots');
 
     //Create the directory, if it exists then thats okay
     try{
-        accessSync(testResultsDirectory, constants.R_OK | constants.W_OK);
+        accessSync(mochawesomeDir, constants.R_OK | constants.W_OK);
     }catch(err){
         //Dir doesnt exist
         try{
-        mkdirSync(testResultsDirectory)
+            mkdirSync(mochawesomeDir, {recursive:true});
         } catch(err){
             console.log("Error making directory for", err)
         }
     }
 
-    let screenshotPath = path.join(testResultsDirectory, `${friendlyTestName}.png`)
+    let screenshotPath = path.join(mochawesomeDir, `${friendlyTestName}.png`)
+    addContext(testContext, {
+        title: `Test ${friendlyTestName} failed:`,
+        value: `./assets/screenshots/${friendlyTestName}.png`
+    });
     await browser.takeScreenshot(screenshotPath);
 }
