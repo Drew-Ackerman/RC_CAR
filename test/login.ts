@@ -2,8 +2,7 @@ import { HomePage } from "../src/pages";
 import { Browser, getRandomInt } from "../src/lib";
 import { config, SupportedBrowsers } from "../config";
 import { LoginPage } from "../src/pages/LoginPage";
-import path = require("path");
-import { accessSync, constants, mkdirSync } from "fs";
+import { snapshot } from "../src/lib/snapshot";
 
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
@@ -68,27 +67,7 @@ describe('The login page', () => {
 
         //Check if the test that just ran was not successful
         if(this.currentTest?.state !== 'passed'){
-            //Record the screen and place that data somewhere          
-            let friendlyTestName = this.currentTest?.title.split(' ').join('_'); //Replace spaces with underscores
-
-            let testFilePath = this.currentTest?.file || ""; //The full file path of the currently running test
-            let testDirectory = path.dirname(testFilePath);
-            let testResultsDirectory = path.join(testDirectory, 'results');
-
-            //Create the directory, if it exists then thats okay
-            try{
-                accessSync(testResultsDirectory, constants.R_OK | constants.W_OK);
-            }catch(err){
-                //Dir doesnt exist
-                try{
-                mkdirSync(testResultsDirectory)
-                } catch(err){
-                    console.log("Error making directory for", err)
-                }
-            }
-
-            let screenshotPath = path.join(testResultsDirectory, `${friendlyTestName}.png`)
-            await browser.takeScreenshot(screenshotPath);
+            snapshot(this, browser);
         }
         await browser.close();
     });
