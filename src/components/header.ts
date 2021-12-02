@@ -3,6 +3,7 @@ import { Browser, Button, elementIsVisible, findByCSS, findById, findByLinkText,
 import { AccountHomePage } from "../pages/AccountHomePage";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductSearchPage } from "../pages/ProductSearchPage";
+import { ShoppingCartPage } from "../pages/ShoppingCartPage";
 
 
 /**
@@ -30,6 +31,9 @@ export class Header{
 
     @findById('searchBox')
     public SearchBoxInput : TextInput;
+
+    @findByLinkText('Cart')
+    public CartButton: Button;
 
     @findByLinkText('Logout')
     public LogoutButton: Button;
@@ -84,6 +88,10 @@ export class Header{
         else{
             throw Error('The account button is not displayed in the header bar');
         }
-        
+    }
+
+    public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
+        await this.CartButton.click();
+        return new ShoppingCartPage(this.browser);
     }
 };

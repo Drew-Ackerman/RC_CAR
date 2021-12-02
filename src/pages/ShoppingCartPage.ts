@@ -1,4 +1,4 @@
-import { Browser, Button, findAllByClass, findByClass, findByLinkText, Page, pageHasLoaded, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Browser, Button, findAllByClass, findByClass, findByCSS, findByLinkText, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { CheckoutPage } from "./CheckoutPage";
 
 export class CartItem {
@@ -23,8 +23,16 @@ export class CartItem {
 
 export class ShoppingCartPage extends Page {
     
-    @findByLinkText('Checkout')
-    private CheckoutButton: Button;
+    private async findCheckoutButton(browser: Browser){
+        let buttons = await browser.findElements({css:"a[href='/Proceed-To-Checkout']"});
+        for(let i = 0; i < buttons.length; i++){
+            let displayed = await buttons[i].isDisplayed();
+            if(displayed){
+                return buttons[i];
+            }
+        };
+        throw new Error('Couldnt find a visible checkout button');
+    }
 
     @findAllByClass('cartItem')
     public CartItems: WebComponents;
@@ -34,11 +42,12 @@ export class ShoppingCartPage extends Page {
     }
 
     public loadCondition(): WaitCondition {
-        throw new Error("Method not implemented.");
+        return urlContainsValue(this.browser, 'Shopping-Cart');
     }
 
     public async Checkout(): Promise<CheckoutPage> {
-        await this.CheckoutButton.click();
+        let checkoutButton = await this.browser.findElement(this.findCheckoutButton)
+        checkoutButton.click();
         await this.browser.wait(pageHasLoaded(CheckoutPage));
         return new CheckoutPage(this.browser);
     }

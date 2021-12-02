@@ -118,3 +118,21 @@ export class TextInput extends WebComponent {
         return this.element.clear();
     }
 }
+
+export class Selector extends WebComponent {
+    
+    constructor(element: WebElementPromise, selector: string){
+        super(element,selector);
+    }
+
+    public async selectOption(selectedOption: string){
+        let options = await this.element.findElements({css:'option'});
+        options.forEach(async (option) => {
+            if(await option.getAttribute('value') == selectedOption){
+                option.click();
+                return;
+            }
+        });
+        throw new Error(`Option ${selectedOption} not present on element ${this}`);
+    }
+}

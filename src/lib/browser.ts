@@ -1,5 +1,5 @@
 import 'chromedriver'
-import { Builder, ThenableWebDriver, WebElementPromise, ByHash, WebElement, IWebDriverCookie, IWebDriverOptionsCookie} from 'selenium-webdriver';
+import { Builder, ThenableWebDriver, WebElementPromise, ByHash, WebElement, IWebDriverCookie, IWebDriverOptionsCookie, TargetLocator} from 'selenium-webdriver';
 import { WaitCondition } from './conditions';
 import { SupportedBrowsers } from '../../config';
 import { writeFile } from 'fs';
@@ -136,6 +136,10 @@ export class Browser{
      */
     public async sleep(seconds:number) : Promise<void>{
         return this.driver.sleep(seconds * 1000);
+    }
+
+    public async switchTo(): Promise<TargetLocator>{
+        return this.driver.switchTo();
     }
 
     /**

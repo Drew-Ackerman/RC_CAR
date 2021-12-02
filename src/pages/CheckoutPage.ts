@@ -1,5 +1,17 @@
-import { WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, Page, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Key, WebElement } from "selenium-webdriver";
+import { Browser, Button, elementIsVisible, findByCSS, findById, Page, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+
+export const enum States {
+    California = 'California',
+    Idaho = 'Idaho',
+    Nevada = 'Navada',
+    Utah = 'Utah',
+}
+
+export const enum Stores {
+    UtahWarehouse = 'Utah Warehouse',
+    Layton = 'Layton',
+}
 
 /**
  * @description The delivery choices available during checkout
@@ -26,6 +38,16 @@ export const enum ShippingOptions {
     InHomeAndBlueRewards
 }
 
+type Address = {
+    firstName: string,
+    lastName: string,
+    streetAddress: string,
+    streetAddress2: string | undefined,
+    city: string,
+    state: string,
+    zip: string,
+}
+
 
 /**
  * @class POM for checkout
@@ -33,12 +55,36 @@ export const enum ShippingOptions {
 export class CheckoutPage extends Page {
     
     private findGuestLoginButton(browser:Browser): Promise<WebElement>{
-        var loginButtons = browser.findElement({css:'login-buttons'});
+        var loginButtons = browser.findElement({css:"div[class~='login-buttons']"});
         var guestButton = loginButtons.findElement({css:"button[type='button']"});
         if(guestButton){
             return guestButton;
         }
         throw Error("Could not find Continue as Guest Button on checkout page");
+    }
+
+    private async findVisibleCCInput(browser:Browser){
+        var ccinputs = await this.browser.findElements({css:"input[name~='cardnumber']"});
+        for(let i=0; i < ccinputs.length; i++){
+            let ccinput = ccinputs[i];
+            let isVisible = await ccinput.isDisplayed();
+            if(isVisible){
+                return ccinput;
+            }
+        }
+        throw new Error('Couldnt find a visible cc input');
+    }
+    private async findContactInformationContinueButton(browser:Browser): Promise<WebElement>{
+        var contactInfoForms = await browser.findElements({css:"form[action='/Order-Confirm']"});
+        for(let i=0; i < contactInfoForms.length; i++){
+            let contactInfoForm = contactInfoForms[i];
+            let isVisible = await contactInfoForm.isDisplayed();
+            if(await contactInfoForm.isDisplayed()){
+                var continueButton = contactInfoForm.findElement({css:"button"});
+                return continueButton;
+            }
+        }
+        throw new Error('Couldnt find a visible continue button');
     }
 
     @findByCSS("a[href='#loginForm']")
@@ -47,8 +93,14 @@ export class CheckoutPage extends Page {
     @findById('continueAsGuest')
     public GuestLoginButton: Button;
 
+    @findById('states')
+    public StateSelector: Selector;
+
+    @findById('locationId')
+    public StoreSelector: Selector;
+
     @findById('deliveryContinueButton')
-    public DeliveryContinueButton: Button;
+    private DeliveryContinueButton: Button;
 
     @findById('shippingFirstName')
     public FirstNameField: TextInput;
@@ -71,13 +123,13 @@ export class CheckoutPage extends Page {
     @findById('shippingZipCode')
     private ShippingZip: TextInput;
 
-    @findById('shipCURB0')
+    @findByCSS("img[alt='Free Ground Delivery']")
     private FreeCurbsideDelivery: Button;
 
     @findById('deliveryContinueButton')
     private ShippingConfirmButton: Button;
 
-    @findByCSS("name=['contactEmail']")
+    @findByCSS("input[name='contactEmail']")
     private EmailInput: TextInput;
 
     @findById('homePhone')
@@ -95,23 +147,23 @@ export class CheckoutPage extends Page {
     @findById('PAPY0')
     private PayPalPaymentSelection: WebComponent;
 
-    @findById('creditCard')
-    private CreditCardNumberInput: TextInput;
+    @findById('gcNumber-1')
+    private GiftCardNumInput: TextInput;
 
-    @findById('cardExpiry')
+    @findById("input[name='exp-date']")
     private CreditCardExpirationInput: TextInput;
 
-    @findById('cardCode')
+    @findById("input[name='csv']")
     private CardCodeInput: TextInput;
 
     @findByCSS("label[for='sameAddress']")
     private SameAddressCheck: WebComponent;
 
     @findById('continuePaymentButton')
-    private ContinuePaymentButton: Button;
+    public ContinuePaymentButton: Button;
 
     @findById('finalSubmit')
-    private PlaceOrderButton: Button;
+    public PlaceOrderButton: Button;
 
     @findById('backToCart')
     private BackToCartButton: Button;
@@ -133,7 +185,8 @@ export class CheckoutPage extends Page {
             await this.AccountLoginButton.click();
         }
         else{
-            await this.browser.findElement(this.findGuestLoginButton);
+            let guestButton = await this.browser.findElement(this.findGuestLoginButton);
+            await guestButton.click();
         }
     }
 
@@ -142,22 +195,24 @@ export class CheckoutPage extends Page {
      * @param deliveryOption The delivery option
      * @param shippingOption The shipping option
      */
-    public async selectDelivery(deliveryOption: DeliveryChoices, shippingOption: ShippingOptions){
-        if(deliveryOption == DeliveryChoices.Delivery){
-            //Default radio button, dont need to click it.
-            //Fill out address then.
-            await this.FirstNameField.type('Demo');
-            await this.LastNameField.type('Demo');
-            await this.ShippingAddress1Field.type('DemoStreet');
-            await this.ShippingCity.type('Demo');
-            await this.ShippingState.type('UT');
-            await this.ShippingZip.type('84405');
+    public async selectDelivery(shippingOption: ShippingOptions){
+        //Default radio button, dont need to click it.
+        //Fill out address then.
+        await this.FirstNameField.type('Demo');
+        await this.LastNameField.type('Demo');
+        await this.ShippingAddress1Field.type('DemoStreet');
+        await this.ShippingCity.type('Demo');
+        await this.ShippingState.type('UT');
+        await this.ShippingZip.type('84405');
 
-            if(shippingOption == ShippingOptions.FreeCurbside){
-                await this.FreeCurbsideDelivery.click();
-            }
+        if(shippingOption == ShippingOptions.FreeCurbside){
+            await this.FreeCurbsideDelivery.click();
         }
         await this.DeliveryContinueButton.click();
+    }
+
+    public async selectInStorePickup(state: States, store: Stores){
+        await this.StateSelector.selectOption('Utah');
     }
 
     /**
@@ -165,11 +220,14 @@ export class CheckoutPage extends Page {
      * @param email 
      * @param phone 
      */
-    public async fillOutContactInfo(email:string, phone:string){
+    public async enterContactInfo(email:string, phone:string){
         await this.EmailInput.type(email);
         await this.HomePhoneInput.type(phone);
         await this.MobilePhoneInput.type(phone);
         await this.WorkPhoneInput.type(phone);
+        let continueButton = new Button(this.browser.findElement(this.findContactInformationContinueButton), 'function');
+        await this.browser.wait(elementIsVisible(() => continueButton));
+        await continueButton.click();
     }
 
     /**
@@ -178,12 +236,22 @@ export class CheckoutPage extends Page {
      * @param cardExp 
      * @param csc 
      */
-    public async inputPaymentDetails(ccNumber:string, cardExp:string, csc:string){
-        await this.CreditCardNumberInput.type(ccNumber);
-        await this.CreditCardExpirationInput.type(ccNumber);
-        await this.CardCodeInput.type(csc);
+    public async enterPaymentDetails(ccNumber:string, cardExp:string, csc:string){
+        //let ccinput = await this.findVisibleCCInput(this.browser);
+        let ccframe = await this.browser.findElement({css:"iframe[title='Secure card number input frame']"});
+        console.log('vis', await ccframe.isDisplayed());
+        //let ccinput = new TextInput(ccframe.findElement(this.findVisibleCCInput), 'function'); 
+        //await ccinput.type(ccNumber);
+        
+        let cci = await ccframe.findElement({css:"input[name~='cardnumber']"});
+        await cci.sendKeys(ccNumber);     
+        //await this.CreditCardExpirationInput.type(cardExp);
+        //await this.CardCodeInput.type(csc);
     }
 
-    
+    public selectSameBillingAddress(): Promise<void>{
+        return this.SameAddressCheck.click();
+    }
+ 
 
 }
