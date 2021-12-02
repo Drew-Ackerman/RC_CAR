@@ -1,4 +1,5 @@
 import { Browser, WaitCondition } from ".";
+import { Header } from "../components";
 
 /**
  * 
@@ -13,12 +14,14 @@ export interface NewablePage<T extends Page> {
 export abstract class Page {
 
     private url: string; //The pages url
-
+    public header: Header;
     /**
      * @constructor
      * @param browser 
      */
-    public constructor(protected browser: Browser){ };
+    public constructor(protected browser: Browser){
+        this.header = new Header(browser);
+     };
 
     /**
      * Navigates to this pages url.

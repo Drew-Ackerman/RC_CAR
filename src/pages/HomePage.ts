@@ -1,6 +1,7 @@
 import { Header } from "../components";
 import { Browser, elementIsVisible, findByClass, findById, Page, WebComponent } from "../lib";
 import { config } from "../../config";
+import { ShoppingCartPage } from "./ShoppingCartPage";
 
 /**
  * @classdesc POM for the home page of RC Willey
@@ -10,7 +11,7 @@ export class HomePage extends Page{
     @findByClass('rcwlogo')
     public RCLogo : WebComponent;
 
-    private header: Header;
+    public header: Header;
 
     constructor(browser: Browser){
         super(browser)
@@ -28,6 +29,10 @@ export class HomePage extends Page{
 
     public async Search(searchText:string){
         return this.header.SearchForItem(searchText);
+    }
+
+    public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
+        return this.header.ClickShoppingCartButton();
     }
 
     /**

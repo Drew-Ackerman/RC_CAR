@@ -1,8 +1,9 @@
-import { HomePage } from "../src/pages";
+import { HomePage, OrderThanksPage } from "../src/pages";
 import { Browser } from "../src/lib";
-import { SupportedBrowsers } from "../config";
-import { fail } from "assert";
+import { config, SupportedBrowsers } from "../config";
 import { snapshot } from "../src/lib/snapshot";
+import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
+import { ZipcodePopup } from "../src/popups/ZipcodePopup";
 
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
@@ -49,18 +50,30 @@ describe('Users', () => {
         expect(filters).to.have.length.greaterThan(0);
     });
 
-    it('Should allow a product to be checked out', async () => {
+    it('Should be able to checkout a product as a guest', async () => {
         let homePage = new HomePage(browser);
-        homePage.navigate();
-        let productSearchPage = await homePage.Search('');
+        await homePage.navigate();
+        let shoppingCartPage = await homePage.ClickShoppingCartButton(); //Trip the zip code search to occur. 
+        let zipcodePopup = new ZipcodePopup(browser);
+        await zipcodePopup.waitTillVisible();
+        await zipcodePopup.typeZipcode(config.testAddress.zip);
+        let productSearchPage = await shoppingCartPage.header.SearchForItem('in stock');
         let productsList = await productSearchPage.findAllProductsOnPage();
         expect(productsList).to.have.length.greaterThan(0);
         let firstProductCard = productsList[0];
-        let firstProductDetails = await firstProductCard.getProductDetails();
         let productPage = await productSearchPage.selectProduct(firstProductCard);
-        expect(await productPage.hasTheProduct(firstProductDetails));
-        fail("Test incomplete");
-    });
+        shoppingCartPage = await productPage.addToCart();
+        let checkoutPage = await shoppingCartPage.Checkout();
+        await checkoutPage.selectAccountType(AccountTypes.Guest);
+        await checkoutPage.selectDelivery(ShippingOptions.FreeCurbside);
+        await checkoutPage.enterContactInfo('demo@demo.com', '801-111-1111');
+        await checkoutPage.enterPaymentDetails('4111111111111111', '06/30', '411');
+        await checkoutPage.selectSameBillingAddress();
+        await checkoutPage.submitPaymentInformation();
+        await checkoutPage.placeOrder();
+        let orderThanksPage = new OrderThanksPage(browser);
+        return expect(browser.currentUrl()).to.eventually.contain('Order-Thanks');
+    });   
 
     /**
      * After all tests are run

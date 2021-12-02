@@ -1,5 +1,20 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, Page, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, elementIsPresent, elementIsVisible, findByCSS, findById, Page, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+
+/**
+ * @description Valid states
+ */
+export const enum States {
+    California = 'California',
+    Idaho = 'Idaho',
+    Nevada = 'Navada',
+    Utah = 'Utah',
+}
+
+export const enum Stores {
+    UtahWarehouse = 'Utah Warehouse',
+    Layton = 'Layton',
+}
 
 /**
  * @description The delivery choices available during checkout
@@ -26,35 +41,40 @@ export const enum ShippingOptions {
     InHomeAndBlueRewards
 }
 
-
 /**
  * @class POM for checkout
  */
 export class CheckoutPage extends Page {
-    
-    private findGuestLoginButton(browser:Browser): Promise<WebElement>{
-        var loginButtons = browser.findElement({css:'login-buttons'});
-        var guestButton = loginButtons.findElement({css:"button[type='button']"});
-        if(guestButton){
-            return guestButton;
+
+    private async findContactInformationContinueButton(browser:Browser): Promise<WebElement>{
+        var contactInfoForms = await browser.findElements({css:"form[action='/Order-Confirm']"});
+        for(let i=0; i < contactInfoForms.length; i++){
+            let contactInfoForm = contactInfoForms[i];
+            if(await contactInfoForm.isDisplayed()){
+                var continueButton = contactInfoForm.findElement({css:"button"});
+                return continueButton;
+            }
         }
-        throw Error("Could not find Continue as Guest Button on checkout page");
+        throw new Error('Couldnt find a visible continue button');
     }
 
     @findByCSS("a[href='#loginForm']")
-    public AccountLoginButton: Button;
+    private AccountLoginButton: Button;
 
-    @findById('continueAsGuest')
-    public GuestLoginButton: Button;
+    @findById('states')
+    private StateSelector: Selector;
+
+    @findById('locationId')
+    private StoreSelector: Selector;
 
     @findById('deliveryContinueButton')
-    public DeliveryContinueButton: Button;
+    private DeliveryContinueButton: Button;
 
     @findById('shippingFirstName')
-    public FirstNameField: TextInput;
+    private FirstNameField: TextInput;
 
     @findById('shippingLastName')
-    public LastNameField: TextInput;
+    private LastNameField: TextInput;
 
     @findById('shippingAddress1')
     private ShippingAddress1Field: TextInput;
@@ -71,13 +91,13 @@ export class CheckoutPage extends Page {
     @findById('shippingZipCode')
     private ShippingZip: TextInput;
 
-    @findById('shipCURB0')
+    @findByCSS("img[alt='Free Curbside Delivery']")
     private FreeCurbsideDelivery: Button;
 
     @findById('deliveryContinueButton')
     private ShippingConfirmButton: Button;
 
-    @findByCSS("name=['contactEmail']")
+    @findByCSS("input[name='contactEmail']")
     private EmailInput: TextInput;
 
     @findById('homePhone')
@@ -95,15 +115,6 @@ export class CheckoutPage extends Page {
     @findById('PAPY0')
     private PayPalPaymentSelection: WebComponent;
 
-    @findById('creditCard')
-    private CreditCardNumberInput: TextInput;
-
-    @findById('cardExpiry')
-    private CreditCardExpirationInput: TextInput;
-
-    @findById('cardCode')
-    private CardCodeInput: TextInput;
-
     @findByCSS("label[for='sameAddress']")
     private SameAddressCheck: WebComponent;
 
@@ -120,6 +131,10 @@ export class CheckoutPage extends Page {
         super(browser);
     }
     
+    /**
+     * Waits until part of the browser url contains 'Proceed-To-Checkout'
+     * @returns WaitCondition
+     */
     public loadCondition(): WaitCondition {
         return urlContainsValue(this.browser, 'Proceed-To-Checkout');
     }
@@ -129,11 +144,16 @@ export class CheckoutPage extends Page {
      * @param accountType 
      */
     public async selectAccountType(accountType: AccountTypes){
+        var loginButtonDiv = new WebComponent(this.browser.findElement({css:"div[class~='login-buttons']"}), "div[class~='login-buttons']");
+        await this.browser.wait(elementIsPresent(()=>loginButtonDiv));
+
         if(accountType == AccountTypes.Account){
             await this.AccountLoginButton.click();
         }
         else{
-            await this.browser.findElement(this.findGuestLoginButton);
+            var guestButton = await loginButtonDiv.findElement({css:"button[type='button']"});
+            //await this.browser.wait(elementIsVisible(()=>guestButton));
+            await guestButton.click();
         }
     }
 
@@ -142,20 +162,20 @@ export class CheckoutPage extends Page {
      * @param deliveryOption The delivery option
      * @param shippingOption The shipping option
      */
-    public async selectDelivery(deliveryOption: DeliveryChoices, shippingOption: ShippingOptions){
-        if(deliveryOption == DeliveryChoices.Delivery){
-            //Default radio button, dont need to click it.
-            //Fill out address then.
-            await this.FirstNameField.type('Demo');
-            await this.LastNameField.type('Demo');
-            await this.ShippingAddress1Field.type('DemoStreet');
-            await this.ShippingCity.type('Demo');
-            await this.ShippingState.type('UT');
-            await this.ShippingZip.type('84405');
+    public async selectDelivery(shippingOption: ShippingOptions){
+        //Default radio button, dont need to click it.
+        //Fill out address then.
+        await this.browser.wait(elementIsVisible(()=>this.FirstNameField));
+        await this.FirstNameField.type('Demo');
+        await this.LastNameField.type('Demo');
+        await this.ShippingAddress1Field.type('DemoStreet');
+        await this.ShippingCity.type('Demo');
+        await this.ShippingState.type('UT');
+        await this.ShippingZip.type('84405');
 
-            if(shippingOption == ShippingOptions.FreeCurbside){
-                await this.FreeCurbsideDelivery.click();
-            }
+        if(shippingOption == ShippingOptions.FreeCurbside){
+            await this.browser.wait(elementIsVisible(()=>this.FreeCurbsideDelivery));
+            await this.FreeCurbsideDelivery.click();
         }
         await this.DeliveryContinueButton.click();
     }
@@ -165,11 +185,15 @@ export class CheckoutPage extends Page {
      * @param email 
      * @param phone 
      */
-    public async fillOutContactInfo(email:string, phone:string){
+    public async enterContactInfo(email:string, phone:string){
+        await this.browser.wait(elementIsVisible(()=>this.EmailInput));
         await this.EmailInput.type(email);
         await this.HomePhoneInput.type(phone);
         await this.MobilePhoneInput.type(phone);
         await this.WorkPhoneInput.type(phone);
+        let continueButton = new Button(this.browser.findElement(this.findContactInformationContinueButton), 'function');
+        await this.browser.wait(elementIsVisible(() => continueButton));
+        await continueButton.click();
     }
 
     /**
@@ -178,12 +202,51 @@ export class CheckoutPage extends Page {
      * @param cardExp 
      * @param csc 
      */
-    public async inputPaymentDetails(ccNumber:string, cardExp:string, csc:string){
-        await this.CreditCardNumberInput.type(ccNumber);
-        await this.CreditCardExpirationInput.type(ccNumber);
-        await this.CardCodeInput.type(csc);
+    public async enterPaymentDetails(ccNumber:string, cardExp:string, csc:string){
+        await this.browser.sleep(2);
+        let rootwindow = await this.browser.CurrentWindowHandle;
+        console.log(rootwindow);
+        await (await this.browser.switchTo()).frame(2);
+        let cci = await this.browser.findElement({css:"input[name~='cardnumber']"});
+        await cci.sendKeys(ccNumber);  
+        await (await this.browser.switchTo()).parentFrame();
+        await (await this.browser.switchTo()).frame(2);
+        let ccexp = await this.browser.findElement({css:"input[name~='exp-date']"});
+        await ccexp.sendKeys(cardExp);
+        await (await this.browser.switchTo()).parentFrame();
+        await (await this.browser.switchTo()).frame(3);
+        let cscinput = await this.browser.findElement({css:"input[name~='cvc']"})
+        await cscinput.sendKeys(csc);
+        await (await this.browser.switchTo()).parentFrame();
     }
 
-    
+    /**
+     * Select the sameBillingAddress checkbox.
+     * @returns 
+     */
+    public selectSameBillingAddress(): Promise<void>{
+        return this.SameAddressCheck.click();
+    }
+
+    /**
+     * Wait until the button for this section is visible
+     * then click it. 
+     * @returns 
+     */
+    public async submitPaymentInformation(): Promise<void> {
+        await this.browser.wait(elementIsVisible(()=>this.ContinuePaymentButton));
+        return this.ContinuePaymentButton.click();
+
+    }
+
+    /**
+     * Finish the checkout process.
+     * @returns 
+     */
+    public async placeOrder(): Promise<void> {
+        await this.browser.wait(elementIsVisible(()=>this.PlaceOrderButton));
+        return this.PlaceOrderButton.click();
+    }
+ 
 
 }
