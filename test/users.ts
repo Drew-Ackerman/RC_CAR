@@ -1,10 +1,9 @@
 import { HomePage, OrderThanksPage } from "../src/pages";
-import { Browser, elementIsPresent, elementIsVisible, TextInput, urlContainsValue } from "../src/lib";
-import { SupportedBrowsers } from "../config";
+import { Browser } from "../src/lib";
+import { config, SupportedBrowsers } from "../config";
 import { snapshot } from "../src/lib/snapshot";
 import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
-import { Key } from "selenium-webdriver";
-import { elementIsDisabled, urlContains } from "selenium-webdriver/lib/until";
+import { ZipcodePopup } from "../src/popups/ZipcodePopup";
 
 var chai = require("chai");
 var chaiAsPromised = require("chai-as-promised");
@@ -55,17 +54,14 @@ describe('Users', () => {
         let homePage = new HomePage(browser);
         await homePage.navigate();
         let shoppingCartPage = await homePage.ClickShoppingCartButton(); //Trip the zip code search to occur. 
-        let zipInput = new TextInput(browser.findElement({css:"input[name='zipCode']"}), "input[name='zipCode']"); 
-        await browser.wait(elementIsPresent(()=>zipInput));
-        await zipInput.type('84405');
-        await zipInput.type(Key.ENTER);
-        let productSearchPage = await shoppingCartPage.header.SearchForItem('');
+        let zipcodePopup = new ZipcodePopup(browser);
+        await zipcodePopup.waitTillVisible();
+        await zipcodePopup.typeZipcode(config.testAddress.zip);
+        let productSearchPage = await shoppingCartPage.header.SearchForItem('in stock');
         let productsList = await productSearchPage.findAllProductsOnPage();
         expect(productsList).to.have.length.greaterThan(0);
         let firstProductCard = productsList[0];
-        let firstProductDetails = await firstProductCard.getProductDetails();
         let productPage = await productSearchPage.selectProduct(firstProductCard);
-        expect(await productPage.hasTheProduct(firstProductDetails));
         shoppingCartPage = await productPage.addToCart();
         let checkoutPage = await shoppingCartPage.Checkout();
         await checkoutPage.selectAccountType(AccountTypes.Guest);
@@ -73,8 +69,8 @@ describe('Users', () => {
         await checkoutPage.enterContactInfo('demo@demo.com', '801-111-1111');
         await checkoutPage.enterPaymentDetails('4111111111111111', '06/30', '411');
         await checkoutPage.selectSameBillingAddress();
-        await checkoutPage.ContinuePaymentButton.click();
-        await checkoutPage.PlaceOrderButton.click();  
+        await checkoutPage.submitPaymentInformation();
+        await checkoutPage.placeOrder();
         let orderThanksPage = new OrderThanksPage(browser);
         return expect(browser.currentUrl()).to.eventually.contain('Order-Thanks');
     });

@@ -1,4 +1,4 @@
-import { Browser, Button, findAllByClass, findByClass, findByCSS, findByLinkText, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Browser, Button, elementIsVisible, findAllByClass, findByClass, findByCSS, findByLinkText, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { CheckoutPage } from "./CheckoutPage";
 
 export class CartItem {
@@ -46,9 +46,11 @@ export class ShoppingCartPage extends Page {
     }
 
     public async Checkout(): Promise<CheckoutPage> {
-        let checkoutButton = await this.browser.findElement(this.findCheckoutButton)
-        checkoutButton.click();
+        let checkoutButton = new Button(this.browser.findElement(this.findCheckoutButton), 'function');
+        await this.browser.wait(elementIsVisible(()=>checkoutButton));
+        await checkoutButton.click();
         await this.browser.wait(pageHasLoaded(CheckoutPage));
+        await this.browser.sleep(2);
         return new CheckoutPage(this.browser);
     }
     
