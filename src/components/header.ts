@@ -90,6 +90,10 @@ export class Header{
         }
     }
 
+    /**
+     * Click the shopping cart button thats in the pages header. 
+     * @returns 
+     */
     public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
         await this.CartButton.click();
         return new ShoppingCartPage(this.browser);

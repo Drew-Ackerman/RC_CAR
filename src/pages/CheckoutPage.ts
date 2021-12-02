@@ -1,6 +1,9 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, Button, elementIsPresent, elementIsVisible, findByCSS, findById, Page, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 
+/**
+ * @description Valid states
+ */
 export const enum States {
     California = 'California',
     Idaho = 'Idaho',
@@ -38,22 +41,10 @@ export const enum ShippingOptions {
     InHomeAndBlueRewards
 }
 
-type Address = {
-    firstName: string,
-    lastName: string,
-    streetAddress: string,
-    streetAddress2: string | undefined,
-    city: string,
-    state: string,
-    zip: string,
-}
-
-
 /**
  * @class POM for checkout
  */
 export class CheckoutPage extends Page {
-
 
     private async findContactInformationContinueButton(browser:Browser): Promise<WebElement>{
         var contactInfoForms = await browser.findElements({css:"form[action='/Order-Confirm']"});
@@ -68,25 +59,22 @@ export class CheckoutPage extends Page {
     }
 
     @findByCSS("a[href='#loginForm']")
-    public AccountLoginButton: Button;
-
-    @findById('continueAsGuest')
-    public GuestLoginButton: Button;
+    private AccountLoginButton: Button;
 
     @findById('states')
-    public StateSelector: Selector;
+    private StateSelector: Selector;
 
     @findById('locationId')
-    public StoreSelector: Selector;
+    private StoreSelector: Selector;
 
     @findById('deliveryContinueButton')
     private DeliveryContinueButton: Button;
 
     @findById('shippingFirstName')
-    public FirstNameField: TextInput;
+    private FirstNameField: TextInput;
 
     @findById('shippingLastName')
-    public LastNameField: TextInput;
+    private LastNameField: TextInput;
 
     @findById('shippingAddress1')
     private ShippingAddress1Field: TextInput;
@@ -131,10 +119,10 @@ export class CheckoutPage extends Page {
     private SameAddressCheck: WebComponent;
 
     @findById('continuePaymentButton')
-    public ContinuePaymentButton: Button;
+    private ContinuePaymentButton: Button;
 
     @findById('finalSubmit')
-    public PlaceOrderButton: Button;
+    private PlaceOrderButton: Button;
 
     @findById('backToCart')
     private BackToCartButton: Button;
@@ -143,6 +131,10 @@ export class CheckoutPage extends Page {
         super(browser);
     }
     
+    /**
+     * Waits until part of the browser url contains 'Proceed-To-Checkout'
+     * @returns WaitCondition
+     */
     public loadCondition(): WaitCondition {
         return urlContainsValue(this.browser, 'Proceed-To-Checkout');
     }
@@ -188,10 +180,6 @@ export class CheckoutPage extends Page {
         await this.DeliveryContinueButton.click();
     }
 
-    public async selectInStorePickup(state: States, store: Stores){
-        await this.StateSelector.selectOption('Utah');
-    }
-
     /**
      * Fillout the contact info
      * @param email 
@@ -232,17 +220,30 @@ export class CheckoutPage extends Page {
         await (await this.browser.switchTo()).parentFrame();
     }
 
+    /**
+     * Select the sameBillingAddress checkbox.
+     * @returns 
+     */
     public selectSameBillingAddress(): Promise<void>{
         return this.SameAddressCheck.click();
     }
 
-    public async submitPaymentInformation(){
+    /**
+     * Wait until the button for this section is visible
+     * then click it. 
+     * @returns 
+     */
+    public async submitPaymentInformation(): Promise<void> {
         await this.browser.wait(elementIsVisible(()=>this.ContinuePaymentButton));
         return this.ContinuePaymentButton.click();
 
     }
 
-    public async placeOrder(){
+    /**
+     * Finish the checkout process.
+     * @returns 
+     */
+    public async placeOrder(): Promise<void> {
         await this.browser.wait(elementIsVisible(()=>this.PlaceOrderButton));
         return this.PlaceOrderButton.click();
     }

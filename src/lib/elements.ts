@@ -114,17 +114,28 @@ export class TextInput extends WebComponent {
         return this.element.sendKeys(text);
     }
 
+    /**
+     * Clear the text out of the text Input.
+     * @returns 
+     */
     public clear(): Promise<void>{
         return this.element.clear();
     }
 }
 
+/**
+ * @classdesc A wrapper for selector elements.
+ */
 export class Selector extends WebComponent {
     
     constructor(element: WebElementPromise, selector: string){
         super(element,selector);
     }
 
+    /**
+     * Select an option of the selector. 
+     * @param selectedOption 
+     */
     public async selectOption(selectedOption: string){
         let options = await this.element.findElements({css:'option'});
         options.forEach(async (option) => {

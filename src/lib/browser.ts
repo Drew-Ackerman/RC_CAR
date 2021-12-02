@@ -142,6 +142,10 @@ export class Browser{
         return this.driver.sleep(seconds * 1000);
     }
 
+    /**
+     * Used for switching the context 
+     * @returns The target locator, which allows switching to frame and windows.
+     */
     public async switchTo(): Promise<TargetLocator>{
         return this.driver.switchTo();
     }

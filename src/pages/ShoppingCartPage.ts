@@ -41,10 +41,18 @@ export class ShoppingCartPage extends Page {
         super(browser);
     }
 
+    /**
+     * This POM is loaded when the url contains 'Shopping-Cart'
+     * @returns 
+     */
     public loadCondition(): WaitCondition {
         return urlContainsValue(this.browser, 'Shopping-Cart');
     }
 
+    /**
+     * Checkout the product
+     * @returns A promise to the checkout page
+     */
     public async Checkout(): Promise<CheckoutPage> {
         let checkoutButton = new Button(this.browser.findElement(this.findCheckoutButton), 'function');
         await this.browser.wait(elementIsVisible(()=>checkoutButton));

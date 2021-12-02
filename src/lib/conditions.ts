@@ -43,6 +43,12 @@ export function urlContainsValue(browser: Browser, partialUrl: string) : WaitCon
     return async () => await (await browser.currentUrl()).includes(partialUrl);
 }
 
+/**
+ * Waits until the url has changed in the browser. 
+ * @param browser 
+ * @param previousUrl 
+ * @returns 
+ */
 export function urlChanged(browser: Browser, previousUrl: string) : WaitCondition {
     return async () => await (await browser.currentUrl()) !== previousUrl;
 }

@@ -2,6 +2,9 @@ import { Key } from "selenium-webdriver";
 import { Browser, elementIsVisible, findByCSS, WebComponent } from "../lib";
 
 
+/**
+ * For working with the zipcode popup. 
+ */
 export class ZipcodePopup {
 
     @findByCSS("div[class='md-modal md-scale md-show'")
@@ -11,6 +14,9 @@ export class ZipcodePopup {
 
     }
 
+    /**
+     * Wait till the popup is visible. 
+     */
     public async waitTillVisible(){
         try{
             await this.browser.wait(elementIsVisible(() => this.PopupOverlay));
@@ -19,6 +25,10 @@ export class ZipcodePopup {
         }
     }
 
+    /**
+     * Type the zipcode into the input, and submit. 
+     * @param zip 
+     */
     public async typeZipcode(zip:string) {
         try{
             let zipInput = await this.PopupOverlay.findElement({css:"input[name='zipCode']"});

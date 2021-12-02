@@ -73,9 +73,7 @@ describe('Users', () => {
         await checkoutPage.placeOrder();
         let orderThanksPage = new OrderThanksPage(browser);
         return expect(browser.currentUrl()).to.eventually.contain('Order-Thanks');
-    });
-
-    
+    });   
 
     /**
      * After all tests are run
