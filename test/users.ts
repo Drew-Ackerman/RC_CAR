@@ -1,9 +1,8 @@
 import { HomePage, OrderThanksPage } from "../src/pages";
 import { Browser } from "../src/lib";
-import { config, SupportedBrowsers } from "../config";
+import { SupportedBrowsers } from "../config";
 import { snapshot } from "../src/lib/snapshot";
 import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
-import { ZipcodePopup } from "../src/popups/ZipcodePopup";
 
 import chai = require("chai");
 import chaiAsPromised = require("chai-as-promised");
@@ -35,14 +34,14 @@ describe("Users", () => {
 		expect(productList).to.have.length.greaterThan(0);
 	});
 
-	it("Should allow a product search on tags", async() => {
+	it("Should be able to search for a product with tags", async() => {
 		const homePage = new HomePage(browser);
 		homePage.navigate();
 		const productPage = await homePage.Search("Electronics");
 		expect(productPage.MainPageTitle.getText()).to.eventually.contain("Electronics");
 	});
 
-	it("Should set mutliple filters on a complex search", async() => {
+	it("Should be able to set mutliple filters on a product search", async() => {
 		const homePage = new HomePage(browser);
 		homePage.navigate();
 		const productPage = await homePage.Search("Gray Chair");
@@ -53,10 +52,7 @@ describe("Users", () => {
 	it("Should be able to checkout a product as a guest", async () => {
 		const homePage = new HomePage(browser);
 		await homePage.navigate();
-		let shoppingCartPage = await homePage.ClickShoppingCartButton(); //Trip the zip code search to occur. 
-		// const zipcodePopup = new ZipcodePopup(browser);
-		// await zipcodePopup.waitTillVisible();
-		// await zipcodePopup.typeZipcode(config.testAddress.zip);
+		let shoppingCartPage = await homePage.ClickShoppingCartButton();
 		const productSearchPage = await shoppingCartPage.header.SearchForItem("in stock");
 		const productsList = await productSearchPage.findAllProductsOnPage();
 		expect(productsList).to.have.length.greaterThan(0);
