@@ -1,5 +1,5 @@
 import { Header } from "../components";
-import { Browser, elementIsVisible, findByClass, findById, Page, WebComponent } from "../lib";
+import { Browser, elementIsVisible, findByClass, Page, WebComponent } from "../lib";
 import { config } from "../../config";
 import { ShoppingCartPage } from "./ShoppingCartPage";
 
@@ -8,38 +8,38 @@ import { ShoppingCartPage } from "./ShoppingCartPage";
  */
 export class HomePage extends Page{
 
-    @findByClass('rcwlogo')
-    public RCLogo : WebComponent;
+	@findByClass("rcwlogo")
+	public RCLogo : WebComponent;
 
-    public header: Header;
+	public header: Header;
 
-    constructor(browser: Browser){
-        super(browser)
-        this.setUrl( `${config.baseUrl}`)
-        this.header = new Header(browser);
-    }
+	constructor(browser: Browser){
+		super(browser);
+		this.setUrl( `${config.baseUrl}`);
+		this.header = new Header(browser);
+	}
 
-    /**
-     * Click the account button
-     * @returns A promise for a login page POM
-     */
-    async GoToLoginPage(){
-        return this.header.ClickAccountButton();
-    }
+	/**
+	 * Click the account button
+	 * @returns A promise for a login page POM
+	 */
+	async GoToLoginPage(){
+		return this.header.ClickAccountButton();
+	}
 
-    public async Search(searchText:string){
-        return this.header.SearchForItem(searchText);
-    }
+	public async Search(searchText:string){
+		return this.header.SearchForItem(searchText);
+	}
 
-    public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
-        return this.header.ClickShoppingCartButton();
-    }
+	public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
+		return this.header.ClickShoppingCartButton();
+	}
 
-    /**
-     * The home page is loaded when the RC logo is visible
-     * @returns A conditon that evaluates when the logo is visible. 
-     */ 
-    public loadCondition() {
-        return elementIsVisible(() => this.RCLogo);
-    }
+	/**
+	 * The home page is loaded when the RC logo is visible
+	 * @returns A conditon that evaluates when the logo is visible. 
+	 */ 
+	public loadCondition() {
+		return elementIsVisible(() => this.RCLogo);
+	}
 }

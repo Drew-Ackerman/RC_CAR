@@ -1,68 +1,68 @@
-import { Locator, WebElement, WebElementCondition, WebElementPromise } from "selenium-webdriver";
+import { Locator, WebElement, WebElementPromise } from "selenium-webdriver";
 
 /**
  * @classdesc A wrapper for all possible html elements.
  */
 export class WebComponent {
 
-    constructor(protected element: WebElementPromise, public selector: string){ }
+	constructor(protected element: WebElementPromise, public selector: string){ }
 
-    /**
-     * @returns Determine if a web element is displayed. 
-     */
-    public async isDisplayed(){
-        try {
-            return await this.element.isDisplayed();
-        }
-        catch (ex) {
-            return false;
-        }
-    }
+	/**
+	 * @returns Determine if a web element is displayed. 
+	 */
+	public async isDisplayed(){
+		try {
+			return await this.element.isDisplayed();
+		}
+		catch (ex) {
+			return false;
+		}
+	}
 
-    /**
-     * @return Attempt to click a web element. 
-     */
-    public async click() {
-        try {
-            return await this.element.click();
-        } catch (clickErr) {
-            try {
-                await this.element.getDriver().executeScript('arguements[0].click();', this.element);
-            } catch (jsErr) {
-                throw clickErr;
-            }
-        }
-    }
+	/**
+	 * @return Attempt to click a web element. 
+	 */
+	public async click() {
+		try {
+			return await this.element.click();
+		} catch (clickErr) {
+			try {
+				await this.element.getDriver().executeScript("arguements[0].click();", this.element);
+			} catch (jsErr) {
+				throw clickErr;
+			}
+		}
+	}
 
-    /**
-     * @returns The elements visible text. 
-     */
-    public async getText() {
-        return await this.element.getText();
-    }
+	/**
+	 * @returns The elements visible text. 
+	 */
+	public async getText() {
+		return await this.element.getText();
+	}
 
-    public findElement(locator: Locator): WebElementPromise{
-        return this.element.findElement(locator);
-    }
+	public findElement(locator: Locator): WebElementPromise{
+		return this.element.findElement(locator);
+	}
 }
 
 export class WebComponents {
 
-    constructor(protected elements: Promise<Array<WebElement>>, public selector: string)
-    {
+	constructor(protected elements: Promise<Array<WebElement>>, public selector: string)
+	{
 
-    };
+	}
 
-    public async getElements(){
-        return await this.elements;
-    }
+	public async getElements(){
+		return await this.elements;
+	}
 
-    public async getDisplayed(){
-        let e = await this.elements;
-        e.forEach( (element) => {
-            console.log(element);
-        });
-    };
+	public async getDisplayed(){
+		const e = await this.elements;
+		e.forEach( (element) => {
+			console.log(element);
+		});
+	}
 }
 
 /**
@@ -70,25 +70,25 @@ export class WebComponents {
  */
 export class Button extends WebComponent {
 
-    /**
-     * @constructor
-     * @param element A Promise that will return a web element
-     * @param selector How to find that element
-     */
-    constructor(element: WebElementPromise, selector: string) {
-        super(element, selector);
-    }
+	/**
+	 * @constructor
+	 * @param element A Promise that will return a web element
+	 * @param selector How to find that element
+	 */
+	constructor(element: WebElementPromise, selector: string) {
+		super(element, selector);
+	}
 
-    /**
-     * @return Determine if the button is disabled
-     */
-    public async isDisabled() {
-        try {
-            return await this.element.getAttribute('disabled') === 'disabled';
-        } catch (ex) {
-            return false;
-        }
-    }
+	/**
+	 * @return Determine if the button is disabled
+	 */
+	public async isDisabled() {
+		try {
+			return await this.element.getAttribute("disabled") === "disabled";
+		} catch (ex) {
+			return false;
+		}
+	}
 }
 
 /**
@@ -96,54 +96,54 @@ export class Button extends WebComponent {
  */
 export class TextInput extends WebComponent {
 
-    /**
-     * @class
-     * @param element A Promise to return a web element
-     * @param selector How to find that element
-     */
-    constructor(element: WebElementPromise, selector: string){
-        super(element,selector);
-    }
+	/**
+	 * @class
+	 * @param element A Promise to return a web element
+	 * @param selector How to find that element
+	 */
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+	}
 
-    /**
-     * 
-     * @param text The text to type into the input field.
-     * @returns A Promise that will evaluate after the typing is done. 
-     */
-    public type(text:string) : Promise<void>{
-        return this.element.sendKeys(text);
-    }
+	/**
+	 * 
+	 * @param text The text to type into the input field.
+	 * @returns A Promise that will evaluate after the typing is done. 
+	 */
+	public type(text:string) : Promise<void>{
+		return this.element.sendKeys(text);
+	}
 
-    /**
-     * Clear the text out of the text Input.
-     * @returns 
-     */
-    public clear(): Promise<void>{
-        return this.element.clear();
-    }
+	/**
+	 * Clear the text out of the text Input.
+	 * @returns 
+	 */
+	public clear(): Promise<void>{
+		return this.element.clear();
+	}
 }
 
 /**
  * @classdesc A wrapper for selector elements.
  */
 export class Selector extends WebComponent {
-    
-    constructor(element: WebElementPromise, selector: string){
-        super(element,selector);
-    }
+	
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+	}
 
-    /**
-     * Select an option of the selector. 
-     * @param selectedOption 
-     */
-    public async selectOption(selectedOption: string){
-        let options = await this.element.findElements({css:'option'});
-        options.forEach(async (option) => {
-            if(await option.getAttribute('value') == selectedOption){
-                option.click();
-                return;
-            }
-        });
-        throw new Error(`Option ${selectedOption} not present on element ${this}`);
-    }
+	/**
+	 * Select an option of the selector. 
+	 * @param selectedOption 
+	 */
+	public async selectOption(selectedOption: string){
+		const options = await this.element.findElements({css:"option"});
+		options.forEach(async (option) => {
+			if(await option.getAttribute("value") == selectedOption){
+				option.click();
+				return;
+			}
+		});
+		throw new Error(`Option ${selectedOption} not present on element ${this}`);
+	}
 }

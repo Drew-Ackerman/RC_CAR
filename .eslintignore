@@ -1,0 +1,7 @@
+/dist/**/*
+
+/.vscode/**/*
+
+/mochawesome-report/**/*
+
+/node_modules/**/*

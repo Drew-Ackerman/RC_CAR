@@ -11,7 +11,7 @@ export type WaitCondition = (browser:Browser) => Promise<boolean>;
  * @returns True if visible, false otherwise. 
  */
 export function elementIsVisible(locator: () => WebComponent): WaitCondition {
-    return async () => await locator().isDisplayed();
+	return async () => await locator().isDisplayed();
 }
 
 /**
@@ -20,7 +20,7 @@ export function elementIsVisible(locator: () => WebComponent): WaitCondition {
  * @returns A promise to be waited upon.  
  */
 export function elementIsPresent(locator: () => WebComponent): WaitCondition {
-    return async () => await locator() !== undefined;
+	return async () => await locator() !== undefined;
 }
 
 /**
@@ -30,7 +30,7 @@ export function elementIsPresent(locator: () => WebComponent): WaitCondition {
  * @returns A promise to be waited upon.
  */
 export function urlIsValue(browser: Browser, url: string) : WaitCondition {
-    return async () => await browser.currentUrl() === url;
+	return async () => await browser.currentUrl() === url;
 }
 
 /**
@@ -40,7 +40,7 @@ export function urlIsValue(browser: Browser, url: string) : WaitCondition {
  * @returns 
  */
 export function urlContainsValue(browser: Browser, partialUrl: string) : WaitCondition {
-    return async () => await (await browser.currentUrl()).includes(partialUrl);
+	return async () => await (await browser.currentUrl()).includes(partialUrl);
 }
 
 /**
@@ -50,7 +50,7 @@ export function urlContainsValue(browser: Browser, partialUrl: string) : WaitCon
  * @returns 
  */
 export function urlChanged(browser: Browser, previousUrl: string) : WaitCondition {
-    return async () => await (await browser.currentUrl()) !== previousUrl;
+	return async () => await (await browser.currentUrl()) !== previousUrl;
 }
 
 /**
@@ -60,8 +60,8 @@ export function urlChanged(browser: Browser, previousUrl: string) : WaitConditio
  * @returns A boolean promise that evaluates when a page is loaded. 
  */
 export function pageHasLoaded<T extends Page>(page: NewablePage<T>): WaitCondition {
-    return (browser: Browser) => {
-        const condition = new page(browser).loadCondition();
-        return condition(browser);
-    }
+	return (browser: Browser) => {
+		const condition = new page(browser).loadCondition();
+		return condition(browser);
+	};
 }
