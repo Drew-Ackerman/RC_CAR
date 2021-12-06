@@ -61,9 +61,9 @@ export class Browser{
 	}
 
 	/**
-	 * 
-	 * @param selectorHash 
-	 * @returns 
+	 * Find a collection of elements that are described by the given selector hash.
+	 * @param selectorHash A selenium selector hash, {type:locator}
+	 * @returns A list of web element 
 	 */
 	public findElements(selectorHash: ByHash ): Promise<WebElement[]> {
 		return this.driver.findElements(selectorHash);
