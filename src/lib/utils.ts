@@ -1,15 +1,5 @@
 import "reflect-metadata";
 
-//Effectively a promise to pause, be sure to await it. 
-/**
- * A promise to pause code execution
- * @param seconds How many seconds to pause
- * @returns A promise
- */
-export const delay = (seconds: number) => {
-	return new Promise((callback) => setTimeout(callback, seconds * 1000));
-};
-
 /**
  * Use as a decorator on a WebComponent property of a POM
  * Find an element by their css ID
@@ -50,6 +40,12 @@ export function findByClass(selector: string){
 	};
 }
 
+/**
+ * Use as a decorator on a WebComponenet propery of a POM
+ * Find all elements by their css class.
+ * @param selector The selector used to find all available webComponents
+ * @returns Nothing.
+ */
 export function findAllByClass(selector: string){
 	return (target: any, propertyKey: string) => {
 		const type = Reflect.getMetadata("design:type", target, propertyKey);
@@ -84,7 +80,12 @@ export function findByLinkText(linkText: string){
 	};
 }
 
-
+/**
+ * Use as a decorator on a WebComponent property of a POM
+ * Find an element by the class name of the element.
+ * @param nameValue The css class name of the element
+ * @returns Nothing. 
+ */
 export function findByName(nameValue: string){
 	return (target: any, propertyKey: string) => {
 		const type = Reflect.getMetadata("design:type", target, propertyKey);
@@ -99,6 +100,13 @@ export function findByName(nameValue: string){
 	};
 }
 
+/**
+ * Use as a decorator on a WebComponent property of a POM
+ * Find an element by the css of the element. Useful for finding 
+ * html tags as well - e.g. <div>
+ * @param cssIdentifier The css identifier
+ * @returns 
+ */
 export function findByCSS(cssIdentifier: string){
 	return (target: any, propertyKey: string) => {
 		const type = Reflect.getMetadata("design:type", target, propertyKey);
