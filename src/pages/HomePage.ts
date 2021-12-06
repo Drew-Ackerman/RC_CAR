@@ -24,15 +24,15 @@ export class HomePage extends Page{
 	 * @returns A promise for a login page POM
 	 */
 	async GoToLoginPage(){
-		return this.header.ClickAccountButton();
+		return this.header.clickAccountButton();
 	}
 
 	public async Search(searchText:string){
-		return this.header.SearchForItem(searchText);
+		return this.header.searchForItem(searchText);
 	}
 
 	public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
-		return this.header.ClickShoppingCartButton();
+		return this.header.clickShoppingCartButton();
 	}
 
 	/**
