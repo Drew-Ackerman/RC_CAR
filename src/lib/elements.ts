@@ -41,11 +41,19 @@ export class WebComponent {
 		return await this.element.getText();
 	}
 
+	/**
+	 * 
+	 * @param locator A selenium By locator hash.
+	 * @returns A 
+	 */
 	public findElement(locator: Locator): WebElementPromise{
 		return this.element.findElement(locator);
 	}
 }
 
+/**
+ * This class allows handling multiple WebElements at once. 
+ */
 export class WebComponents {
 
 	constructor(protected elements: Promise<Array<WebElement>>, public selector: string)
@@ -53,14 +61,21 @@ export class WebComponents {
 
 	}
 
-	public async getElements(){
+	/**
+	 * @returns All the elements in this collection
+	 */
+	public async getElements(): Promise<Array<WebElement>>{
 		return await this.elements;
 	}
 
-	public async getDisplayed(){
-		const e = await this.elements;
-		e.forEach( (element) => {
-			console.log(element);
+	/**
+	 * @returns All elements in the collection that are visible. 
+	 */
+	public async getDisplayed(): Promise<Array<WebElement>>{
+		return (await this.elements).filter(async (element) => {
+			if(await element.isDisplayed()){
+				return element;
+			}
 		});
 	}
 }
