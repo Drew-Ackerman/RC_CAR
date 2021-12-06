@@ -6,6 +6,8 @@ import { writeFile } from "fs";
 
 /**
  * @classdesc A wrapper for the selenium browser driver. 
+ * This class allows interacting with the browser, finding elements
+ * navigating to pages with urls, working with browser windows, etc. 
  */
 export class Browser{
 
@@ -161,7 +163,7 @@ export class Browser{
 
 	/**
 	 * Wait till one of one or many conditoons to be satisfied. 
-	 * @param conditions 1 or many conditions to fulfill.
+	 * @param conditions 1 or many {@link WaitCondition WaitConditions} to fulfill.
 	 */ 
 	public async waitAny(conditions: WaitCondition | WaitCondition[]) : Promise <void> {
 		//Treat all conditions as an array of conditions. 
