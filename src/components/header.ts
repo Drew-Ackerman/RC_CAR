@@ -8,6 +8,8 @@ import { ShoppingCartPage } from "../pages/ShoppingCartPage";
 /**
  * @classdesc The header is the part of the page that contains things like 
  * the logo, navigation, and the search bar. 
+ * Add this component to pages that contain the header if theres things from the header
+ * that you need.
  */
 export class Header{
 
@@ -40,7 +42,7 @@ export class Header{
 	/**
 	 * Click the account button
 	 */
-	async ClickAccountButton(){
+	public async clickAccountButton(){
 		//User isnt logged in yet then
 		let loginButtonPresent = false;
 		try{
@@ -65,8 +67,9 @@ export class Header{
 	/**
 	 * Types into the search text input and then sends the enter key. 
 	 * @param searchText What text to input into the text box
+	 * @returns A {@link ProductSearchPage}
 	 */
-	async SearchForItem(searchText:string): Promise<ProductSearchPage>{
+	public async searchForItem(searchText:string): Promise<ProductSearchPage>{
 		await this.SearchBoxInput.type(searchText);
 		await this.SearchBoxInput.type(Key.ENTER);
 		await this.browser.wait(pageHasLoaded(ProductSearchPage));
@@ -91,9 +94,9 @@ export class Header{
 
 	/**
 	 * Click the shopping cart button thats in the pages header. 
-	 * @returns 
+	 * @returns A {@link ShoppingCartPage}
 	 */
-	public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
+	public async clickShoppingCartButton(): Promise<ShoppingCartPage>{
 		await this.CartButton.click();
 		return new ShoppingCartPage(this.browser);
 	}
