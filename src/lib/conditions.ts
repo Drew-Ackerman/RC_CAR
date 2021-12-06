@@ -7,7 +7,7 @@ export type WaitCondition = (browser:Browser) => Promise<boolean>;
 
 /**
  * Wait for a WebComponent to be displayed
- * @param locator The WebComponent 
+ * @param locator A function returning a {@link WebComponent}
  * @returns True if visible, false otherwise. 
  */
 export function elementIsVisible(locator: () => WebComponent): WaitCondition {
@@ -24,10 +24,10 @@ export function elementIsPresent(locator: () => WebComponent): WaitCondition {
 }
 
 /**
- * Create a @WaitCondition that can be used to wait for a specific url to be present in the browser
- * @param browser The browser
+ * Create a {@link WaitCondition} that can be used to wait for a specific url to be present in the browser
+ * @param browser The {@link Browser}
  * @param url The url to wait for
- * @returns A promise to be waited upon.
+ * @returns A {@link WaitCondition} promise to be waited upon.
  */
 export function urlIsValue(browser: Browser, url: string) : WaitCondition {
 	return async () => await browser.currentUrl() === url;
@@ -35,9 +35,9 @@ export function urlIsValue(browser: Browser, url: string) : WaitCondition {
 
 /**
  * 
- * @param browser 
+ * @param browser The {@link Browser}
  * @param partialUrl 
- * @returns 
+ * @returns A {@link WaitCondition} promise to be waited upon.
  */
 export function urlContainsValue(browser: Browser, partialUrl: string) : WaitCondition {
 	return async () => await (await browser.currentUrl()).includes(partialUrl);

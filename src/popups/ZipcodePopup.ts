@@ -17,7 +17,7 @@ export class ZipcodePopup {
 	/**
 	 * Wait till the popup is visible. 
 	 */
-	public async waitTillVisible(){
+	public async waitTillVisible(): Promise<void>{
 		try{
 			await this.browser.wait(elementIsVisible(() => this.PopupOverlay));
 		} catch(error){
