@@ -44,10 +44,19 @@ export class WebComponent {
 	/**
 	 * 
 	 * @param locator A selenium By locator hash.
-	 * @returns A 
+	 * @returns A {@link WebElementPromise}
 	 */
 	public findElement(locator: Locator): WebElementPromise{
 		return this.element.findElement(locator);
+	}
+
+	/**
+	 * 
+	 * @param locator A selenium By locator hash.
+	 * @returns A promise that returns an array of {@link WebElement}
+	 */
+	public findElements(locator: Locator):Promise<Array<WebElement>>{
+		return this.element.findElements(locator);
 	}
 }
 
@@ -151,11 +160,30 @@ export class Selector extends WebComponent {
 	 * Select an option of the selector. 
 	 * @param selectedOption 
 	 */
-	public async selectOption(selectedOption: string){
+	public async selectOptionByValue(selectedOption: string){
 		const options = await this.element.findElements({css:"option"});
 		options.forEach(async (option) => {
 			if(await option.getAttribute("value") == selectedOption){
-				option.click();
+				await option.click();
+				return;
+			}
+			if(await (await option.getText()).includes(selectedOption)){
+				await option.click();
+				return;
+			}
+		});
+		throw new Error(`Option ${selectedOption} not present on element ${this}`);
+	}
+
+	/**
+	 * Choose a selector option by its visible text value. 
+	 * @param selectedOption The entire text to match, or a substring. 
+	 */
+	public async selectOptionByText(selectedOption: string){
+		const options = await this.element.findElements({css:"option"});
+		options.forEach(async (option) => {
+			if(await (await option.getText()).includes(selectedOption)){
+				await option.click();
 				return;
 			}
 		});
