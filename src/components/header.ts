@@ -1,9 +1,10 @@
 import { Key } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByCSS, findById, findByLinkText, pageHasLoaded, TextInput, WebComponent } from "../lib";
+import { Browser, Button, elementIsVisible, findByClass, findByCSS, findById, findByLinkText, pageHasLoaded, TextInput, WebComponent } from "../lib";
 import { AccountHomePage } from "../pages/AccountHomePage";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductSearchPage } from "../pages/ProductSearchPage";
 import { ShoppingCartPage } from "../pages/ShoppingCartPage";
+import { StoreLocationsPage } from "../pages/StoreLocationsPage";
 
 /**
  * @classdesc The header is the part of the page that contains things like 
@@ -38,6 +39,12 @@ export class Header{
 
 	@findByLinkText("Logout")
 	public LogoutButton: Button;
+
+	@findByLinkText("Locations")
+	private LocationButton: Button;
+
+	@findByClass("homeStoreCity")
+	private homeStoreLocationChangeLink: WebComponent;
 
 	/**
 	 * Click the account button
@@ -90,6 +97,25 @@ export class Header{
 		else{
 			throw Error("The account button is not displayed in the header bar");
 		}
+	}
+
+	/**
+	 * Clicking this link either opens up the zipcode dialog or
+	 * if a location has already been set then a dialog with a selector element 
+	 * is given. 
+	 */
+	public changeHomeStore(): Promise<void>{
+		return this.homeStoreLocationChangeLink.click();
+	}
+
+	/**
+	 * Click location button
+	 * @returns Promise for a StoreLocationpage
+	 */
+	public async clickLocationButton(): Promise<StoreLocationsPage> {
+		await this.LocationButton.click();
+		await this.browser.wait(pageHasLoaded(StoreLocationsPage));
+		return new StoreLocationsPage(this.browser);
 	}
 
 	/**
