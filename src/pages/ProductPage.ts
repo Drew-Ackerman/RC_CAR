@@ -2,6 +2,7 @@ import { WebElement } from "selenium-webdriver";
 import { Browser, Button, elementIsVisible, findByClass, findById, Page, pageHasLoaded, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails, ProductCard } from "./ProductSearchPage";
 import { ShoppingCartPage } from "./ShoppingCartPage";
+import { WishlistPage } from "./WishlistPage";
 
 export class ProductPage extends Page {
 	
@@ -26,6 +27,9 @@ export class ProductPage extends Page {
 
 	@findByClass("priceBlock")
 	private Price: WebComponent;
+
+	@findByClass("wishlistActionItem")
+	private WishlistAddButton: Button;
 
 	private product: ProductCard;
 	constructor(protected browser: Browser){
@@ -80,5 +84,23 @@ export class ProductPage extends Page {
 			throw Error(`Not the same product. On product page with SKU ${await this.SKU.getText()}, expected ${await this.product.SKU()}`);
 		}
 		return true;
+	}
+
+
+	public async addProductToWishlist(wishlistName: string): Promise<void|WishlistPage>{
+		await this.WishlistAddButton.click();
+		const wishlistContainer = await this.browser.findElement({className:"wishlist"});
+		const possibleWishlists = await wishlistContainer.findElements({xpath:".//li"});
+		const wishListOptions: Array<string> = [];
+		await possibleWishlists.forEach(async (element) => {
+			const text = await element.getText();
+			wishListOptions.push(text);
+			if(text.includes(wishlistName)){
+				await element.click();
+				await this.browser.wait(pageHasLoaded(WishlistPage));
+				return new WishlistPage(this.browser);
+			}
+		});
+		throw Error(`Wishlist option ${wishlistName} not available in list. Options available: ${wishListOptions}`);
 	}
 }

@@ -11,7 +11,7 @@ import { writeFile } from "fs";
  */
 export class Browser{
 
-	private driver: ThenableWebDriver;
+	public driver: ThenableWebDriver;
 
 	/**
 	 * @param browserName The browser to use.
