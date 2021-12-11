@@ -36,7 +36,8 @@ describe("The wishlist page", () => {
 		const productDetails = await firstProduct.getProductDetails();	
 		const productPage = await productSearchPage.selectProduct(firstProduct);
 		const wishlistPage = await productPage.addProductToWishlist("Add to Wish List") as WishlistPage;
-		expect(await wishlistPage.checkProductIsInWishlist(productDetails)).to.be.true;		
+		const productAvailable = await wishlistPage.checkProductIsInWishlist(productDetails);
+		expect(productAvailable).to.be.true;
 	});
 
 	it("Allows products to be removed from a wish list", async () => {
@@ -49,7 +50,7 @@ describe("The wishlist page", () => {
 		const productPage = await productSearchPage.selectProduct(firstProduct);
 		const wishlistPage = await productPage.addProductToWishlist("Add to Wish List") as WishlistPage;
 		await wishlistPage.removeProductFromWishlist(productDetails);
-		expect(wishlistPage.removeProductFromWishlist(productDetails)).to.eventually.be.true;
+		expect(wishlistPage.wishlistIsEmpty()).to.eventually.be.true;
 	});
 
 	it("Allows wishlist items to be added to the cart", async () => {

@@ -1,7 +1,8 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, findByClass, findById, findByLinkText, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, findByClass, findByCSS, findById, findByLinkText, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
 import { ShoppingCartPage } from "./ShoppingCartPage";
+
 
 export type WishListDetails = {
 	productName:string,
@@ -9,29 +10,48 @@ export type WishListDetails = {
 }
 
 export class WishListItem{
-	@findByClass("prodName")
+	@findByCSS("a[class~='prodName']")
 	private ProductNameText: WebComponent;
 
-	@findByClass("prodInfo")
+	@findByCSS("div[class~='prodInfo']")
 	private productInfoText: WebComponent;
 
-	@findByLinkText("Move to Cart")
+	@findByCSS("a[class~'icon-cart']")
 	public moveToCartButton: Button;
 
-	constructor(private element: WebElement){}
+	private browser;
+	constructor(private element: WebElement)
+	{
+		this.browser = element;
+	}
 
 	public async ProductName(): Promise<string>{
-		return await this.ProductNameText.getText();
+		try{
+			return await this.ProductNameText.getText();
+		}catch(error){
+			console.error("Error getting wish list product name", error);
+			throw error;
+		}
 	}
 
 	public async ProductInfo(): Promise<string>{
-		return await this.productInfoText.getText();
+		try{
+			return await this.productInfoText.getText();
+		}catch(error){
+			console.error("Error gettting wish list item product info", error);
+			throw error;
+		}
 	}
 
 	public async productDetails(): Promise<WishListDetails>{
-		const name = await this.ProductName();
-		const info = await this.ProductInfo();
-		return {productName:name, productInfo:info};
+		try{
+			const name = await this.ProductName();
+			const info = await this.ProductInfo();
+			return {productName:name, productInfo:info};
+		} catch(error){
+			console.log(error);
+			throw error;
+		}
 	}
 
 	public async deleteItem(): Promise<void>{
@@ -62,39 +82,43 @@ export class WishlistPage extends Page {
 			}
 			return false;
 		} catch(error){
-			return false;
+			console.error("Wish list is empty failed", error);
+			throw error;
 		}
 	}
 
 	public async getWishlistItems(): Promise<Array<WishListItem>>{
-		const items = await this.ShoppingCart.findElements({css:"cartItem"});
+		const items = await this.ShoppingCart.findElements({css:"div[class~='cartItem']"});
+		if(items.shift() == undefined){
+			throw new Error("No wish list items");
+		}
 		const wishlistItems = items.map((item) => {
-			return new WishListItem(item);
+			const wli = new WishListItem(item);
+			return wli;
 		});		
 		return wishlistItems;
 	}
 
 	public async checkProductIsInWishlist(product:ProductDetails): Promise<boolean>{
 		const items = await this.getWishlistItems();
-		const wishlistDetails = await items.map(async (wli) => {
-			return await wli.productDetails();
-		});
-		wishlistDetails.forEach(async (wld) => {
-			if(product.productName == (await wld).productName){
+		for(let i = 0; i < items.length; i++){
+			const wishlistProductName = (await items[i].productDetails()).productName;
+			if(product.productName === wishlistProductName){
 				return true;
 			}
-		});
+		}
 		return false;
 	}		
 
 	public async removeProductFromWishlist(product:ProductDetails): Promise<void>{
 		const items = await this.getWishlistItems();
-		items.forEach(async (item) => {
-			const itemDetails = await item.productDetails();
+		for(let i=0; i < items.length; i++){
+			const itemDetails = await items[i].productDetails();
 			if(product.productName == itemDetails.productName){
-				await item.deleteItem();
+				await items[i].deleteItem();
+				return;
 			}
-		});
+		}
 		throw new Error(`Product: ${product.productName} was not found in wishlist to delete`);
 	}
 
