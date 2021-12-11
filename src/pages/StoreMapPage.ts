@@ -55,7 +55,7 @@ export class StoreMapPage extends Page{
 	 */
 	public async getLocations(){
 		const locationContainer = new WebComponent(this.browser.findElement({id:"locationList"}), "locationList");
-		const locations = new WebComponents(locationContainer.findElements({xpath:"//li"}), "//li");
+		const locations = new WebComponents(locationContainer.findElements({xpath:".//li"}), ".//li");
 		const mapLocations = (await locations.getDisplayed()).map((location) => {
 			return new MapLocation(location);
 		});
@@ -67,8 +67,7 @@ export class StoreMapPage extends Page{
 	 * @param zipCode 
 	 */
 	public async zipSearch(zipCode:string): Promise<void>{
-		await this.zipCodeInput.type(zipCode);
-		await this.zipCodeInput.type(Key.ENTER);
+		await this.zipCodeInput.type(zipCode, Key.ENTER);
 	}
 
 	public loadCondition(): WaitCondition {
