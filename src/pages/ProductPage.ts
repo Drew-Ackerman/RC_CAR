@@ -89,18 +89,19 @@ export class ProductPage extends Page {
 
 	public async addProductToWishlist(wishlistName: string): Promise<void|WishlistPage>{
 		await this.WishlistAddButton.click();
-		const wishlistContainer = await this.browser.findElement({className:"wishlist"});
-		const possibleWishlists = await wishlistContainer.findElements({xpath:".//li"});
-		const wishListOptions: Array<string> = [];
-		await possibleWishlists.forEach(async (element) => {
-			const text = await element.getText();
-			wishListOptions.push(text);
+		//const wishlistContainer = await this.browser.findElement({css:"div[class~='wishlist']"});
+		const possibleWishlists = await this.browser.findElements({css:"a[class~='icon-heart']"});
+		for(let i=0; i < possibleWishlists.length;i++){
+			const text = await possibleWishlists[i].getText();
 			if(text.includes(wishlistName)){
-				await element.click();
-				await this.browser.wait(pageHasLoaded(WishlistPage));
-				return new WishlistPage(this.browser);
+				try{
+					await possibleWishlists[i].click();
+					await this.browser.wait(pageHasLoaded(WishlistPage));
+					return new WishlistPage(this.browser);
+				} catch(error){
+					console.log(error);
+				}
 			}
-		});
-		throw Error(`Wishlist option ${wishlistName} not available in list. Options available: ${wishListOptions}`);
+		}
 	}
 }
