@@ -157,15 +157,15 @@ export class Browser{
 	 * havnt loaded in or when actions take time to occur.
 	 * @param condition A condition to evaluate
 	 */
-	public async wait(condition: WaitCondition) {
-		await this.waitAny(condition);
+	public async wait(condition: WaitCondition, optionalTimeout?:number, optionalMessage?:string) {
+		await this.waitAny(condition, optionalTimeout, optionalMessage);
 	}
 
 	/**
 	 * Wait till one of one or many conditoons to be satisfied. 
 	 * @param conditions 1 or many {@link WaitCondition WaitConditions} to fulfill.
 	 */ 
-	public async waitAny(conditions: WaitCondition | WaitCondition[]) : Promise <void> {
+	public async waitAny(conditions: WaitCondition | WaitCondition[], optionalTimeout?:number, optionalMessage?:string) : Promise <void> {
 		//Treat all conditions as an array of conditions. 
 		const all = (!(conditions instanceof Array)) ? [conditions] : conditions;
 		
@@ -182,6 +182,6 @@ export class Browser{
 					continue;
 				}
 			}
-		});
+		}, optionalTimeout, optionalMessage);
 	}
 }

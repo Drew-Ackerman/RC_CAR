@@ -50,6 +50,7 @@ describe("The wishlist page", () => {
 		const productPage = await productSearchPage.selectProduct(firstProduct);
 		const wishlistPage = await productPage.addProductToWishlist("Add to Wish List") as WishlistPage;
 		await wishlistPage.removeProductFromWishlist(productDetails);
+		await browser.wait(() => wishlistPage.wishlistIsEmpty(), 10, "Wish List was not empty in time");
 		expect(wishlistPage.wishlistIsEmpty()).to.eventually.be.true;
 	});
 

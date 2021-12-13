@@ -75,16 +75,11 @@ export class WishlistPage extends Page {
 	}
 
 	public async wishlistIsEmpty(): Promise<boolean>{
-		try{
-			const el = await this.browser.findElement({id:"empytyCart"});
-			if(await el.isDisplayed()){
-				return true;
-			}
-			return false;
-		} catch(error){
-			console.error("Wish list is empty failed", error);
-			throw error;
+		const el = await this.browser.findElement({id:"emptyCart"});
+		if(await el.isDisplayed()){
+			return true;
 		}
+		return false;
 	}
 
 	public async getWishlistItems(): Promise<Array<WishListItem>>{
