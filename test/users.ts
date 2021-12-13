@@ -53,7 +53,7 @@ describe("Users", () => {
 		const homePage = new HomePage(browser);
 		await homePage.navigate();
 		let shoppingCartPage = await homePage.ClickShoppingCartButton();
-		const productSearchPage = await shoppingCartPage.header.searchForItem("in stock");
+		const productSearchPage = await shoppingCartPage.header.searchForItem("sofa");
 		const productsList = await productSearchPage.findAllProductsOnPage();
 		expect(productsList).to.have.length.greaterThan(0);
 		const firstProductCard = productsList[0];

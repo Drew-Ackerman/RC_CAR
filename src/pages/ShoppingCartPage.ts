@@ -1,5 +1,7 @@
-import { Browser, Button, elementIsVisible, findAllByClass, findByClass, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { WebElement } from "selenium-webdriver";
+import { Browser, Button, elementIsVisible, findByClass, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { CheckoutPage } from "./CheckoutPage";
+import { ProductDetails } from "./ProductSearchPage";
 
 export class CartItem {
 
@@ -9,7 +11,7 @@ export class CartItem {
 	@findByClass("prodInfo")
 	private productInfoText:WebComponent;
 
-	constructor(private browser: WebComponent){}
+	constructor(private element: WebElement){}
 
 	public async ProductName(): Promise<string>{
 		return await this.ProductNameText.getText();
@@ -18,8 +20,11 @@ export class CartItem {
 	public async ProductInfo(): Promise<string>{
 		return await this.productInfoText.getText();
 	}
-}
 
+	public async equalTo(productInfo: ProductDetails){
+		return await this.ProductName() === productInfo.productName;
+	}
+}
 
 export class ShoppingCartPage extends Page {
 	
@@ -33,9 +38,6 @@ export class ShoppingCartPage extends Page {
 		}
 		throw new Error("Couldnt find a visible checkout button");
 	}
-
-	@findAllByClass("cartItem")
-	public CartItems: WebComponents;
 
 	constructor(protected browser:Browser){
 		super(browser);
@@ -60,6 +62,24 @@ export class ShoppingCartPage extends Page {
 		await this.browser.wait(pageHasLoaded(CheckoutPage));
 		await this.browser.sleep(2);
 		return new CheckoutPage(this.browser);
+	}
+
+	public async getCartItems(): Promise<Array<CartItem>>{
+		const shoppingCart = await this.browser.findElement({id:"shoppingCart"});
+		const cartItemElements = shoppingCart.findElements({className:"cartItem"});
+		return (await cartItemElements).map((itemElement) => {
+			return new CartItem(itemElement);
+		});		
+	}
+
+	public async cartContainsProduct(product:ProductDetails){
+		const cartItems = await this.getCartItems();
+		cartItems.forEach(async (cartItem)=> {
+			if(await cartItem.equalTo(product)){
+				return true;
+			}
+		});
+		return false;
 	}
 	
 }

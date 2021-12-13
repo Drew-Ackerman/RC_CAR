@@ -134,8 +134,8 @@ export class TextInput extends WebComponent {
 	 * @param text The text to type into the input field.
 	 * @returns A Promise that will evaluate after the typing is done. 
 	 */
-	public type(text:string) : Promise<void>{
-		return this.element.sendKeys(text);
+	public type(...varArgs:(string|number|Promise<string|number>)[]): Promise<void>{
+		return this.element.sendKeys(...varArgs);
 	}
 
 	/**
