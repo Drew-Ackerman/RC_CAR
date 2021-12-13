@@ -1,7 +1,7 @@
 
 import { HomePage } from "../src/pages";
 import { Browser } from "../src/lib";
-import { SupportedBrowsers } from "../config";
+import { SupportedBrowsers, time } from "../config";
 import { snapshot } from "../src/lib/snapshot";
 
 import chai = require("chai"); 
@@ -50,7 +50,7 @@ describe("The wishlist page", () => {
 		const productPage = await productSearchPage.selectProduct(firstProduct);
 		const wishlistPage = await productPage.addProductToWishlist("Add to Wish List") as WishlistPage;
 		await wishlistPage.removeProductFromWishlist(productDetails);
-		await browser.wait(() => wishlistPage.wishlistIsEmpty(), 10, "Wish List was not empty in time");
+		await browser.wait(() => wishlistPage.wishlistIsEmpty(), time.TenSeconds, "Wish List was not empty in time");
 		expect(wishlistPage.wishlistIsEmpty()).to.eventually.be.true;
 	});
 

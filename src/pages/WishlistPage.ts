@@ -16,7 +16,7 @@ export class WishListItem{
 	@findByCSS("div[class~='prodInfo']")
 	private productInfoText: WebComponent;
 
-	@findByCSS("a[class~'icon-cart']")
+	@findByCSS("a[class~='icon-cart']")
 	public moveToCartButton: Button;
 
 	private browser;
@@ -118,15 +118,15 @@ export class WishlistPage extends Page {
 	}
 
 	public async addWishlistItemToCart(product:ProductDetails): Promise<ShoppingCartPage>{
-		const items = await this.getWishlistItems();
-		items.forEach(async (item) => {
-			const itemsDetails = await item.productDetails();
+		const items = await this.  getWishlistItems();
+		for(let i=0; i < items.length; i++){
+			const itemsDetails = await items[i].productDetails();
 			if(product.productName == itemsDetails.productName){
-				await item.moveToCartButton.click();
+				await items[0].moveToCartButton.click();
 				await this.browser.wait(pageHasLoaded(ShoppingCartPage));
 				return new ShoppingCartPage(this.browser);
 			}
-		});
+		}
 		throw new Error(`Could not add ${product.productName} from wishlist to shopping cart page`);
 	}
 }
