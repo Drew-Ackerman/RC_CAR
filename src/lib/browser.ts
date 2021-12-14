@@ -20,6 +20,12 @@ export class Browser{
 		this.driver = new Builder().forBrowser(browserName).build();
 	}
 
+	public maximize(): Promise<void>{
+		const manager = this.driver.manage();
+		const window = manager.window();
+		return window.maximize();
+	}
+
 	/**
 	 * @returns A list of available browser window handles. 
 	 */
