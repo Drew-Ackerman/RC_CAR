@@ -7,8 +7,9 @@ import { CreditCardInformation } from "./src/types/PaymentInformation";
  */
 export const config = {
 	baseUrl: process.env.BASE_URL || "https://rcwtest.rcwilley.com/",
-	testEmployee: {username:"web.adminone", password:"I'malittleteapot"},
+	testEmployee: {username:"web.adminone", password:"WILLRESETPASSWORD1@q"},
 	testAddress: {street:"DemoStree", city:"democity", zip:"84405"}
+
 };
 
 /**
