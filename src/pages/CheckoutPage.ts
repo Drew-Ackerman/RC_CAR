@@ -1,5 +1,7 @@
-import { WebElement } from "selenium-webdriver";
+import { Key, WebElement } from "selenium-webdriver";
+import { DemoAddress, time } from "../../config";
 import { Browser, Button, elementIsPresent, elementIsVisible, findByCSS, findById, Page, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Address, ContactInformation, CreditCardInformation } from "../types";
 
 /**
  * @description Valid states
@@ -38,7 +40,8 @@ export const enum AccountTypes {
 export const enum ShippingOptions {
 	FreeCurbside,
 	InHome,
-	InHomeAndBlueRewards
+	InHomeAndBlueRewards,
+	Any
 }
 
 /**
@@ -57,6 +60,11 @@ export class CheckoutPage extends Page {
 		}
 		throw new Error("Couldnt find a visible continue button");
 	}
+	@findById("giftCardEmail1")
+	private giftCardEmailInput: TextInput;
+
+	@findById("personalMessage1")
+	private personalMessageInput: TextInput;
 
 	@findByCSS("a[href='#loginForm']")
 	private AccountLoginButton: Button;
@@ -94,6 +102,12 @@ export class CheckoutPage extends Page {
 	@findByCSS("img[alt='Free Curbside Delivery']")
 	private FreeCurbsideDelivery: Button;
 
+	@findByCSS("label[for='shipRCW0']")
+	private inHomeDeliveryBtn: Button;
+
+	@findByCSS("label[for='shipBRO'")
+	private inHomeBlueRewardsDeliveryBtn: Button;
+
 	@findById("deliveryContinueButton")
 	private ShippingConfirmButton: Button;
 
@@ -109,6 +123,9 @@ export class CheckoutPage extends Page {
 	@findById("workPhone")
 	private WorkPhoneInput: TextInput;
 
+	@findById("paymentMethod0")
+	private creditCardPaymentContainer: WebComponent;
+
 	@findById("CARD0")
 	private CreditCardPaymentSelection: WebComponent;
 
@@ -117,6 +134,27 @@ export class CheckoutPage extends Page {
 
 	@findByCSS("label[for='sameAddress']")
 	private SameAddressCheck: WebComponent;
+
+	@findById("txtBillFirstName")
+	private billingFirstName: TextInput;
+
+	@findById("txtBillLastName")
+	private billingLastName: TextInput;
+
+	@findById("txtBillStreet1")
+	private billingStreet1: TextInput;
+
+	@findById("txtBillStreet2")
+	private billingStreet2: TextInput;
+
+	@findById("txtBillCity")
+	private billingCity: TextInput;
+
+	@findById("txtBillState")
+	private billingState: TextInput;
+
+	@findById("txtBillPostal")
+	private billingZip: TextInput;
 
 	@findById("continuePaymentButton")
 	private ContinuePaymentButton: Button;
@@ -159,25 +197,48 @@ export class CheckoutPage extends Page {
 
 	/**
 	 * Fillout delivery
-	 * @param deliveryOption The delivery option
+	 * @param shippingInformation
 	 * @param shippingOption The shipping option
 	 */
-	public async selectDelivery(shippingOption: ShippingOptions){
+	public async selectDelivery(shippingInformation=DemoAddress, shippingOption: ShippingOptions){
 		//Default radio button, dont need to click it.
 		//Fill out address then.
-		await this.browser.wait(elementIsVisible(()=>this.FirstNameField));
-		await this.FirstNameField.type("Demo");
-		await this.LastNameField.type("Demo");
-		await this.ShippingAddress1Field.type("DemoStreet");
-		await this.ShippingCity.type("Demo");
-		await this.ShippingState.type("UT");
-		await this.ShippingZip.type("84405");
+		await this.browser.wait(elementIsVisible(()=>this.FirstNameField),time.TenSeconds);
+		await this.FirstNameField.type(shippingInformation.firstName);
+		await this.LastNameField.type(shippingInformation.lastName);
+		await this.ShippingAddress1Field.type(shippingInformation.streetAddress);
+		await this.ShippingAddress2Field.type(shippingInformation.streetAddress2);
+		await this.ShippingCity.type(shippingInformation.city);
+		await this.ShippingState.type(shippingInformation.state);
+		await this.ShippingZip.type(shippingInformation.zip, Key.ENTER);
 
-		if(shippingOption == ShippingOptions.FreeCurbside){
-			await this.browser.wait(elementIsVisible(()=>this.FreeCurbsideDelivery));
+		switch(shippingOption){
+		case ShippingOptions.Any:
+		case ShippingOptions.InHome:
+			await this.browser.wait(elementIsVisible(()=>this.inHomeDeliveryBtn), time.TenSeconds, "No in home ship option");
+			await this.inHomeDeliveryBtn.click();
+			break;
+		case ShippingOptions.InHomeAndBlueRewards:
+			await this.browser.wait(elementIsVisible(()=>this.inHomeBlueRewardsDeliveryBtn), time.TenSeconds, "No in home blue rewards ship option");
+			await this.inHomeBlueRewardsDeliveryBtn.click();
+			break;
+		case ShippingOptions.FreeCurbside:
+			await this.browser.wait(elementIsVisible(()=>this.FreeCurbsideDelivery), time.TenSeconds, "No curbside ship option");
 			await this.FreeCurbsideDelivery.click();
+			break;
 		}
+
 		await this.DeliveryContinueButton.click();
+	}
+
+	public async enterBillingDetails(address:Address){
+		await this.billingFirstName.type(address.firstName);
+		await this.billingLastName.type(address.lastName);
+		await this.billingStreet1.type(address.streetAddress);
+		await this.billingStreet2.type(address.streetAddress2);
+		await this.billingCity.type(address.city);
+		await this.billingState.type(address.state);
+		await this.billingZip.type(address.zip);
 	}
 
 	/**
@@ -185,12 +246,12 @@ export class CheckoutPage extends Page {
 	 * @param email 
 	 * @param phone 
 	 */
-	public async enterContactInfo(email:string, phone:string){
+	public async enterContactInfo(contactInformation:ContactInformation){
 		await this.browser.wait(elementIsVisible(()=>this.EmailInput));
-		await this.EmailInput.type(email);
-		await this.HomePhoneInput.type(phone);
-		await this.MobilePhoneInput.type(phone);
-		await this.WorkPhoneInput.type(phone);
+		await this.EmailInput.type(contactInformation.email);
+		await this.HomePhoneInput.type(contactInformation.homePhone);
+		await this.MobilePhoneInput.type(contactInformation.mobilePhone);
+		await this.WorkPhoneInput.type(contactInformation.workPhone);
 		const continueButton = new Button(this.browser.findElement(this.findContactInformationContinueButton), "function");
 		await this.browser.wait(elementIsVisible(() => continueButton));
 		await continueButton.click();
@@ -202,22 +263,46 @@ export class CheckoutPage extends Page {
 	 * @param cardExp 
 	 * @param csc 
 	 */
-	public async enterPaymentDetails(ccNumber:string, cardExp:string, csc:string){
+	public async enterPaymentDetails(creditCardInfo:CreditCardInformation){
 		await this.browser.sleep(2);
-		const rootwindow = await this.browser.CurrentWindowHandle;
-		console.log(rootwindow);
-		await (await this.browser.switchTo()).frame(2);
+		await this.browser.wait(elementIsVisible(() => this.creditCardPaymentContainer), time.TenSeconds, "Couldnt find credit card payment container");
+		//Find the cc input frame and type in it.
+		await (await this.browser.switchTo()).defaultContent();
+		const ccinputcont = await this.browser.findElement({id:"creditCard"});
+		const ccframe = await ccinputcont.findElement({xpath:".//iframe"});
+		await (await this.browser.switchTo()).frame(ccframe);
 		const cci = await this.browser.findElement({css:"input[name~='cardnumber']"});
-		await cci.sendKeys(ccNumber);  
-		await (await this.browser.switchTo()).parentFrame();
-		await (await this.browser.switchTo()).frame(2);
+		await cci.sendKeys(creditCardInfo.creditCardNumber);  
+
+		//Find the cc expiration frame and type in it.
+		await (await this.browser.switchTo()).defaultContent();
+		const ccExp = await this.browser.findElement({id:"cardExpiry"});
+		const ccExpFrame = await ccExp.findElement({xpath:".//iframe"});
+		await (await this.browser.switchTo()).frame(ccExpFrame);
 		const ccexp = await this.browser.findElement({css:"input[name~='exp-date']"});
-		await ccexp.sendKeys(cardExp);
-		await (await this.browser.switchTo()).parentFrame();
-		await (await this.browser.switchTo()).frame(3);
+		await ccexp.sendKeys(creditCardInfo.creditCardExp);
+
+		//Find the cc csv frame and type in it
+		await (await this.browser.switchTo()).defaultContent();
+		const ccCsv = await this.browser.findElement({id:"cardCode"});
+		const ccCsvFrame = await ccCsv.findElement({xpath:".//iframe"});
+		await (await this.browser.switchTo()).frame(ccCsvFrame);
 		const cscinput = await this.browser.findElement({css:"input[name~='cvc']"});
-		await cscinput.sendKeys(csc);
+		await cscinput.sendKeys(creditCardInfo.creditCardCSV);
+
 		await (await this.browser.switchTo()).parentFrame();
+	}
+
+	/**
+	 * Enter the information needed to delivery a giftcard by email.
+	 * @param email Email to send gift card to
+	 * @param personalMessage A personalized message to put into the email
+	 */
+	public async enterGiftCardDeliveryOptions(email: string, personalMessage: string){
+		await this.browser.wait(elementIsVisible(() => this.giftCardEmailInput));
+		await this.giftCardEmailInput.type(email);
+		await this.personalMessageInput.type(personalMessage);
+		await this.DeliveryContinueButton.click();
 	}
 
 	/**
@@ -236,7 +321,6 @@ export class CheckoutPage extends Page {
 	public async submitPaymentInformation(): Promise<void> {
 		await this.browser.wait(elementIsVisible(()=>this.ContinuePaymentButton));
 		return this.ContinuePaymentButton.click();
-
 	}
 
 	/**
@@ -247,6 +331,4 @@ export class CheckoutPage extends Page {
 		await this.browser.wait(elementIsVisible(()=>this.PlaceOrderButton));
 		return this.PlaceOrderButton.click();
 	}
- 
-
 }
