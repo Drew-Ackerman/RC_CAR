@@ -15,7 +15,7 @@ export const config = {
 /**
  * An address useful for testing.
  */
-export const DemoAddress: Address = {
+export const TestAddress: Address = {
 	firstName: "Demo",
 	lastName: "Lition",
 	streetAddress: "Demo",
