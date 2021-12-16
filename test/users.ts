@@ -1,6 +1,6 @@
 import { HomePage, OrderThanksPage, GiftCardStyleSets } from "../src/pages";
 import { Browser, pageHasLoaded } from "../src/lib";
-import { DemoAddress, SupportedBrowsers } from "../config";
+import { TestAddress, SupportedBrowsers, TestContactInfo, TestCreditCard } from "../config";
 import { snapshot } from "../src/lib/snapshot";
 import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
 
@@ -63,9 +63,9 @@ describe("Users", () => {
 		shoppingCartPage = await productPage.addToCart();
 		const checkoutPage = await shoppingCartPage.Checkout();
 		await checkoutPage.selectAccountType(AccountTypes.Guest);
-		await checkoutPage.selectDelivery(DemoAddress, ShippingOptions.Any);
-		await checkoutPage.enterContactInfo("demo@demo.com", "801-111-1111");
-		await checkoutPage.enterPaymentDetails("4111111111111111", "06/30", "411");
+		await checkoutPage.selectDelivery(TestAddress, ShippingOptions.Any);
+		await checkoutPage.enterContactInfo(TestContactInfo);
+		await checkoutPage.enterPaymentDetails(TestCreditCard);
 		await checkoutPage.selectSameBillingAddress();
 		await checkoutPage.submitPaymentInformation();
 		await checkoutPage.placeOrder();
@@ -86,9 +86,9 @@ describe("Users", () => {
 		const checkoutPage = await shoppingCartPage.Checkout();
 		await checkoutPage.selectAccountType(AccountTypes.Guest);
 		await checkoutPage.enterGiftCardDeliveryOptions("demo@demo.com", "Demo Message");
-		await checkoutPage.enterContactInfo("demo@demo.com", "801-111-1111");
-		await checkoutPage.enterPaymentDetails("4111111111111111", "06/30", "411");
-		await checkoutPage.enterBillingDetails(DemoAddress);
+		await checkoutPage.enterContactInfo(TestContactInfo);
+		await checkoutPage.enterPaymentDetails(TestCreditCard);
+		await checkoutPage.enterBillingDetails(TestAddress);
 		await checkoutPage.submitPaymentInformation();
 		await checkoutPage.placeOrder();
 		const orderThanksPage = new OrderThanksPage(browser);

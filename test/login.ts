@@ -1,6 +1,6 @@
 import { HomePage } from "../src/pages";
 import { Browser } from "../src/lib";
-import { config, SupportedBrowsers } from "../config";
+import { config, SupportedBrowsers, TestAddress, TestContactInfo } from "../config";
 import { LoginPage } from "../src/pages/LoginPage";
 import { snapshot } from "../src/lib/snapshot";
 
@@ -45,7 +45,7 @@ describe("The login page", () => {
 		const accountHelpPage = await loginPage.setupNewAccount();
 		const accountCreationPage = await accountHelpPage.gotoAccountCreation();
 		const viewPersonalProfilePage = await accountCreationPage.CreateNewAccount(demoEmail, password, "answer");
-		await viewPersonalProfilePage.CompleteUserData("Demo", "Demo", "1111111111", "DemoStreet", "DemoTown", "UT", "84405");
+		await viewPersonalProfilePage.CompleteUserData(TestAddress, TestContactInfo);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
