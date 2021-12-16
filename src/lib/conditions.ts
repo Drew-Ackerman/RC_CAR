@@ -14,6 +14,10 @@ export function elementIsVisible(locator: () => WebComponent): WaitCondition {
 	return async () => await locator().isDisplayed();
 }
 
+export function elementIsNotVisible(locator: () => WebComponent): WaitCondition {
+	return async () => await !(locator().isDisplayed());
+}
+
 /**
  * Ensure a WebComponent is present in the DOM, doesnt mean visible. 
  * @param locator The WebComponent

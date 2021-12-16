@@ -1,6 +1,7 @@
 import { Browser, elementIsVisible, findByClass, findByCSS, findById, Page, pageHasLoaded, WaitCondition } from "../lib";
 import { TextInput, WebComponent, Button } from "../lib/elements";
 import { AccountHelpPage } from "./AccountHelpPage";
+import { AccountHomePage } from "./accountPages";
 
 export const LoginPageUrl = "https://www.rcwilley.com/account/Home";
 
@@ -36,10 +37,12 @@ export class LoginPage extends Page{
 	 * @param username The username to use
 	 * @param password The password to use
 	 */
-	public async Login(username:string, password:string){
+	public async Login(username:string, password:string): Promise<AccountHomePage>{
 		await this.UsernameInput.type(username);
 		await this.PasswordInput.type(password);
 		await this.SignInButton.click();
+		await this.browser.wait(pageHasLoaded(AccountHomePage));
+		return new AccountHomePage(this.browser);
 	}
 
 	/**

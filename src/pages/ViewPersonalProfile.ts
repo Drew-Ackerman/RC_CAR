@@ -1,5 +1,6 @@
 import { Browser, findByCSS, findById, Page, TextInput, urlContainsValue, WaitCondition, WebComponent, Button, pageHasLoaded } from "../lib";
-import { AccountHomePage } from "./AccountHomePage";
+import { Address, ContactInformation } from "../types";
+import { AccountHomePage } from "./accountPages";
 
 export class ViewPersonalProfile extends Page {
 
@@ -40,22 +41,21 @@ export class ViewPersonalProfile extends Page {
 		super(browser);
 	}
 
-	public async CompleteUserData(firstName: string, lastName: string, phone: string, 
-		billingAddress: string, billingCity: string, billingState: string, billingZip: string){
-		await this.FirstNameInput.type(firstName);
-		await this.LastNameInput.type(lastName);
+	public async CompleteUserData(billingInformation: Address, contactInfo: ContactInformation){
+		await this.FirstNameInput.type(billingInformation.firstName);
+		await this.LastNameInput.type(billingInformation.lastName);
 
-		await this.HomePhoneInput.type(phone);
-		await this.MobilePhoneInput.type(phone);
-		await this.WorkPhoneInput.type(phone);
+		await this.HomePhoneInput.type(contactInfo.homePhone);
+		await this.MobilePhoneInput.type(contactInfo.mobilePhone);
+		await this.WorkPhoneInput.type(contactInfo.workPhone);
 
-		await this.BillingAddress1.type(billingAddress);
+		await this.BillingAddress1.type(billingInformation.streetAddress);
 		await this.BillingCity.clear();
-		await this.BillingCity.type(billingCity);
+		await this.BillingCity.type(billingInformation.city);
 		await this.BillingState.clear();
-		await this.BillingState.type(billingState);
+		await this.BillingState.type(billingInformation.state);
 		await this.BillingZip.clear();
-		await this.BillingZip.type(billingZip);
+		await this.BillingZip.type(billingInformation.zip);
 
 		await this.SameAddressCheckbox.click();
 		await this.SubmitButton.click();

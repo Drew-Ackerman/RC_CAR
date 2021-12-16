@@ -1,5 +1,5 @@
 import { Key, WebElement } from "selenium-webdriver";
-import { DemoAddress, time } from "../../config";
+import { TestAddress, time } from "../../config";
 import { Browser, Button, elementIsPresent, elementIsVisible, findByCSS, findById, Page, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
 
@@ -200,7 +200,7 @@ export class CheckoutPage extends Page {
 	 * @param shippingInformation
 	 * @param shippingOption The shipping option
 	 */
-	public async selectDelivery(shippingInformation=DemoAddress, shippingOption: ShippingOptions){
+	public async selectDelivery(shippingInformation=TestAddress, shippingOption: ShippingOptions){
 		//Default radio button, dont need to click it.
 		//Fill out address then.
 		await this.browser.wait(elementIsVisible(()=>this.FirstNameField),time.TenSeconds);

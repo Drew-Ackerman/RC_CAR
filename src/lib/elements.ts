@@ -115,6 +115,33 @@ export class Button extends WebComponent {
 	}
 }
 
+export class Checkbox extends WebComponent {
+
+	constructor(element: WebElementPromise, selector: string){
+		super(element, selector);
+	}
+
+	/**
+	 * Check the checkbox if it is checked, otherwise no-op
+	 */
+	public async check(): Promise<void>{
+		const isChecked = await this.element.getAttribute("value");
+		if(!isChecked){
+			await this.element.click();
+		}
+	}
+
+	/**
+	 * Uncheck the checkbox if it is checked, otherwise no-op
+	 */
+	public async uncheck(): Promise<void>{
+		const isChecked = await this.element.getAttribute("value");
+		if(isChecked){
+			await this.element.click();
+		}
+	}
+}
+
 /**
  * @classdesc A wrapper for input elements
  */
