@@ -1,6 +1,6 @@
 import { Key } from "selenium-webdriver";
 import { Browser, Button, elementIsVisible, findByClass, findByCSS, findById, findByLinkText, pageHasLoaded, TextInput, WebComponent } from "../lib";
-import { AccountHomePage } from "../pages/AccountHomePage";
+import { AccountHomePage } from "../pages/accountPages";
 import { LoginPage } from "../pages/LoginPage";
 import { ProductSearchPage } from "../pages/ProductSearchPage";
 import { ShoppingCartPage } from "../pages/ShoppingCartPage";
@@ -91,7 +91,6 @@ export class Header{
 			await this.AccountButton.click();
 			await this.browser.wait(elementIsVisible(()=>this.LogoutButton));
 			await this.LogoutButton.click();
-
 			await this.browser.wait(elementIsVisible(()=>this.LoginButton));
 		}
 		else{
