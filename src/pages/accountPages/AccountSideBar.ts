@@ -2,7 +2,7 @@ import { AccountSecurityPage } from ".";
 import { Browser, findById, pageHasLoaded, WebComponent } from "../../lib";
 
 export enum MenuOptions {
-	SecuritySettings="Security Settings",
+	SecuritySettings="/account/View-Customer-Security",
 }
 
 export class AccountSideBar {
@@ -14,16 +14,14 @@ export class AccountSideBar {
 
 	}
 
-	public async selectMenuOption(option:MenuOptions): Promise<AccountSecurityPage | void>{
-		const menuOption = this.sideBarMenu.findElement({linkText:option});
-		menuOption.click();
+	public async selectMenuOption(option:MenuOptions): Promise<AccountSecurityPage>{
+		const menuOption = await this.sideBarMenu.findElement({css:`a[href='${option}']`});
+		await menuOption.click();
 
 		switch(option){
 		case MenuOptions.SecuritySettings:
 			await this.browser.wait(pageHasLoaded(AccountSecurityPage));
 			return new AccountSecurityPage(this.browser);
-		default:
-			return;
 		}
 	}
 

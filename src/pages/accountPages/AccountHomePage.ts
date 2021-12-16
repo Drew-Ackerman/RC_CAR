@@ -1,4 +1,5 @@
-import { Browser, findByLinkText, Page, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, findByLinkText, Page, urlContainsValue, WaitCondition, WebComponent } from "../../lib";
+import { AccountSideBar } from "./AccountSideBar";
 
 export class AccountHomePage extends Page {
 	
@@ -7,9 +8,12 @@ export class AccountHomePage extends Page {
 
 	@findByLinkText("Account Activity")
 	public AccountActivityLink: WebComponent;
+	
+	public sidebar: AccountSideBar;
 
 	constructor(browser:Browser){
 		super(browser);
+		this.sidebar = new AccountSideBar(browser);
 	}
 	
 	public loadCondition(): WaitCondition {
