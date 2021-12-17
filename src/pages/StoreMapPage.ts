@@ -1,6 +1,7 @@
 import { Key, WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, Page, pageHasLoaded, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Browser, Button, findByCSS, findById, pageHasLoaded, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { StoreLocationsPage } from "./StoreLocationsPage";
+import { Page } from "../components/page";
 
 type MapLocationData = {
 	storeName: string,

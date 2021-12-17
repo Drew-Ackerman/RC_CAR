@@ -1,6 +1,6 @@
 import { Browser, findByLinkText, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
-import { Page } from "../lib";
 import { AccountCreationPage } from "./AccountCreationPage";
+import { Page } from "../components/page";
 
 export class AccountHelpPage extends Page{
 

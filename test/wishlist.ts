@@ -1,12 +1,11 @@
 
-import { HomePage } from "../src/pages";
+import { AllPages } from "../src/pages";
 import { Browser } from "../src/lib";
 import { SupportedBrowsers, time } from "../config";
-import { snapshot } from "../src/lib/snapshot";
+import { snapshot } from "../src/lib/snapshot/snapshot";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
-import { WishlistPage } from "../src/pages/WishlistPage";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -19,52 +18,53 @@ require("chromedriver");
 describe("The wishlist page", () => {  
 
 	let browser: Browser;
-
+	let pages: AllPages;
 	/**
 	 * Before all tests are run
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
+		pages = new AllPages(browser);
 	});
 
 	it("Allows products to be added from a wish list", async () => {
-		const homePage = new HomePage(browser);
-		await homePage.navigate();
-		const productSearchPage = await homePage.header.searchForItem("");
-		const products = await productSearchPage.findAllProductsOnPage();
+		await pages.homePage.navigate();
+		await pages.homePage.header.searchForItem("");
+		const products = await pages.productSearchPage.findAllProductsOnPage();
 		const firstProduct = products[0];
 		const productDetails = await firstProduct.getProductDetails();	
-		const productPage = await productSearchPage.selectProduct(firstProduct);
-		const wishlistPage = await productPage.addProductToWishlist("Add to Wish List") as WishlistPage;
-		const productAvailable = await wishlistPage.checkProductIsInWishlist(productDetails);
+		await pages.productSearchPage.selectProduct(firstProduct);
+		await pages.productPage.addProductToWishlist("Add to Wish List");
+		const productAvailable = await pages.wishlistPage.checkProductIsInWishlist(productDetails);
 		expect(productAvailable).to.be.true;
 	});
 
 	it("Allows products to be removed from a wish list", async () => {
-		const homePage = new HomePage(browser);
-		await homePage.navigate();
-		const productSearchPage = await homePage.header.searchForItem("");
-		const products = await productSearchPage.findAllProductsOnPage();
+		await pages.homePage.navigate();
+		await pages.homePage.header.searchForItem("");
+		const products = await pages.productSearchPage.findAllProductsOnPage();
 		const firstProduct = products[0];
 		const productDetails = await firstProduct.getProductDetails();	
-		const productPage = await productSearchPage.selectProduct(firstProduct);
-		const wishlistPage = await productPage.addProductToWishlist("Add to Wish List") as WishlistPage;
-		await wishlistPage.removeProductFromWishlist(productDetails);
-		await browser.wait(() => wishlistPage.wishlistIsEmpty(), time.TenSeconds, "Wish List was not empty in time");
-		expect(wishlistPage.wishlistIsEmpty()).to.eventually.be.true;
+		
+		await pages.productSearchPage.selectProduct(firstProduct);
+		await pages.productPage.addProductToWishlist("Add to Wish List");
+		await pages.wishlistPage.removeProductFromWishlist(productDetails);
+		await browser.wait(() => pages.wishlistPage.wishlistIsEmpty(), time.TenSeconds, "Wish List was not empty in time");
+		expect(pages.wishlistPage.wishlistIsEmpty()).to.eventually.be.true;
 	});
 
 	it("Allows wishlist items to be added to the cart", async () => {
-		const homePage = new HomePage(browser);
-		await homePage.navigate();
-		const productSearchPage = await homePage.header.searchForItem("");
-		const products = await productSearchPage.findAllProductsOnPage();
+		await pages.homePage.navigate();
+		await pages.homePage.header.searchForItem("");
+		
+		const products = await pages.productSearchPage.findAllProductsOnPage();
 		const firstProduct = products[0];
 		const productDetails = await firstProduct.getProductDetails();	
-		const productPage = await productSearchPage.selectProduct(firstProduct);
-		const wishlistPage = await productPage.addProductToWishlist("Add to Wish List") as WishlistPage;
-		const shoppingCartPage = await wishlistPage.addWishlistItemToCart(productDetails);
-		expect(shoppingCartPage.cartContainsProduct(productDetails)).to.eventually.be.true;
+		
+		await pages.productSearchPage.selectProduct(firstProduct);
+		await pages.productPage.addProductToWishlist("Add to Wish List");
+		await pages.wishlistPage.addWishlistItemToCart(productDetails);
+		expect(pages.shoppingCartPage.cartContainsProduct(productDetails)).to.eventually.be.true;
 	});
 
 	/** 

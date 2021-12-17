@@ -1,5 +1,6 @@
-import { Browser, findByLinkText, Page, urlContainsValue, WaitCondition, WebComponent } from "../../lib";
-import { AccountSideBar } from "./AccountSideBar";
+import { AccountSideBar } from "../components/AccountSideBar";
+import { Page } from "../components/page";
+import { Browser, findByLinkText, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 
 export class AccountHomePage extends Page {
 	

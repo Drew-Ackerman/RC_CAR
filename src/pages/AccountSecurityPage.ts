@@ -1,5 +1,6 @@
-import { AccountHomePage } from ".";
-import { Browser, Button, Checkbox, findByCSS, findById, Page, pageHasLoaded, TextInput, urlContainsValue, WaitCondition } from "../../lib";
+import { Page } from "../components/page";
+import { Browser, Button, Checkbox, findByCSS, findById, pageHasLoaded, TextInput, urlContainsValue, WaitCondition } from "../lib";
+import { AccountHomePage } from "./AccountHomePage";
 
 export class AccountSecurityPage extends Page{
 

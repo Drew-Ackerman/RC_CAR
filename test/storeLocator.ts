@@ -1,7 +1,7 @@
-import { HomePage } from "../src/pages";
+import { AllPages } from "../src/pages";
 import { Browser } from "../src/lib";
 import { SupportedBrowsers } from "../config";
-import { snapshot } from "../src/lib/snapshot";
+import { snapshot } from "../src/lib/snapshot/snapshot";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
@@ -17,20 +17,22 @@ require("chromedriver");
 describe("The store locator page", () => {  
 
 	let browser: Browser;
+	let pages: AllPages;
 
 	/**
 	 * Before all tests are run
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
-		browser.addCookie({name:"SiteSessionId", value:"34632632462346"});
+		await browser.addCookie({name:"SiteSessionId", value:"34632632462346"});
+
+		pages = new AllPages(browser);
 	});
 
 	it("Displays available store locations", async () => {
-		const homePage = new HomePage(browser);
-		homePage.navigate();
-		const storeLocationsPage = await homePage.header.clickLocationButton();
-		expect(storeLocationsPage.getStoreLocations()).to.eventually.be.greaterThan(0);
+		await pages.homePage.navigate();
+		await pages.homePage.header.clickLocationButton();
+		expect(pages.storeLocationsPage.getStoreLocations()).to.eventually.be.greaterThan(0);
 	});
 
 	/** 

@@ -1,6 +1,7 @@
-import { Browser, findByCSS, findById, Page, TextInput, urlContainsValue, WaitCondition, WebComponent, Button, pageHasLoaded } from "../lib";
+import { Browser, findByCSS, findById, TextInput, urlContainsValue, WaitCondition, WebComponent, Button, pageHasLoaded } from "../lib";
 import { Address, ContactInformation } from "../types";
-import { AccountHomePage } from "./accountPages";
+import { AccountHomePage } from "./AccountHomePage";
+import { Page } from "../components/page";
 
 export class ViewPersonalProfile extends Page {
 

@@ -1,6 +1,7 @@
 import { WebElement } from "selenium-webdriver";
-import { Page, WaitCondition, Browser, urlContainsValue, findByName, TextInput, findById, findByCSS, Button, pageHasLoaded } from "../lib";
+import { WaitCondition, Browser, urlContainsValue, findByName, TextInput, findById, findByCSS, Button, pageHasLoaded } from "../lib";
 import { ViewPersonalProfile } from "./ViewPersonalProfile";
+import { Page } from "../components/page";
 
 export class AccountCreationPage extends Page {
 	

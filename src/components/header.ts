@@ -1,10 +1,11 @@
 import { Key } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByClass, findByCSS, findById, findByLinkText, pageHasLoaded, TextInput, WebComponent } from "../lib";
-import { AccountHomePage } from "../pages/accountPages";
-import { LoginPage } from "../pages/LoginPage";
-import { ProductSearchPage } from "../pages/ProductSearchPage";
-import { ShoppingCartPage } from "../pages/ShoppingCartPage";
-import { StoreLocationsPage } from "../pages/StoreLocationsPage";
+import { Button, elementIsVisible, findByClass, findByCSS, findById, findByLinkText, TextInput, WebComponent } from "../lib";
+import type { Browser } from "../lib";
+// import { AccountHomePage } from "../pages/accountPages";
+// import { LoginPage } from "../pages/LoginPage";
+// import { ProductSearchPage } from "../pages/ProductSearchPage";
+// import { ShoppingCartPage } from "../pages/ShoppingCartPage";
+// import { StoreLocationsPage } from "../pages/StoreLocationsPage";
 
 /**
  * @classdesc The header is the part of the page that contains things like 
@@ -60,14 +61,14 @@ export class Header{
 		
 		if(loginButtonPresent){
 			await this.LoginButton.click();
-			await this.browser.wait(pageHasLoaded(LoginPage));
-			return new LoginPage(this.browser);
+			// await this.browser.wait(pageHasLoaded(LoginPage));
+			// return new LoginPage(this.browser);
 		}
 		//Otherwise user is logged in
 		else{
 			await this.AccountButton.click();
-			await this.browser.wait(pageHasLoaded(AccountHomePage));
-			return new AccountHomePage(this.browser);
+			// await this.browser.wait(pageHasLoaded(AccountHomePage));
+			// return new AccountHomePage(this.browser);
 		}
 	}
 
@@ -76,11 +77,11 @@ export class Header{
 	 * @param searchText What text to input into the text box
 	 * @returns A {@link ProductSearchPage}
 	 */
-	public async searchForItem(searchText:string): Promise<ProductSearchPage>{
+	public async searchForItem(searchText:string){//}: Promise<ProductSearchPage>{
 		await this.SearchBoxInput.type(searchText);
 		await this.SearchBoxInput.type(Key.ENTER);
-		await this.browser.wait(pageHasLoaded(ProductSearchPage));
-		return new ProductSearchPage(this.browser);
+		// await this.browser.wait(pageHasLoaded(ProductSearchPage));
+		// return new ProductSearchPage(this.browser);
 	}
 
 	/**
@@ -111,18 +112,18 @@ export class Header{
 	 * Click location button
 	 * @returns Promise for a StoreLocationpage
 	 */
-	public async clickLocationButton(): Promise<StoreLocationsPage> {
+	public async clickLocationButton(){//}: Promise<StoreLocationsPage> {
 		await this.LocationButton.click();
-		await this.browser.wait(pageHasLoaded(StoreLocationsPage));
-		return new StoreLocationsPage(this.browser);
+		// await this.browser.wait(pageHasLoaded(StoreLocationsPage));
+		// return new StoreLocationsPage(this.browser);
 	}
 
 	/**
 	 * Click the shopping cart button thats in the pages header. 
 	 * @returns A {@link ShoppingCartPage}
 	 */
-	public async clickShoppingCartButton(): Promise<ShoppingCartPage>{
+	public async clickShoppingCartButton(){//}: Promise<ShoppingCartPage>{
 		await this.CartButton.click();
-		return new ShoppingCartPage(this.browser);
+		//return new ShoppingCartPage(this.browser);
 	}
 }

@@ -1,7 +1,8 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByClass, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, elementIsVisible, findByClass, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { CheckoutPage } from "./CheckoutPage";
 import { ProductDetails } from "./ProductSearchPage";
+import { Page } from "../components/page";
 
 export class CartItem {
 

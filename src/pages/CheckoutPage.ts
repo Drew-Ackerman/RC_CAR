@@ -1,7 +1,8 @@
 import { Key, WebElement } from "selenium-webdriver";
 import { TestAddress, time } from "../../config";
-import { Browser, Button, elementIsPresent, elementIsVisible, findByCSS, findById, Page, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, elementIsPresent, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
+import { Page } from "../components/page";
 
 /**
  * @description Valid states

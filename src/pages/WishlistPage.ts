@@ -1,7 +1,8 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, findByCSS, findById, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
 import { ShoppingCartPage } from "./ShoppingCartPage";
+import { Page } from "../components/page";
 
 
 export type WishListDetails = {

@@ -1,6 +1,7 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, findById, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
+import { Browser, findById, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
 import { ShoppingCartPage } from "./ShoppingCartPage";
+import { Page } from "../components/page";
 
 export const enum GiftCardStyleSets {
 	Anytime="Anytime",

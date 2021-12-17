@@ -1,5 +1,5 @@
-import { Browser, WaitCondition } from ".";
-import { Header } from "../components";
+import { Browser, WaitCondition } from "../lib";
+import { Header } from "./header";
 
 /**
  * 
@@ -15,6 +15,7 @@ export abstract class Page {
 
 	private url: string; //The pages url
 	public header: Header;
+	
 	/**
 	 * @constructor
 	 * @param browser 

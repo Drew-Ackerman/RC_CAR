@@ -1,8 +1,9 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByClass, findById, Page, pageHasLoaded, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, elementIsVisible, findByClass, findById, pageHasLoaded, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails, ProductCard } from "./ProductSearchPage";
 import { ShoppingCartPage } from "./ShoppingCartPage";
 import { WishlistPage } from "./WishlistPage";
+import { Page } from "../components/page";
 
 export class ProductPage extends Page {
 	
@@ -87,7 +88,7 @@ export class ProductPage extends Page {
 	}
 
 
-	public async addProductToWishlist(wishlistName: string): Promise<void|WishlistPage>{
+	public async addProductToWishlist(wishlistName: string): Promise<void>{
 		await this.WishlistAddButton.click();
 		//const wishlistContainer = await this.browser.findElement({css:"div[class~='wishlist']"});
 		const possibleWishlists = await this.browser.findElements({css:"a[class~='icon-heart']"});
@@ -97,7 +98,7 @@ export class ProductPage extends Page {
 				try{
 					await possibleWishlists[i].click();
 					await this.browser.wait(pageHasLoaded(WishlistPage));
-					return new WishlistPage(this.browser);
+					//return new WishlistPage(this.browser);
 				} catch(error){
 					console.log(error);
 				}

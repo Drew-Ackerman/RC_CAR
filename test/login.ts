@@ -1,8 +1,7 @@
-import { HomePage } from "../src/pages";
+import { AllPages } from "../src/pages";
 import { Browser } from "../src/lib";
 import { config, SupportedBrowsers, TestAddress, TestContactInfo } from "../config";
-import { LoginPage } from "../src/pages/LoginPage";
-import { snapshot } from "../src/lib/snapshot";
+import { snapshot } from "../src/lib/snapshot/snapshot";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
@@ -30,38 +29,32 @@ describe("The login page", () => {
 	const demoEmail: string = createDemoEmail();
 	const password = "Password1!";
 
+	let pages:AllPages;
+
 	/**
 	 * Before all tests are run
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
-		browser.addCookie({name:"SiteSessionId", value:"34632632462346"});
+		pages = new AllPages(browser);
 	});
 
 	it("Should allow an account to be created", async() => {
-		const homePage = new HomePage(browser);
-		homePage.navigate();
-		const loginPage = await homePage.GoToLoginPage() as LoginPage;
-		const accountHelpPage = await loginPage.setupNewAccount();
-		const accountCreationPage = await accountHelpPage.gotoAccountCreation();
-		const viewPersonalProfilePage = await accountCreationPage.CreateNewAccount(demoEmail, password, "answer");
-		await viewPersonalProfilePage.CompleteUserData(TestAddress, TestContactInfo);
+		await pages.homePage.navigate();
+		await pages.viewPersonalProfilePage.CompleteUserData(TestAddress, TestContactInfo);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
 	it("Should allow customers to login", async() => {
-		const homePage = new HomePage(browser);
-		await homePage.navigate();
-		const loginPage = await homePage.GoToLoginPage() as LoginPage;
-		await loginPage.Login(demoEmail, password);
+		await pages.homePage.navigate();
+		await pages.homePage.GoToLoginPage();
+		await pages.loginPage.Login(demoEmail, password);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
 	it("Should allow employees to login", async() => {
-		const homePage = new HomePage(browser);
-		await homePage.navigate();
-		const loginPage = await homePage.GoToLoginPage() as LoginPage;
-		await loginPage.Login(`${config.testEmployee.username}`, `${config.testEmployee.password}`);
+		await pages.homePage.navigate();
+		await pages.loginPage.Login(`${config.testEmployee.username}`, `${config.testEmployee.password}`);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 

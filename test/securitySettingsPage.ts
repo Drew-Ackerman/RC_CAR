@@ -1,18 +1,12 @@
-import { HomePage } from "../src/pages";
+import { AllPages } from "../src/pages";
 import { Browser } from "../src/lib";
-import { config, SupportedBrowsers, TestAddress, TestContactInfo } from "../config";
-import { LoginPage } from "../src/pages/LoginPage";
-import { snapshot } from "../src/lib/snapshot";
+import { SupportedBrowsers, TestAddress, TestContactInfo } from "../config";
+import { snapshot } from "../src/lib/snapshot/snapshot";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
-import { MenuOptions } from "../src/pages/accountPages/AccountSideBar";
-import { AccountHomePage, AccountSecurityPage } from "../src/pages/accountPages";
 import { ZipcodePopup } from "../src/popups/ZipcodePopup";
-import { AccountHelpPage } from "../src/pages/AccountHelpPage";
-import { AccountCreationPage } from "../src/pages/AccountCreationPage";
-import { ViewPersonalProfile } from "../src/pages/ViewPersonalProfile";
-import { InformationPopup } from "../src/popups/InformationPopup";
+import { MenuOptions } from "../src/components/AccountSideBar";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -37,85 +31,69 @@ describe("The Security Settings Page", () => {
 	let testEmail: string; 
 	const password = "Password1!";
 
-    let homePage:HomePage;
-    let zipCodePopup:ZipcodePopup;
-    let loginPage:LoginPage;
-    let accountHelpPage:AccountHelpPage;
-    let accountCreationPage:AccountCreationPage;
-    let viewPersonalProfilePage:ViewPersonalProfile
-    let accountHomePage:AccountHomePage;
-    let accountSecurityPage:AccountSecurityPage;
-    let informationPopup: InformationPopup;
+	let pages:AllPages;
 
 	/**
 	 * Before all tests are run
 	 */
 	beforeEach(async () => {
-        testEmail = createTestEmail(); //Create a new test email for each test. 
+		testEmail = createTestEmail(); //Create a new test email for each test. 
 
-        //Create browser for each test
+		//Create browser for each test
 		browser = await new Browser(SupportedBrowsers.Chrome);
+		pages = new AllPages(browser);
+		const zipCodePopup = new ZipcodePopup(browser);
 
-        homePage = new HomePage(browser);
-        zipCodePopup = new ZipcodePopup(browser);
-        loginPage = new LoginPage(browser);
-        accountHelpPage = new AccountHelpPage(browser);
-        accountCreationPage = new AccountCreationPage(browser);
-        viewPersonalProfilePage = new ViewPersonalProfile(browser);
-        accountHomePage = new AccountHomePage(browser);
-        accountSecurityPage = new AccountSecurityPage(browser);
-        informationPopup = new InformationPopup(browser);
+		//Create a new user for each test. 
+		await pages.homePage.navigate();
+		await pages.homePage.header.changeHomeStore();
+		await zipCodePopup.waitTillVisible();
+		await zipCodePopup.typeZipcode("84405");
 
-        //Create a new user for each test. 
-		await homePage.navigate();
-        await homePage.header.changeHomeStore();
-        await zipCodePopup.waitTillVisible();
-        await zipCodePopup.typeZipcode("84405");
-
-        //Create new account for each test.
-		await homePage.GoToLoginPage() as LoginPage;
-		await loginPage.setupNewAccount();
-		await accountHelpPage.gotoAccountCreation();
-		await accountCreationPage.CreateNewAccount(testEmail, password, "answer");
-		await viewPersonalProfilePage.CompleteUserData(TestAddress,TestContactInfo);
+		//Create new account for each test.
+		await pages.homePage.GoToLoginPage();
+		await pages.loginPage.setupNewAccount();
+		await pages.accountHelpPage.gotoAccountCreation();
+		await pages.accountCreationPage.CreateNewAccount(testEmail, password, "answer");
+		await pages.viewPersonalProfilePage.CompleteUserData(TestAddress,TestContactInfo);
 		await browser.sleep(5);
-        return expect(browser.currentUrl()).to.eventually.contain("account/Home");
+		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
 	it("Should allow customers to change their password", async() => {
-        const newPassword = "Password2@";
+		const newPassword = "Password2@";
 
 		//const homePage = new HomePage(browser);
 		//await homePage.navigate();
 		//let loginPage = await homePage.GoToLoginPage() as LoginPage;
 		//let accountHomePage = await loginPage.Login(testEmail, password);
-        await accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
-        await browser.sleep(4);
-        await accountSecurityPage.changePassword(password, newPassword);
-        await browser.sleep(4);
-        await accountHomePage.header.logout();
+		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
+		await browser.sleep(4);
+		await pages.accountSecurityPage.changePassword(password, newPassword);
+		await browser.sleep(4);
+		await pages.accountHomePage.header.logout();
 
-        await browser.sleep(4);
-        await homePage.navigate();
-        await homePage.GoToLoginPage() as LoginPage;
-        await loginPage.Login(testEmail, newPassword);
-        return expect(browser.currentUrl()).to.eventually.contain("account/Home");
+		await browser.sleep(4);
+		await pages.homePage.navigate();
+		await pages.homePage.GoToLoginPage();
+		await pages.loginPage.Login(testEmail, newPassword);
+		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
 	it("Should allow customers to change their email", async() => {
-        const newEmail = createTestEmail();
+		const newEmail = createTestEmail();
 
 		//await homePage.navigate();
-        await accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
-        await accountSecurityPage.changeEmail(newEmail);
-        await browser.sleep(4);
-        await accountHomePage.header.logout();
-        await browser.sleep(4);
+		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
+		await pages.accountSecurityPage.changeEmail(newEmail);
+		await browser.sleep(4);
+		await pages.accountHomePage.header.logout();
+		await browser.sleep(4);
 
-        await homePage.navigate();
-        await homePage.GoToLoginPage() as LoginPage;
-        await loginPage.Login(newEmail, password);
-        return expect(browser.currentUrl()).to.eventually.contain("account/Home");
+		await pages.homePage.navigate();
+		await pages.homePage.GoToLoginPage();
+		await pages.loginPage.Login(newEmail, password);
+		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
 	/**

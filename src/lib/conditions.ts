@@ -1,4 +1,6 @@
-import { Browser, WebComponent, Page, NewablePage } from ".";
+import { WebComponent} from ".";
+import { Page, NewablePage } from "../components/page";
+import type {Browser} from "./browser";
 
 /**
  * @type alias, take in a Browser, return a promise that will evaluate to a boolean.  

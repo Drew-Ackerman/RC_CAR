@@ -1,7 +1,7 @@
-import { HomePage } from "../src/pages";
+import { AllPages } from "../src/pages";
 import { Browser } from "../src/lib";
 import { SupportedBrowsers } from "../config";
-import { snapshot } from "../src/lib/snapshot";
+import { snapshot } from "../src/lib/snapshot/snapshot";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
@@ -18,31 +18,34 @@ require("chromedriver");
 describe("The store map page", () => {  
 
 	let browser: Browser;
+	let pages: AllPages;
 
 	/**
 	 * Before all tests are run
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
-		browser.addCookie({name:"SiteSessionId", value:"34632632462346"});
+		pages = new AllPages(browser);
 	});
 
 	it("Allows stores to be filtered by zipcode", async () => {
-		const homePage = new HomePage(browser);
-		await homePage.navigate();
-		await homePage.header.changeHomeStore();
+		await pages.homePage.navigate();
+		await pages.homePage.header.changeHomeStore();
 		const zipcodePopup = new ZipcodePopup(browser);
 		await zipcodePopup.waitTillVisible();
 		await zipcodePopup.typeZipcode("84405");
-		const storeLocationsPage = await homePage.header.clickLocationButton();
-		const storeMapPage = await storeLocationsPage.clickAllStoresMapButton();
-		const storeListBeforeSearch = (await storeMapPage.getLocations()).map(async (location) => {
+		await pages.homePage.header.clickLocationButton();
+		await pages.storeLocationsPage.clickAllStoresMapButton();
+		
+		const storeListBeforeSearch = (await pages.storeMapPage.getLocations()).map(async (location) => {
 			return await location.getData();
 		});
-		storeMapPage.zipSearch("84405");
-		const storeListAfterSearch = (await storeMapPage.getLocations()).map(async (location) => {
+		pages.storeMapPage.zipSearch("84405");
+		
+		const storeListAfterSearch = (await pages.storeMapPage.getLocations()).map(async (location) => {
 			return await location.getData();
 		});
+		
 		expect(storeListBeforeSearch).to.not.equal(storeListAfterSearch);
 	});
 

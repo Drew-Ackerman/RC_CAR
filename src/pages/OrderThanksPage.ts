@@ -1,4 +1,5 @@
-import { Browser, Page, urlContainsValue, WaitCondition } from "../lib";
+import { Browser, urlContainsValue, WaitCondition } from "../lib";
+import { Page } from "../components/page";
 
 export class OrderThanksPage extends Page {
 	

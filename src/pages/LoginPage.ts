@@ -1,7 +1,8 @@
-import { Browser, elementIsVisible, findByClass, findByCSS, findById, Page, pageHasLoaded, WaitCondition } from "../lib";
+import { Browser, elementIsVisible, findByClass, findByCSS, findById, pageHasLoaded, WaitCondition } from "../lib";
 import { TextInput, WebComponent, Button } from "../lib/elements";
 import { AccountHelpPage } from "./AccountHelpPage";
-import { AccountHomePage } from "./accountPages";
+import { Page } from "../components/page";
+import { AccountHomePage } from "./AccountHomePage";
 
 export const LoginPageUrl = "https://www.rcwilley.com/account/Home";
 

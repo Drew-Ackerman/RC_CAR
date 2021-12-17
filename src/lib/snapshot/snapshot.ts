@@ -1,4 +1,4 @@
-import { Browser } from ".";
+import { Browser } from "../browser";
 import { accessSync, constants, mkdirSync } from "fs";
 import path = require("path");
 import addContext = require("mochawesome/addContext");
@@ -15,7 +15,7 @@ export async function snapshot(testContext:Mocha.Context, browser: Browser){
 
 	const testFilePath = testContext.test?.file || ""; //The full file path of the currently running test
 	const testDirectory = path.dirname(testFilePath);
-	const mochawesomeDir = path.join(testDirectory, "../../mochawesome-report/assets/screenshots");
+	const mochawesomeDir = path.join(testDirectory, "../../reports/mochawesome/assets/screenshots");
 
 	//Create the directory, if it exists then thats okay
 	try{

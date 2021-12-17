@@ -1,7 +1,6 @@
-import { Header } from "../components";
-import { Browser, elementIsVisible, findByClass, Page, WebComponent } from "../lib";
+import { Browser, elementIsVisible, findByClass, WebComponent } from "../lib";
 import { config } from "../../config";
-import { ShoppingCartPage } from "./ShoppingCartPage";
+import { Page } from "../components/page";
 
 /**
  * @classdesc POM for the home page of RC Willey
@@ -11,12 +10,9 @@ export class HomePage extends Page{
 	@findByClass("rcwlogo")
 	public RCLogo : WebComponent;
 
-	public header: Header;
-
 	constructor(browser: Browser){
 		super(browser);
 		this.setUrl( `${config.baseUrl}`);
-		this.header = new Header(browser);
 	}
 
 	/**
@@ -31,8 +27,8 @@ export class HomePage extends Page{
 		return this.header.searchForItem(searchText);
 	}
 
-	public async ClickShoppingCartButton(): Promise<ShoppingCartPage>{
-		return this.header.clickShoppingCartButton();
+	public async ClickShoppingCartButton(){//}: Promise<ShoppingCartPage>{
+		this.header.clickShoppingCartButton();
 	}
 
 	/**

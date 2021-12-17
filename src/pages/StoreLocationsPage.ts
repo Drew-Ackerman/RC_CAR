@@ -1,5 +1,6 @@
-import { Browser, Button, findByCSS, Page, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Browser, Button, findByCSS, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { StoreMapPage } from "./StoreMapPage";
+import { Page } from "../components/page";
 
 
 export class StoreLocationsPage extends Page {

@@ -1,6 +1,7 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, elementIsVisible, findAllByClass, findByClass, Page, pageHasLoaded, WaitCondition, WebComponent, WebComponents } from "../lib";
-import { ProductPage } from "./ProductPage";
+import { Browser, elementIsVisible, findAllByClass, findByClass, WaitCondition, WebComponent, WebComponents } from "../lib";
+//import { ProductPage } from "./ProductPage";
+import { Page } from "../components/page";
 
 export class ProductDetails {
 	constructor(public sku:string, public price:string, public productName: string){}
@@ -98,10 +99,10 @@ export class ProductSearchPage extends Page {
 	 * @param product The product to select from the search page
 	 * @returns The products page
 	 */
-	public async selectProduct(product: ProductCard): Promise<ProductPage>{
+	public async selectProduct(product: ProductCard){//}: Promise<ProductPage>{
 		await product.Click();
-		await this.browser.wait(pageHasLoaded(ProductPage));
-		return new ProductPage(this.browser).attachProduct(product);
+		//await this.browser.wait(pageHasLoaded(ProductPage));
+		//return new ProductPage(this.browser).attachProduct(product);
 	}
 
 	/**
