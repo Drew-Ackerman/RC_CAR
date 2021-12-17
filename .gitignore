@@ -40,5 +40,5 @@ dist/**/*
 # ignore yarn.lock
 yarn.lock
 
-# dont check in reporting from test runs. 
-mochawesome-report/**/*
+# dont check in the reporting from test runs or dependency checks.
+reports/**/*
