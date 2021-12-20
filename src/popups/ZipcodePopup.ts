@@ -21,7 +21,7 @@ export class ZipcodePopup {
 		try{
 			await this.browser.wait(elementIsVisible(() => this.PopupOverlay));
 		} catch(error){
-			console.log("Couldnt find zip code popup: ", error);
+			console.error("Couldnt find zip code popup: ", error);
 		}
 	}
 
@@ -35,7 +35,7 @@ export class ZipcodePopup {
 			await zipInput.sendKeys(`${zip}`, Key.ENTER);
 			await this.browser.sleep(5);
 		} catch(error){
-			console.log("Couldnt type zip into zipcode popup:", error);
+			console.error("Couldnt type zip into zipcode popup:", error);
 		}
 	}
 }

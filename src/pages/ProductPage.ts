@@ -59,10 +59,8 @@ export class ProductPage extends Page {
 	 * Add the product to the cart by clicking the corresponding button
 	 * @returns Return a shopping cart page
 	 */
-	public async addToCart(): Promise<ShoppingCartPage>{
+	public async addToCart(): Promise<void>{
 		await this.AddToCardButton.click();
-		await this.browser.wait(pageHasLoaded(ShoppingCartPage));
-		return new ShoppingCartPage(this.browser);
 	}
 
 	/**
@@ -97,10 +95,8 @@ export class ProductPage extends Page {
 			if(text.includes(wishlistName)){
 				try{
 					await possibleWishlists[i].click();
-					await this.browser.wait(pageHasLoaded(WishlistPage));
-					//return new WishlistPage(this.browser);
 				} catch(error){
-					console.log(error);
+					console.error(error);
 				}
 			}
 		}

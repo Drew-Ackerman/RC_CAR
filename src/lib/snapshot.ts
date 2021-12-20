@@ -1,7 +1,7 @@
-import { Browser } from "../browser";
 import { accessSync, constants, mkdirSync } from "fs";
 import path = require("path");
 import addContext = require("mochawesome/addContext");
+import { IBrowser } from "../interfaces/IBrowser";
 
 /**
  * Takes a snapshot of the screen and saves the snapshot to a file that can 
@@ -9,7 +9,7 @@ import addContext = require("mochawesome/addContext");
  * @param testContext The current {@link Mocha.Context Mocha Test Context}
  * @param browser The current {@link Browser}
  */
-export async function snapshot(testContext:Mocha.Context, browser: Browser){
+export async function snapshot(testContext:Mocha.Context, browser: IBrowser){
 	//Record the screen and place that data somewhere          
 	const friendlyTestName = testContext.currentTest?.title.split(" ").join("_"); //Replace spaces with underscores
 
@@ -25,7 +25,7 @@ export async function snapshot(testContext:Mocha.Context, browser: Browser){
 		try{
 			mkdirSync(mochawesomeDir, {recursive:true});
 		} catch(err){
-			console.log("Error making directory for", err);
+			console.error("Error making directory for", err);
 		}
 	}
 

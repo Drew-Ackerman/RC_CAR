@@ -1,26 +1,22 @@
-import { Browser, WaitCondition } from "../lib";
+import { IBrowser } from "../interfaces/IBrowser";
+import { IHeader } from "../interfaces/IHeader";
+import { IPage } from "../interfaces/IPage";
+import { WaitCondition } from "../lib/conditions";
 import { Header } from "./header";
-
-/**
- * 
- */
-export interface NewablePage<T extends Page> {
-	new(browser: Browser): T;
-}
 
 /**
  * @classdesc Every POM derives from this base class.
  */
-export abstract class Page {
+export abstract class Page implements IPage{
 
 	private url: string; //The pages url
-	public header: Header;
+	public header: IHeader;
 	
 	/**
 	 * @constructor
 	 * @param browser 
 	 */
-	public constructor(protected browser: Browser){
+	public constructor(protected browser: IBrowser){
 		this.header = new Header(browser);
 	}
 
@@ -43,7 +39,7 @@ export abstract class Page {
 	 * Set the url property.
 	 * @param url The url for the page
 	 */
-	public setUrl(url:string) {
+	public setUrl(url:string): void {
 		this.url = url;
 	}
 

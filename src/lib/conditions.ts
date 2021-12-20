@@ -1,11 +1,11 @@
-import { WebComponent} from ".";
-import { Page, NewablePage } from "../components/page";
-import type {Browser} from "./browser";
-
+import { WebComponent} from "./elements";
+import { IBrowser } from "../interfaces/IBrowser";
+import { IPage } from "../interfaces/IPage";
+  
 /**
  * @type alias, take in a Browser, return a promise that will evaluate to a boolean.  
  */
-export type WaitCondition = (browser:Browser) => Promise<boolean>;
+export type WaitCondition = (browser:IBrowser) => Promise<boolean>;
 
 /**
  * Wait for a WebComponent to be displayed
@@ -35,7 +35,7 @@ export function elementIsPresent(locator: () => WebComponent): WaitCondition {
  * @param url The url to wait for
  * @returns A {@link WaitCondition} promise to be waited upon.
  */
-export function urlIsValue(browser: Browser, url: string) : WaitCondition {
+export function urlIsValue(browser: IBrowser, url: string) : WaitCondition {
 	return async () => await browser.currentUrl() === url;
 }
 
@@ -45,7 +45,7 @@ export function urlIsValue(browser: Browser, url: string) : WaitCondition {
  * @param partialUrl 
  * @returns A {@link WaitCondition} promise to be waited upon.
  */
-export function urlContainsValue(browser: Browser, partialUrl: string) : WaitCondition {
+export function urlContainsValue(browser: IBrowser, partialUrl: string) : WaitCondition {
 	return async () => await (await browser.currentUrl()).includes(partialUrl);
 }
 
@@ -55,7 +55,7 @@ export function urlContainsValue(browser: Browser, partialUrl: string) : WaitCon
  * @param previousUrl 
  * @returns 
  */
-export function urlChanged(browser: Browser, previousUrl: string) : WaitCondition {
+export function urlChanged(browser: IBrowser, previousUrl: string) : WaitCondition {
 	return async () => await (await browser.currentUrl()) !== previousUrl;
 }
 
@@ -65,9 +65,9 @@ export function urlChanged(browser: Browser, previousUrl: string) : WaitConditio
  * @param page The page that will be instantiated
  * @returns A boolean promise that evaluates when a page is loaded. 
  */
-export function pageHasLoaded<T extends Page>(page: NewablePage<T>): WaitCondition {
-	return (browser: Browser) => {
-		const condition = new page(browser).loadCondition();
+export function pageHasLoaded(page: IPage): WaitCondition {
+	return (browser: IBrowser) => {
+		const condition = page.loadCondition();
 		return condition(browser);
 	};
 }

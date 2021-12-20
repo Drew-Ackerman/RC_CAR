@@ -1,8 +1,9 @@
-import { Page } from "../components/page";
-import { Browser, Button, Checkbox, findByCSS, findById, pageHasLoaded, TextInput, urlContainsValue, WaitCondition } from "../lib";
-import { AccountHomePage } from "./AccountHomePage";
+import { IBrowser } from "../interfaces/IBrowser";
+import { Button, Checkbox, findByCSS, findById, TextInput, urlContainsValue, WaitCondition } from "../lib";
+import { IPage } from "../interfaces/IPage";
+import { IHeader } from "../interfaces/IHeader";
 
-export class AccountSecurityPage extends Page{
+export class AccountSecurityPage implements IPage{
 
 	@findById("email")
 	private newEmailInput: TextInput;
@@ -25,8 +26,14 @@ export class AccountSecurityPage extends Page{
 	@findByCSS("label[for='2FactorOff']")
 	private twoFactorAuthentictionCheckbox: Checkbox;
 
-	constructor(browser:Browser){
-		super(browser);
+	constructor(private browser: IBrowser){	}
+	header: IHeader;
+
+	navigate(): Promise<void> {
+		throw new Error("Method not implemented.");
+	}
+	setUrl(url: string): void {
+		throw new Error("Method not implemented.");
 	}
 
 	/**
@@ -34,12 +41,10 @@ export class AccountSecurityPage extends Page{
 	 * @param newEmail 
 	 * @returns 
 	 */
-	public async changeEmail(newEmail:string): Promise<AccountHomePage>{
+	public async changeEmail(newEmail:string): Promise<void>{
 		await this.newEmailInput.clear();
 		await this.newEmailInput.type(newEmail);
 		await this.changeEmailButton.click();
-		await this.browser.wait(pageHasLoaded(AccountHomePage));
-		return new AccountHomePage(this.browser);
 	}
 
 	/**
@@ -53,8 +58,6 @@ export class AccountSecurityPage extends Page{
 		await this.confirmPasswordInput.type(newPassword);
 		//await this.oldPasswordInput.type(oldPassword);
 		await this.changePasswordButton.click();
-		await this.browser.wait(pageHasLoaded(AccountHomePage));
-		return new AccountHomePage(this.browser);
 	}
 
 	/**
@@ -69,8 +72,6 @@ export class AccountSecurityPage extends Page{
 		else{
 			await this.twoFactorAuthentictionCheckbox.uncheck();
 		}
-		await this.browser.wait(pageHasLoaded(AccountHomePage));
-		return new AccountHomePage(this.browser);
 	}
 	
 	public loadCondition(): WaitCondition {

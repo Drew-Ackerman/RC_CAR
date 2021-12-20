@@ -3,45 +3,46 @@ import { Builder, ThenableWebDriver, WebElementPromise, ByHash, WebElement, IWeb
 import { WaitCondition } from "./conditions";
 import { SupportedBrowsers } from "../../config";
 import { writeFile } from "fs";
+import { IBrowser } from "../interfaces/IBrowser";
 
 /**
  * @classdesc A wrapper for the selenium browser driver. 
  * This class allows interacting with the browser, finding elements
  * navigating to pages with urls, working with browser windows, etc. 
  */
-export class Browser{
+export class Browser implements IBrowser{
 
 	public driver: ThenableWebDriver;
 
 	/**
 	 * @param browserName The browser to use.
 	 */
-	public constructor(private browserName: SupportedBrowsers){
+	public constructor(protected browserName: SupportedBrowsers){
 		this.driver = new Builder().forBrowser(browserName).build();
+	}
+	
+	/**
+	 * @returns A list of available browser window handles. 
+	 */
+	public getWindowHandles(): Promise<string[]> {
+		return this.driver.getAllWindowHandles();
+	}
+	
+	/**
+	 * @returns The handle for the currently focused window.
+	 */
+	public getCurrentWindowHandle(): Promise<string> {
+		throw new Error("Method not implemented.");
+	}
+	
+	public getPageTitle(): Promise<string> {
+		throw new Error("Method not implemented.");
 	}
 
 	public maximize(): Promise<void>{
 		const manager = this.driver.manage();
 		const window = manager.window();
 		return window.maximize();
-	}
-
-	/**
-	 * @returns A list of available browser window handles. 
-	 */
-	get WindowHandles(): Promise<Array<string>> {
-		return this.driver.getAllWindowHandles();
-	}
-
-	/**
-	 * @returns The handle for the currently focused window.
-	 */
-	get CurrentWindowHandle(): Promise<string> {
-		return this.driver.getWindowHandle();
-	}
-
-	get PageTitle(): Promise<string> {
-		return this.driver.getTitle();
 	}
 
 	public async actions(options:any): Promise<Actions> {

@@ -79,9 +79,7 @@ export class StoreMapPage extends Page{
 	 * 
 	 * @returns 
 	 */
-	public async goToStoreLocationPage(): Promise<StoreLocationsPage>{
+	public async goToStoreLocationPage(): Promise<void>{
 		await this.completeStoreListButton.click();
-		await this.browser.wait(pageHasLoaded(StoreLocationsPage));
-		return new StoreLocationsPage(this.browser);
 	}
 }

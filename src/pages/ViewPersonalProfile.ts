@@ -60,8 +60,8 @@ export class ViewPersonalProfile extends Page {
 
 		await this.SameAddressCheckbox.click();
 		await this.SubmitButton.click();
-		await this.browser.wait(pageHasLoaded(AccountHomePage));
-		return new AccountHomePage(this.browser);
+		//await this.browser.wait(pageHasLoaded(pages.));
+		//return new AccountHomePage(this.browser);
 	}
 
 	public loadCondition(): WaitCondition {

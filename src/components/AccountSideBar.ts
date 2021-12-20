@@ -1,9 +1,9 @@
 
 import { AccountSecurityPage } from "../pages/AccountSecurityPage";
-import { Browser } from "../lib";
 import { WebComponent } from "../lib/elements";
 import { findById } from "../lib/utils";
 import { pageHasLoaded } from "../lib/conditions";
+import { IBrowser } from "../interfaces/IBrowser";
 
 export enum MenuOptions {
 	SecuritySettings="/account/View-Customer-Security",
@@ -14,7 +14,7 @@ export class AccountSideBar {
 	@findById("sideBarMenu")
 	private sideBarMenu: WebComponent;
 
-	constructor(protected browser:Browser){
+	constructor(protected browser:IBrowser){
 
 	}
 
@@ -24,7 +24,7 @@ export class AccountSideBar {
 
 		switch(option){
 		case MenuOptions.SecuritySettings:
-			await this.browser.wait(pageHasLoaded(AccountSecurityPage));
+			//await this.browser.wait(pageHasLoaded(AccountSecurityPage));
 		}
 	}
 

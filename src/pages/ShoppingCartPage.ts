@@ -56,13 +56,13 @@ export class ShoppingCartPage extends Page {
 	 * Checkout the product
 	 * @returns A promise to the checkout page
 	 */
-	public async Checkout(): Promise<CheckoutPage> {
+	public async Checkout(): Promise<void> {
 		const checkoutButton = new Button(this.browser.findElement(this.findCheckoutButton), "function");
 		await this.browser.wait(elementIsVisible(()=>checkoutButton));
 		await checkoutButton.click();
-		await this.browser.wait(pageHasLoaded(CheckoutPage));
-		await this.browser.sleep(2);
-		return new CheckoutPage(this.browser);
+		//await this.browser.wait(pageHasLoaded(CheckoutPage));
+		//await this.browser.sleep(2);
+		//return new CheckoutPage(this.browser);
 	}
 
 	public async getCartItems(): Promise<Array<CartItem>>{

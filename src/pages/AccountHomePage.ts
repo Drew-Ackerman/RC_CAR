@@ -1,6 +1,7 @@
 import { AccountSideBar } from "../components/AccountSideBar";
 import { Page } from "../components/page";
-import { Browser, findByLinkText, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { IBrowser } from "../interfaces/IBrowser";
+import { findByLinkText, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 
 export class AccountHomePage extends Page {
 	
@@ -12,7 +13,7 @@ export class AccountHomePage extends Page {
 	
 	public sidebar: AccountSideBar;
 
-	constructor(browser:Browser){
+	constructor(browser:IBrowser){
 		super(browser);
 		this.sidebar = new AccountSideBar(browser);
 	}

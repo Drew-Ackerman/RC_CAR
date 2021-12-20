@@ -1,8 +1,9 @@
 import { Key, WebElement } from "selenium-webdriver";
 import { TestAddress, time } from "../../config";
-import { Browser, Button, elementIsPresent, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Button, elementIsPresent, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
 import { Page } from "../components/page";
+import { IBrowser } from "../interfaces/IBrowser";
 
 /**
  * @description Valid states
@@ -50,7 +51,7 @@ export const enum ShippingOptions {
  */
 export class CheckoutPage extends Page {
 
-	private async findContactInformationContinueButton(browser:Browser): Promise<WebElement>{
+	private async findContactInformationContinueButton(browser:IBrowser): Promise<WebElement>{
 		const contactInfoForms = await browser.findElements({css:"form[action='/Order-Confirm']"});
 		for(let i=0; i < contactInfoForms.length; i++){
 			const contactInfoForm = contactInfoForms[i];
@@ -166,7 +167,7 @@ export class CheckoutPage extends Page {
 	@findById("backToCart")
 	private BackToCartButton: Button;
 
-	constructor(public browser:Browser){
+	constructor(public browser:IBrowser){
 		super(browser);
 	}
 	

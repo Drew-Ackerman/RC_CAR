@@ -1,18 +1,19 @@
 import { WebElement } from "selenium-webdriver";
-import { WaitCondition, Browser, urlContainsValue, findByName, TextInput, findById, findByCSS, Button, pageHasLoaded } from "../lib";
+import { WaitCondition, urlContainsValue, findByName, TextInput, findById, findByCSS, Button } from "../lib";
 import { ViewPersonalProfile } from "./ViewPersonalProfile";
 import { Page } from "../components/page";
+import { IBrowser } from "../interfaces/IBrowser";
 
 export class AccountCreationPage extends Page {
 	
-	private async FindSubscribeCheckbox(browser:Browser): Promise<WebElement>{
+	private async FindSubscribeCheckbox(browser:IBrowser): Promise<WebElement>{
 		const checkbox = await browser.findElement({css:"input[name='onEmailList']"});
 		const id = await checkbox.getAttribute("id");
 		const label = await browser.findElement({css:`label[for='${id}']`});
 		return label;
 	}
 
-	private async Find2FactorCheckbox(browser:Browser): Promise<WebElement>{
+	private async Find2FactorCheckbox(browser:IBrowser): Promise<WebElement>{
 		const checkbox = await browser.findElement({css:"input[name='2FactorOff']"});
 		const id = await checkbox.getAttribute("id");
 		const label = await browser.findElement({css:`label[for='${id}']`});
@@ -37,7 +38,7 @@ export class AccountCreationPage extends Page {
 	@findByCSS("button[type='submit']")
 	public SubmitButton : Button;
 
-	constructor (browser : Browser){
+	constructor (browser : IBrowser){
 		super(browser);
 	}
 	
@@ -48,7 +49,7 @@ export class AccountCreationPage extends Page {
 	 * @param answer 
 	 * @returns The personal profile page that should appear upon successful account creation
 	 */
-	public async CreateNewAccount(email:string, password:string, answer:string): Promise<ViewPersonalProfile>{
+	public async CreateNewAccount(email:string, password:string, answer:string){//}: Promise<ViewPersonalProfile>{
 		await this.EmailAddressInput.type(email);
 		await this.NewPasswordInput.type(password);
 		await this.NewPassword2Input.type(password);
@@ -59,8 +60,7 @@ export class AccountCreationPage extends Page {
 		await (this.browser.findElement(this.Find2FactorCheckbox).click());
 	
 		await this.SubmitButton.click();
-		await this.browser.wait(pageHasLoaded(ViewPersonalProfile));
-		return new ViewPersonalProfile(this.browser);
+		//return new ViewPersonalProfile(this.browser);
 	}
 
 	/**
