@@ -1,7 +1,7 @@
 import { AllPages } from "../src/pages";
 import { Browser } from "../src/lib";
 import { SupportedBrowsers, TestAddress, TestContactInfo } from "../config";
-import { snapshot } from "../src/lib/snapshot/snapshot";
+import { snapshot } from "../src/lib";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");

@@ -32,7 +32,7 @@ export class SetHomeStorePopup {
 		try{
 			await this.browser.wait(elementIsVisible(() => this.PopupOverlay));
 		} catch(error){
-			console.log("Couldnt find zip code popup: ", error);
+			console.error("Couldnt find zip code popup: ", error);
 		}
 	}
 

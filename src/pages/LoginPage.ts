@@ -38,12 +38,12 @@ export class LoginPage extends Page{
 	 * @param username The username to use
 	 * @param password The password to use
 	 */
-	public async Login(username:string, password:string): Promise<AccountHomePage>{
+	public async Login(username:string, password:string): Promise<void>{
 		await this.UsernameInput.type(username);
 		await this.PasswordInput.type(password);
 		await this.SignInButton.click();
-		await this.browser.wait(pageHasLoaded(AccountHomePage));
-		return new AccountHomePage(this.browser);
+		//await this.browser.wait(pageHasLoaded(AccountHomePage));
+		//return new AccountHomePage(this.browser);
 	}
 
 	/**
@@ -54,9 +54,9 @@ export class LoginPage extends Page{
 		return elementIsVisible(() => this.LoginForm);
 	}
 
-	public async setupNewAccount(): Promise<AccountHelpPage> {
+	public async setupNewAccount(): Promise<void> {
 		await this.SetupNewAccountBtn.click();
-		await this.browser.wait(pageHasLoaded(AccountHelpPage));
-		return new AccountHelpPage(this.browser);
+		//await this.browser.wait(pageHasLoaded(AccountHelpPage));
+		//return new AccountHelpPage(this.browser);
 	}
 }

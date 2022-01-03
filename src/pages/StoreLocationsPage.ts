@@ -1,5 +1,4 @@
-import { Browser, Button, findByCSS, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
-import { StoreMapPage } from "./StoreMapPage";
+import { Browser, Button, findByCSS, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../components/page";
 
 
@@ -26,10 +25,10 @@ export class StoreLocationsPage extends Page {
 	 * Click all stores map button 
 	 * @returns StoreMapPage
 	 */
-	public async clickAllStoresMapButton(): Promise<StoreMapPage> {
+	public async clickAllStoresMapButton(){//:Promise<StoreMapPage> {
 		await this.allStoresMapButton.click();
-		await this.browser.wait(pageHasLoaded(StoreMapPage));
-		return new StoreMapPage(this.browser);
+		//await this.browser.wait(pageHasLoaded(StoreMapPage));
+		//return new StoreMapPage(this.browser);
 	}
 	
 	/**

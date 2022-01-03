@@ -1,7 +1,7 @@
 import { AllPages, OrderThanksPage } from "../src/pages";
 import { Browser, pageHasLoaded } from "../src/lib";
 import { TestAddress, SupportedBrowsers, TestContactInfo, TestCreditCard } from "../config";
-import { snapshot } from "../src/lib/snapshot/snapshot";
+import { snapshot } from "../src/lib";
 import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
 
 import chai = require("chai");
@@ -67,8 +67,7 @@ describe("Users", () => {
 		await pages.checkoutPage.selectSameBillingAddress();
 		await pages.checkoutPage.submitPaymentInformation();
 		await pages.checkoutPage.placeOrder();
-		//const orderThanksPage = new OrderThanksPage(browser);
-		return expect(pageHasLoaded(OrderThanksPage));
+		return expect(pageHasLoaded(pages.orderThanksPage));
 	});   
 
 	it("Should be able to purchase a giftcard", async () => {
@@ -88,7 +87,7 @@ describe("Users", () => {
 		await pages.checkoutPage.enterBillingDetails(TestAddress);
 		await pages.checkoutPage.submitPaymentInformation();
 		await pages.checkoutPage.placeOrder();
-		return expect(pageHasLoaded(OrderThanksPage));
+		return expect(pageHasLoaded(pages.orderThanksPage));
 	});
 
 	/**

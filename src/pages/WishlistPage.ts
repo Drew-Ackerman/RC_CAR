@@ -50,7 +50,7 @@ export class WishListItem{
 			const info = await this.ProductInfo();
 			return {productName:name, productInfo:info};
 		} catch(error){
-			console.log(error);
+			console.error(error);
 			throw error;
 		}
 	}
@@ -118,14 +118,12 @@ export class WishlistPage extends Page {
 		throw new Error(`Product: ${product.productName} was not found in wishlist to delete`);
 	}
 
-	public async addWishlistItemToCart(product:ProductDetails): Promise<ShoppingCartPage>{
+	public async addWishlistItemToCart(product:ProductDetails): Promise<void>{
 		const items = await this.  getWishlistItems();
 		for(let i=0; i < items.length; i++){
 			const itemsDetails = await items[i].productDetails();
 			if(product.productName == itemsDetails.productName){
 				await items[0].moveToCartButton.click();
-				await this.browser.wait(pageHasLoaded(ShoppingCartPage));
-				return new ShoppingCartPage(this.browser);
 			}
 		}
 		throw new Error(`Could not add ${product.productName} from wishlist to shopping cart page`);

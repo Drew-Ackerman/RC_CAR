@@ -1,11 +1,7 @@
 import { Key } from "selenium-webdriver";
+import { IBrowser } from "../interfaces/IBrowser";
+import { IHeader } from "../interfaces/IHeader";
 import { Button, elementIsVisible, findByClass, findByCSS, findById, findByLinkText, TextInput, WebComponent } from "../lib";
-import type { Browser } from "../lib";
-// import { AccountHomePage } from "../pages/accountPages";
-// import { LoginPage } from "../pages/LoginPage";
-// import { ProductSearchPage } from "../pages/ProductSearchPage";
-// import { ShoppingCartPage } from "../pages/ShoppingCartPage";
-// import { StoreLocationsPage } from "../pages/StoreLocationsPage";
 
 /**
  * @classdesc The header is the part of the page that contains things like 
@@ -13,9 +9,9 @@ import type { Browser } from "../lib";
  * Add this component to pages that contain the header if theres things from the header
  * that you need.
  */
-export class Header{
+export class Header implements IHeader{
 
-	constructor(private browser:Browser){ }
+	constructor(private browser:IBrowser){ }
 
 	/**
 	 * When logged in the account button can be found this way
@@ -42,10 +38,10 @@ export class Header{
 	public LogoutButton: Button;
 
 	@findByLinkText("Locations")
-	private LocationButton: Button;
+	public LocationButton: Button;
 
 	@findByClass("homeStoreCity")
-	private homeStoreLocationChangeLink: WebComponent;
+	public homeStoreLocationChangeLink: WebComponent;
 
 	/**
 	 * Click the account button
@@ -56,7 +52,7 @@ export class Header{
 		try{
 			loginButtonPresent = await this.LoginButton.isDisplayed();
 		} catch(error){
-			console.log("nope");
+			console.error("Cannot click account btn");
 		}
 		
 		if(loginButtonPresent){

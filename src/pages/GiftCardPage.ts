@@ -1,7 +1,8 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, findById, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
+import { findById, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
 import { ShoppingCartPage } from "./ShoppingCartPage";
 import { Page } from "../components/page";
+import { IBrowser } from "../interfaces/IBrowser";
 
 export const enum GiftCardStyleSets {
 	Anytime="Anytime",
@@ -23,15 +24,11 @@ export class GiftCard {
 	@findById("addToCartBtn")
 	private addToCartBtn: Button;
 
-	constructor(protected browser: Browser, protected element: WebElement){	}
+	constructor(protected browser: IBrowser, protected element: WebElement){	}
 
-	public async addToCart(): Promise<ShoppingCartPage> {
-		console.log("ca", await this.element.getAttribute("data-style"));
+	public async addToCart(): Promise<void> {
 		await this.element.click();
-		const cart = await this.element.findElement({id:"addToCartBtn"});
 		await this.addToCartBtn.click();
-		await this.browser.wait(pageHasLoaded(ShoppingCartPage));
-		return new ShoppingCartPage(this.browser);
 	}
 }
 
@@ -43,7 +40,7 @@ export class GiftCardPage extends Page {
 	@findById("cardStyleSet")
 	private cardStyleSets: WebComponent;
 
-	constructor(browser:Browser){
+	constructor(browser:IBrowser){
 		super(browser);
 	}
 
