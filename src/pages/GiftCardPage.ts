@@ -1,6 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { findById, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
-import { ShoppingCartPage } from "./ShoppingCartPage";
+import { findById, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
