@@ -44,10 +44,11 @@ export class Header implements IHeader{
 	public homeStoreLocationChangeLink: WebComponent;
 
 	/**
-	 * Click the account button
+	 * Click the account button. 
+	 * This will either go to the login page, 
+	 * or if logged in, will go to the account page.
 	 */
 	public async clickAccountButton(){
-		//User isnt logged in yet then
 		let loginButtonPresent = false;
 		try{
 			loginButtonPresent = await this.LoginButton.isDisplayed();
@@ -57,27 +58,21 @@ export class Header implements IHeader{
 		
 		if(loginButtonPresent){
 			await this.LoginButton.click();
-			// await this.browser.wait(pageHasLoaded(LoginPage));
-			// return new LoginPage(this.browser);
 		}
 		//Otherwise user is logged in
 		else{
 			await this.AccountButton.click();
-			// await this.browser.wait(pageHasLoaded(AccountHomePage));
-			// return new AccountHomePage(this.browser);
 		}
 	}
 
 	/**
 	 * Types into the search text input and then sends the enter key. 
-	 * @param searchText What text to input into the text box
-	 * @returns A {@link ProductSearchPage}
+	 * This should send you to the {@link ProductSearchPage}
+	 * @param searchText What text to input into the search text box.
 	 */
-	public async searchForItem(searchText:string){//}: Promise<ProductSearchPage>{
+	public async searchForItem(searchText:string){
 		await this.SearchBoxInput.type(searchText);
 		await this.SearchBoxInput.type(Key.ENTER);
-		// await this.browser.wait(pageHasLoaded(ProductSearchPage));
-		// return new ProductSearchPage(this.browser);
 	}
 
 	/**
@@ -105,21 +100,18 @@ export class Header implements IHeader{
 	}
 
 	/**
-	 * Click location button
-	 * @returns Promise for a StoreLocationpage
+	 * Click location button.
+	 * Changes the page to a {@link StoreLocationsPage}
 	 */
-	public async clickLocationButton(){//}: Promise<StoreLocationsPage> {
+	public async clickLocationButton(){
 		await this.LocationButton.click();
-		// await this.browser.wait(pageHasLoaded(StoreLocationsPage));
-		// return new StoreLocationsPage(this.browser);
 	}
 
 	/**
 	 * Click the shopping cart button thats in the pages header. 
-	 * @returns A {@link ShoppingCartPage}
+	 * Changes the page to a {@link ShoppingCartPage}
 	 */
-	public async clickShoppingCartButton(){//}: Promise<ShoppingCartPage>{
+	public async clickShoppingCartButton(){
 		await this.CartButton.click();
-		//return new ShoppingCartPage(this.browser);
 	}
 }
