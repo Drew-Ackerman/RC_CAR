@@ -1,6 +1,5 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findAllByClass, findByClass, WaitCondition, WebComponent, WebComponents } from "../lib";
-//import { ProductPage } from "./ProductPage";
 import { Page } from "../components/page";
 
 export class ProductDetails {
@@ -97,16 +96,13 @@ export class ProductSearchPage extends Page {
 	 * product page is loaded correctly, the product card and its related 
 	 * data is sent to the page. 
 	 * @param product The product to select from the search page
-	 * @returns The products page
+	 * Should change the page to the product page of the selected product. 
 	 */
-	public async selectProduct(product: ProductCard){//}: Promise<ProductPage>{
+	public async selectProduct(product: ProductCard){
 		await product.Click();
-		//await this.browser.wait(pageHasLoaded(ProductPage));
-		//return new ProductPage(this.browser).attachProduct(product);
 	}
 
 	/**
-	 * 
 	 * @returns Page is loaded when the main page title is visible. 
 	 */
 	public loadCondition(): WaitCondition {
