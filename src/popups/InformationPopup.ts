@@ -12,8 +12,13 @@ export class InformationPopup {
 
     }
 
-    public async waitTillNotPresent(){
-        return this.browser.wait(elementIsNotVisible(()=>this.overlay));
+    /**
+     * Wait until this popup is gone. 
+     * @param optionalTimeout How long to wait for the timeout, optional.
+     * @returns 
+     */
+    public async waitTillNotPresent(optionalTimeout?:number){
+        return this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout);
     }
 
     public async close(){
