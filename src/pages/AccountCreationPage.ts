@@ -1,6 +1,5 @@
 import { WebElement } from "selenium-webdriver";
 import { WaitCondition, urlContainsValue, findByName, TextInput, findById, findByCSS, Button, Checkbox } from "../lib";
-import { ViewPersonalProfile } from "./ViewPersonalProfile";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
@@ -54,7 +53,7 @@ export class AccountCreationPage extends Page {
 	 * @param answer 
 	 * @returns The personal profile page that should appear upon successful account creation
 	 */
-	public async CreateNewAccount(email:string, password:string, answer:string){//}: Promise<ViewPersonalProfile>{
+	public async CreateNewAccount(email:string, password:string, answer:string){
 		await this.EmailAddressInput.type(email);
 		await this.NewPasswordInput.type(password);
 		await this.NewPassword2Input.type(password);

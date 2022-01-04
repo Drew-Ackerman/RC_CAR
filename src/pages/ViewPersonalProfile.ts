@@ -42,6 +42,12 @@ export class ViewPersonalProfile extends Page {
 		super(browser);
 	}
 
+	/**
+	 * Fill out the form to update user data.
+	 * @param billingInformation 
+	 * @param contactInfo
+	 * @returns The account home page that should appear upon successful update of user data
+	 */
 	public async CompleteUserData(billingInformation: Address, contactInfo: ContactInformation){
 		await this.FirstNameInput.type(billingInformation.firstName);
 		await this.LastNameInput.type(billingInformation.lastName);
@@ -60,8 +66,6 @@ export class ViewPersonalProfile extends Page {
 
 		await this.SameAddressCheckbox.click();
 		await this.SubmitButton.click();
-		//await this.browser.wait(pageHasLoaded(pages.));
-		//return new AccountHomePage(this.browser);
 	}
 
 	public loadCondition(): WaitCondition {

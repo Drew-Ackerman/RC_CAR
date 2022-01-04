@@ -1,6 +1,6 @@
 import { AllPages } from "../src/pages";
 import { Browser, pageHasLoaded, snapshot } from "../src/lib";
-import { config, SupportedBrowsers, TestAddress, TestContactInfo } from "../config";
+import { config, SupportedBrowsers, TestAddress, TestContactInfo, time} from "../config";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
@@ -46,7 +46,7 @@ describe("The login page", () => {
 		await pages.accountCreationPage.CreateNewAccount(demoEmail, password, "demo");
 		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage));
 		await pages.viewPersonalProfilePage.CompleteUserData(TestAddress, TestContactInfo);
-		await browser.wait(pageHasLoaded(pages.accountHomePage), 10000);
+		await browser.wait(pageHasLoaded(pages.accountHomePage), time.TenSeconds);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
