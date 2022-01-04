@@ -1,10 +1,9 @@
-import { Browser, Button, findByCSS, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Browser, Button, findById, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../components/page";
-
 
 export class StoreLocationsPage extends Page {
 	
-	@findByCSS("a[href='/Store-Map']")
+	@findById("allStoresMapButton")
 	private allStoresMapButton: Button;
 
 	constructor(browser: Browser){
@@ -13,7 +12,7 @@ export class StoreLocationsPage extends Page {
 
 	/**
 	 * Returns Webcomponetns that are the root element of each store location card.
-	 * @returns A promise for webcomponents. 
+	 * @returns A promise for the locations cards as webcomponents. 
 	 */
 	public async getStoreLocations():Promise<WebComponents> {
 		const slcontainer = new WebComponent(this.browser.findElement({id:"storeLocations"}), "storeLocations");
@@ -22,18 +21,16 @@ export class StoreLocationsPage extends Page {
 	}
 
 	/**
-	 * Click all stores map button 
-	 * @returns StoreMapPage
+	 * Click the all stores map button 
+	 * This should navigate to {@link StoreMapPage}
 	 */
-	public async clickAllStoresMapButton(){//:Promise<StoreMapPage> {
-		await this.allStoresMapButton.click();
-		//await this.browser.wait(pageHasLoaded(StoreMapPage));
-		//return new StoreMapPage(this.browser);
+	public async clickAllStoresMapButton(){
+		await this.allStoresMapButton.click();;
 	}
 	
 	/**
 	 * This page is loaded when url contains Store-Locations.
-	 * @returns Url WaitCondition
+	 * @returns A wait condition for when the Page has loaded.
 	 */
 	public loadCondition(): WaitCondition {
 		return urlContainsValue(this.browser, "Store-Locations");
