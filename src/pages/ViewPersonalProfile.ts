@@ -5,10 +5,10 @@ import { Page } from "../components/page";
 
 export class ViewPersonalProfile extends Page {
 
-	@findByCSS("input[name='customer.billingPerson.firstName']")
+	@findById("customer.billingPerson.firstName")
 	public FirstNameInput: TextInput;
 
-	@findByCSS("input[name='customer.billingPerson.lastName']")
+	@findById("customer.billingPerson.lastName")
 	public LastNameInput: TextInput;
 
 	@findById("homePhone")
@@ -20,13 +20,13 @@ export class ViewPersonalProfile extends Page {
 	@findById("workPhone")
 	public WorkPhoneInput: TextInput;
 	
-	@findByCSS("input[name='customer.billingPerson.contact.address.address1']")
+	@findById("customer.billingPerson.contact.address.address1")
 	public BillingAddress1: TextInput;
 
-	@findByCSS("input[name='customer.billingPerson.contact.address.city']")
+	@findById("customer.billingPerson.contact.address.city")
 	public BillingCity: TextInput;
 
-	@findByCSS("input[name='customer.billingPerson.contact.address.state']")
+	@findById("customer.billingPerson.contact.address.state")
 	public BillingState: TextInput;
 
 	@findById("zipCode")
@@ -35,13 +35,19 @@ export class ViewPersonalProfile extends Page {
 	@findByCSS("label[for='sameAsBilling']")
 	public SameAddressCheckbox: WebComponent;
 
-	@findByCSS("button[type='submit']")
+	@findById("submitPersonalProfileChanges")
 	public SubmitButton: Button;
 
 	constructor(browser: Browser){
 		super(browser);
 	}
 
+	/**
+	 * Fill out the form to update user data.
+	 * @param billingInformation 
+	 * @param contactInfo
+	 * @returns The account home page that should appear upon successful update of user data
+	 */
 	public async CompleteUserData(billingInformation: Address, contactInfo: ContactInformation){
 		await this.FirstNameInput.type(billingInformation.firstName);
 		await this.LastNameInput.type(billingInformation.lastName);
@@ -60,8 +66,6 @@ export class ViewPersonalProfile extends Page {
 
 		await this.SameAddressCheckbox.click();
 		await this.SubmitButton.click();
-		//await this.browser.wait(pageHasLoaded(pages.));
-		//return new AccountHomePage(this.browser);
 	}
 
 	public loadCondition(): WaitCondition {

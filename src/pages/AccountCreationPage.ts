@@ -1,6 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { WaitCondition, urlContainsValue, findByName, TextInput, findById, findByCSS, Button } from "../lib";
-import { ViewPersonalProfile } from "./ViewPersonalProfile";
+import { WaitCondition, urlContainsValue, findByName, TextInput, findById, findByCSS, Button, Checkbox } from "../lib";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
@@ -19,8 +18,13 @@ export class AccountCreationPage extends Page {
 		const label = await browser.findElement({css:`label[for='${id}']`});
 		return label;
 	}
+	@findByCSS("label[for='subscribeCheckbox']")
+	public SubscribeCheckbox : Checkbox;
 
-	@findByName("email")
+	@findByCSS("label[for='twoFactorCheckbox']")
+	public TwoFactorCheckbox : Checkbox;
+
+	@findById("email")
 	public EmailAddressInput : TextInput;
 
 	@findById("newPassword")
@@ -29,10 +33,10 @@ export class AccountCreationPage extends Page {
 	@findById("newPassword2")
 	public NewPassword2Input : TextInput;
 
-	@findByName("answer1")
+	@findById("answer1")
 	public AnswerInput : TextInput;
 
-	@findByName("answer2")
+	@findById("answer2")
 	public Answer2Input : TextInput;
 
 	@findByCSS("button[type='submit']")
@@ -49,15 +53,15 @@ export class AccountCreationPage extends Page {
 	 * @param answer 
 	 * @returns The personal profile page that should appear upon successful account creation
 	 */
-	public async CreateNewAccount(email:string, password:string, answer:string){//}: Promise<ViewPersonalProfile>{
+	public async CreateNewAccount(email:string, password:string, answer:string){
 		await this.EmailAddressInput.type(email);
 		await this.NewPasswordInput.type(password);
 		await this.NewPassword2Input.type(password);
 		await this.AnswerInput.type(answer);
 		await this.Answer2Input.type(answer);
 
-		await (this.browser.findElement(this.FindSubscribeCheckbox).click());
-		await (this.browser.findElement(this.Find2FactorCheckbox).click());
+		await this.SubscribeCheckbox.check();
+		await this.TwoFactorCheckbox.check();
 	
 		await this.SubmitButton.click();
 		//return new ViewPersonalProfile(this.browser);
