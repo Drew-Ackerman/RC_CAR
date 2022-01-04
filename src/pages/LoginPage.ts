@@ -1,33 +1,26 @@
-import { Browser, elementIsVisible, findByClass, findByCSS, findById, pageHasLoaded, WaitCondition } from "../lib";
+import { Browser, elementIsVisible, findByCSS, findById, WaitCondition } from "../lib";
 import { TextInput, WebComponent, Button } from "../lib/elements";
-import { AccountHelpPage } from "./AccountHelpPage";
 import { Page } from "../components/page";
-import { AccountHomePage } from "./AccountHomePage";
-
-export const LoginPageUrl = "https://www.rcwilley.com/account/Home";
 
 /**
  * @classdesc POM for the Login page.
  */
 export class LoginPage extends Page{
 
-	@findByClass("buttonGroupCenter")
-	public SignInGroup : TextInput;
-
 	@findById("j_password")
-	public PasswordInput : TextInput;
+	private PasswordInput : TextInput;
 
 	@findById("j_username")
-	public UsernameInput : TextInput;
+	private UsernameInput : TextInput;
 
 	@findById("login")
-	public LoginForm : WebComponent;
+	private LoginForm : WebComponent;
 
-	@findByCSS("button[type='submit']")
-	public SignInButton : Button;
+	@findById("signInButton")
+	private SignInButton : Button;
 
-	@findByCSS("a[href='/Account-Help']")
-	public SetupNewAccountBtn : WebComponent;
+	@findByCSS("setupNewAccountButton")
+	private SetupNewAccountBtn : WebComponent;
 
 	constructor(browser: Browser){
 		super(browser);
@@ -37,13 +30,12 @@ export class LoginPage extends Page{
 	 * Login by filling out the form and submitting it. 
 	 * @param username The username to use
 	 * @param password The password to use
+	 * Successful login changes page to account home page.
 	 */
 	public async Login(username:string, password:string): Promise<void>{
 		await this.UsernameInput.type(username);
 		await this.PasswordInput.type(password);
 		await this.SignInButton.click();
-		//await this.browser.wait(pageHasLoaded(AccountHomePage));
-		//return new AccountHomePage(this.browser);
 	}
 
 	/**
@@ -54,9 +46,11 @@ export class LoginPage extends Page{
 		return elementIsVisible(() => this.LoginForm);
 	}
 
+	/**
+	 * Click the setup new account button
+	 * Page should change to AccountHelpPage
+	 */
 	public async setupNewAccount(): Promise<void> {
 		await this.SetupNewAccountBtn.click();
-		//await this.browser.wait(pageHasLoaded(AccountHelpPage));
-		//return new AccountHelpPage(this.browser);
 	}
 }
