@@ -1,12 +1,16 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByClass, findById, pageHasLoaded, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, elementIsVisible, findByClass, findById, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails, ProductCard } from "./ProductSearchPage";
-import { ShoppingCartPage } from "./ShoppingCartPage";
-import { WishlistPage } from "./WishlistPage";
 import { Page } from "../components/page";
 
 export class ProductPage extends Page {
 	
+	/**
+	 * This is required because there are multple prodName elements,
+	 * as thus we have to find a visible one.
+	 * @param browser 
+	 * @returns 
+	 */
 	private async findProductNameText(browser:Browser): Promise<WebElement>{
 		const productNameFields = await browser.findElements({id:"prodName"});
 
@@ -38,7 +42,6 @@ export class ProductPage extends Page {
 	}
 	
 	/**
-	 * 
 	 * @returns The page is loaded when the Add to Cart button is visible on the page.
 	 */
 	public loadCondition(): WaitCondition {
@@ -46,9 +49,8 @@ export class ProductPage extends Page {
 	}
 
 	/**
-	 * 
 	 * @param product The product that should be on this page.
-	 * @returns 
+	 * @returns This product page.
 	 */
 	public attachProduct(product: ProductCard): ProductPage{
 		this.product = product;
@@ -57,18 +59,20 @@ export class ProductPage extends Page {
 
 	/**
 	 * Add the product to the cart by clicking the corresponding button
-	 * @returns Return a shopping cart page
+	 * @returns should change the page to the shopping cart page.
 	 */
 	public async addToCart(): Promise<void>{
 		await this.AddToCardButton.click();
 	}
 
 	/**
-	 * 
 	 * @returns Get the product details on this page
 	 */
 	public async getProductDetails(): Promise<ProductDetails>{
-		return new ProductDetails(await (await this.SKU.getText()).split(":")?.pop()?.trim() || "Sku not found", await this.Price.getText(), await (await this.browser.findElement(this.findProductNameText)).getText());
+		let sku = await (await this.SKU.getText()).split(":").pop()?.trim() || "Sku not found";
+		let price = await this.Price.getText();
+		let name = await this.browser.findElement(this.findProductNameText).getText();
+		return new ProductDetails(sku, price, name);
 	}
 
 	/**
@@ -88,7 +92,6 @@ export class ProductPage extends Page {
 
 	public async addProductToWishlist(wishlistName: string): Promise<void>{
 		await this.WishlistAddButton.click();
-		//const wishlistContainer = await this.browser.findElement({css:"div[class~='wishlist']"});
 		const possibleWishlists = await this.browser.findElements({css:"a[class~='icon-heart']"});
 		for(let i=0; i < possibleWishlists.length;i++){
 			const text = await possibleWishlists[i].getText();

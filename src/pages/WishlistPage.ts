@@ -1,15 +1,17 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, pageHasLoaded, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
-import { ShoppingCartPage } from "./ShoppingCartPage";
 import { Page } from "../components/page";
-
 
 export type WishListDetails = {
 	productName:string,
 	productInfo:string,
 }
 
+/**
+ * A wishlist is composed of individual items. 
+ * This class represents one of those items. 
+ */
 export class WishListItem{
 	@findByCSS("a[class~='prodName']")
 	private ProductNameText: WebComponent;
@@ -20,7 +22,9 @@ export class WishListItem{
 	@findByCSS("a[class~='icon-cart']")
 	public moveToCartButton: Button;
 
+	//Find by is needs a local browser element, so for now we need one.
 	private browser;
+
 	constructor(private element: WebElement)
 	{
 		this.browser = element;
@@ -119,7 +123,7 @@ export class WishlistPage extends Page {
 	}
 
 	public async addWishlistItemToCart(product:ProductDetails): Promise<void>{
-		const items = await this.  getWishlistItems();
+		const items = await this.getWishlistItems();
 		for(let i=0; i < items.length; i++){
 			const itemsDetails = await items[i].productDetails();
 			if(product.productName == itemsDetails.productName){
