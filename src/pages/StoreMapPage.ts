@@ -1,6 +1,5 @@
 import { Key, WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, pageHasLoaded, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
-import { StoreLocationsPage } from "./StoreLocationsPage";
+import { Browser, Button, findById, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../components/page";
 
 type MapLocationData = {
@@ -44,7 +43,7 @@ export class StoreMapPage extends Page{
 	@findById("zipCode")
 	private zipCodeInput: TextInput;
 
-	@findByCSS("a[href='/Store-Locations']")
+	@findById("completeStoreListButton")
 	private completeStoreListButton: Button;
 
 	constructor(browser:Browser){
@@ -71,13 +70,16 @@ export class StoreMapPage extends Page{
 		await this.zipCodeInput.type(zipCode, Key.ENTER);
 	}
 
+	/**
+	 * Contains the logic for knowing when a page is loaded.
+	 * @returns WaitCondition
+	 */
 	public loadCondition(): WaitCondition {
 		return urlContainsValue(this.browser, "Store-Map");
 	}
 
 	/**
-	 * 
-	 * @returns 
+	 * Pressing this button takes you back to the {@link StoreLocationsPage}
 	 */
 	public async goToStoreLocationPage(): Promise<void>{
 		await this.completeStoreListButton.click();
