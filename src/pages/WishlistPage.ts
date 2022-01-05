@@ -127,7 +127,8 @@ export class WishlistPage extends Page {
 		for(let i=0; i < items.length; i++){
 			const itemsDetails = await items[i].productDetails();
 			if(product.productName == itemsDetails.productName){
-				await items[0].moveToCartButton.click();
+				await items[i].moveToCartButton.click();
+				return;
 			}
 		}
 		throw new Error(`Could not add ${product.productName} from wishlist to shopping cart page`);

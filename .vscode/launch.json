@@ -5,6 +5,16 @@
     "version": "0.2.0",
     "configurations": [
         {            
+            "name": "Debug Wishlist Tests",
+            "type": "node",
+            "protocol": "inspector",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/wishlist.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
+            "cwd": "${workspaceRoot}"
+        },
+        {            
             "name": "Debug Mocha Tests",
             "type": "node",
             "protocol": "inspector",
