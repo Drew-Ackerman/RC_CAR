@@ -1,12 +1,12 @@
 import { AllPages } from "../src/pages";
-import { Browser } from "../src/lib";
-import { SupportedBrowsers, TestAddress, TestContactInfo } from "../config";
+import { Browser, pageHasLoaded } from "../src/lib";
+import { SupportedBrowsers, TestAddress, TestContactInfo, time } from "../config";
 import { snapshot } from "../src/lib";
+import { ZipcodePopup } from "../src/popups/ZipcodePopup";
+import { MenuOptions } from "../src/components/AccountSideBar";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
-import { ZipcodePopup } from "../src/popups/ZipcodePopup";
-import { MenuOptions } from "../src/components/AccountSideBar";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -55,25 +55,24 @@ describe("The Security Settings Page", () => {
 		await pages.loginPage.setupNewAccount();
 		await pages.accountHelpPage.gotoAccountCreation();
 		await pages.accountCreationPage.CreateNewAccount(testEmail, password, "answer");
+		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage), time.TenSeconds);
 		await pages.viewPersonalProfilePage.CompleteUserData(TestAddress,TestContactInfo);
-		await browser.sleep(5);
-		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
+
+		//Starting point for tests is a logged in account on the account home page.
+		await browser.wait(pageHasLoaded(pages.accountHomePage), time.TenSeconds);		
+		await browser.sleep(4);
 	});
 
 	it("Should allow customers to change their password", async() => {
 		const newPassword = "Password2@";
 
-		//const homePage = new HomePage(browser);
-		//await homePage.navigate();
-		//let loginPage = await homePage.GoToLoginPage() as LoginPage;
-		//let accountHomePage = await loginPage.Login(testEmail, password);
 		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
-		await browser.sleep(4);
+		await browser.wait(pageHasLoaded(pages.accountSecurityPage), 10);
 		await pages.accountSecurityPage.changePassword(password, newPassword);
-		await browser.sleep(4);
+		await browser.sleep(6);
 		await pages.accountHomePage.header.logout();
 
-		await browser.sleep(4);
+		await browser.sleep(6);
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
 		await pages.loginPage.Login(testEmail, newPassword);
@@ -83,12 +82,11 @@ describe("The Security Settings Page", () => {
 	it("Should allow customers to change their email", async() => {
 		const newEmail = createTestEmail();
 
-		//await homePage.navigate();
 		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
 		await pages.accountSecurityPage.changeEmail(newEmail);
-		await browser.sleep(4);
+		await browser.sleep(6);
 		await pages.accountHomePage.header.logout();
-		await browser.sleep(4);
+		await browser.sleep(6);
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();

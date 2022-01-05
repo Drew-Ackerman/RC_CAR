@@ -19,7 +19,7 @@ export class LoginPage extends Page{
 	@findById("signInButton")
 	private SignInButton : Button;
 
-	@findByCSS("setupNewAccountButton")
+	@findById("setupNewAccountButton")
 	private SetupNewAccountBtn : WebComponent;
 
 	constructor(browser: Browser){
