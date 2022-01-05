@@ -24,8 +24,6 @@ describe("The store locator page", () => {
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
-		await browser.addCookie({name:"SiteSessionId", value:"34632632462346"});
-
 		pages = new AllPages(browser);
 	});
 
