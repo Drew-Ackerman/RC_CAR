@@ -101,6 +101,9 @@ export class CheckoutPage extends Page {
 	@findById("shippingZipCode")
 	private ShippingZip: TextInput;
 
+	@findById("shippingOpts0")
+	private shippingOptions: WebComponent;
+
 	@findByCSS("img[alt='Free Curbside Delivery']")
 	private FreeCurbsideDelivery: Button;
 
@@ -216,6 +219,11 @@ export class CheckoutPage extends Page {
 
 		switch(shippingOption){
 		case ShippingOptions.Any:
+			await this.browser.sleep(5);
+			await this.browser.wait(elementIsVisible(()=>this.shippingOptions), time.TenSeconds, "No options available");
+			const deliveryOptions = await this.browser.findElements({className:"shippingOptions"});
+			await deliveryOptions[0].click();
+			break;
 		case ShippingOptions.InHome:
 			await this.browser.wait(elementIsVisible(()=>this.inHomeDeliveryBtn), time.TenSeconds, "No in home ship option");
 			await this.inHomeDeliveryBtn.click();
@@ -304,6 +312,7 @@ export class CheckoutPage extends Page {
 		await this.browser.wait(elementIsVisible(() => this.giftCardEmailInput));
 		await this.giftCardEmailInput.type(email);
 		await this.personalMessageInput.type(personalMessage);
+		await this.browser.wait(elementIsVisible(() => this.DeliveryContinueButton));
 		await this.DeliveryContinueButton.click();
 	}
 
