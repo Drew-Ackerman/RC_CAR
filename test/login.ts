@@ -41,7 +41,7 @@ describe("The login page", () => {
 	it("Should allow an account to be created", async() => {
 		await pages.homePage.navigate();
 		await pages.homePage.header.clickAccountButton();
-		await pages.loginPage.SetupNewAccountBtn.click();
+		await pages.loginPage.setupNewAccount();
 		await pages.accountHelpPage.CreateAccountLink.click();
 		await pages.accountCreationPage.CreateNewAccount(demoEmail, password, "demo");
 		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage));
