@@ -5,7 +5,7 @@
     "make-depcruiser-dir": "npx mkdirp ./reports/depcruiser",
     "check-dependencies": "npm run make-depcruiser-dir && depcruise --validate --output-type err-html -f ./reports/depcruiser/dependency-report.html --config .dependency-cruiser.js src test",
     "make-mochawesome-dir": "npx mkdirp ./reports/mochawesome",
-    "mocha": "npm run make-mochawesome-dir && mocha dist/test --timeout 30000 --exit --reporter mochawesome  --reporter-options reportDir=./reports/mochawesome,reportFilename=testReport"
+    "mocha": "npm run make-mochawesome-dir && mocha dist/test --timeout 50000 --exit --reporter mochawesome  --reporter-options reportDir=./reports/mochawesome,reportFilename=testReport"
   },
   "dependencies": {
     "chai": "^4.3.4",
