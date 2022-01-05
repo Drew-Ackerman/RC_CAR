@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByClass, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, findByClass, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
 import { Page } from "../components/page";
 
@@ -31,8 +31,16 @@ export class CartItem {
 
 export class ShoppingCartPage extends Page {
 	
-	@findById("checkoutButton")
-	private checkoutButton: Button
+	private async findCheckoutButton(browser: Browser){
+		const buttons = await browser.findElements({css:"a[href='/Proceed-To-Checkout']"});
+		for(let i = 0; i < buttons.length; i++){
+			const displayed = await buttons[i].isDisplayed();
+			if(displayed){
+				return buttons[i];
+			}
+		}
+		throw new Error("Couldnt find a visible checkout button");
+	}
 
 	constructor(protected browser:Browser){
 		super(browser);
@@ -51,8 +59,8 @@ export class ShoppingCartPage extends Page {
 	 * Page should change to the checkout page
 	 */
 	public async Checkout(): Promise<void> {
-		await this.browser.wait(elementIsVisible(()=>this.checkoutButton));
-		await this.checkoutButton.click();
+		const checkoutButton = await this.browser.findElement(this.findCheckoutButton);
+		await checkoutButton.click();
 	}
 
 	/**

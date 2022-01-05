@@ -1,12 +1,13 @@
-import { AllPages, OrderThanksPage } from "../src/pages";
+import { AllPages } from "../src/pages";
 import { Browser, pageHasLoaded } from "../src/lib";
 import { TestAddress, SupportedBrowsers, TestContactInfo, TestCreditCard } from "../config";
 import { snapshot } from "../src/lib";
 import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
+import { GiftCardStyleSets } from "../src/pages/GiftCardPage";
+import { ZipcodePopup } from "../src/popups/ZipcodePopup";
 
 import chai = require("chai");
 import chaiAsPromised = require("chai-as-promised");
-import { GiftCardPage, GiftCardStyleSets } from "../src/pages/GiftCardPage";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -52,13 +53,19 @@ describe("Users", () => {
 
 	it("Should be able to checkout a product as a guest", async () => {
 		await pages.homePage.navigate();
-		await pages.homePage.ClickShoppingCartButton();
+		await pages.homePage.header.changeHomeStore();
+
+		const zipCodePopup = new ZipcodePopup(browser);
+		await zipCodePopup.waitTillVisible();
+		await zipCodePopup.typeZipcode("84405");
+		
 		await pages.shoppingCartPage.header.searchForItem("");
 		const productsList = await pages.productSearchPage.findAllProductsOnPage();
 		expect(productsList).to.have.length.greaterThan(0);
 		const firstProductCard = productsList[0];
 		await pages.productSearchPage.selectProduct(firstProductCard);
 		await pages.productPage.addToCart();
+		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 		await pages.shoppingCartPage.Checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
 		await pages.checkoutPage.selectDelivery(TestAddress, ShippingOptions.Any);
@@ -72,12 +79,17 @@ describe("Users", () => {
 
 	it("Should be able to purchase a giftcard", async () => {
 		await pages.homePage.navigate();
-		await pages.homePage.ClickShoppingCartButton();
+		await pages.homePage.header.changeHomeStore();
+
+		const zipCodePopup = new ZipcodePopup(browser);
+		await zipCodePopup.waitTillVisible();
+		await zipCodePopup.typeZipcode("84405");
+
 		await pages.shoppingCartPage.header.searchForItem("gift card");
 		(await pages.productSearchPage.findAllProductsOnPage())[0].Click();
-		const giftCardPage = new GiftCardPage(browser).isAvailable();
-		(await giftCardPage).selectCardStyleSet(GiftCardStyleSets.Anytime);
-		const cards = await (await giftCardPage).getCards(GiftCardStyleSets.Anytime);
+		await browser.wait(pageHasLoaded(pages.giftcardPage));
+		await pages.giftcardPage.selectCardStyleSet(GiftCardStyleSets.Anytime);
+		const cards = await pages.giftcardPage.getCards(GiftCardStyleSets.Anytime);
 		await cards[0].addToCart();
 		await pages.shoppingCartPage.Checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
