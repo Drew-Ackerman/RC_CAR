@@ -74,7 +74,6 @@ export class GiftCardPage extends Page {
 		const firstLetterLowercased = replacedDashes.charAt(0).toLowerCase() + replacedDashes.slice(1);
 		const toBackgroundId = `${firstLetterLowercased}Background`;
 		const cardStyleContainer = await this.browser.findElement({id:toBackgroundId});
-		console.error("cde", await cardStyleContainer.getAttribute("className"));
 		const cardElements = await cardStyleContainer.findElements({xpath:".//div"});
 		const giftCards = await cardElements.map((cardElement) => {
 			return new GiftCard(this.browser, cardElement);
