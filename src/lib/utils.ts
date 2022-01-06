@@ -102,6 +102,26 @@ export function findByName(nameValue: string){
 
 /**
  * Use as a decorator on a WebComponent property of a POM
+ * Find an element by their _visible_ link text, used on <a> tags. 
+ * @param linkText The links tags text
+ * @returns Nothing. 
+ */
+ export function findByPartialLinkText(linkText: string){
+	return (target: any, propertyKey: string) => {
+		const type = Reflect.getMetadata("design:type", target, propertyKey);
+		Object.defineProperty(target, propertyKey, {
+			configurable: true,
+			enumerable: true,
+			get: function() {
+				const promise = this.browser.findElement({partialLinkText:`${linkText}`});
+				return new type(promise, linkText);
+			},
+		});
+	};
+}
+
+/**
+ * Use as a decorator on a WebComponent property of a POM
  * Find an element by the css of the element. Useful for finding 
  * html tags as well - e.g. <div>
  * @param cssIdentifier The css identifier
@@ -116,6 +136,26 @@ export function findByCSS(cssIdentifier: string){
 			get: function() {
 				const promise = this.browser.findElement({css:`${cssIdentifier}`});
 				return new type(promise, cssIdentifier);
+			},
+		});
+	};
+}
+
+/**
+ * Use as a decorator on a WebComponent property of a POM
+ * Find an element by an xpath.
+ * @param xpath The xpath to find the element
+ * @returns Nothing. 
+ */
+ export function findByXpath(xpath: string){
+	return (target: any, propertyKey: string) => {
+		const type = Reflect.getMetadata("design:type", target, propertyKey);
+		Object.defineProperty(target, propertyKey, {
+			configurable: true,
+			enumerable: true,
+			get: function() {
+				const promise = this.browser.findElement({xpath:`${xpath}`});
+				return new type(promise, xpath);
 			},
 		});
 	};
