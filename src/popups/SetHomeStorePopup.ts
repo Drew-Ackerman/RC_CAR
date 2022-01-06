@@ -1,4 +1,5 @@
-import { Browser, Button, elementIsVisible, findByCSS, Selector, WebComponent } from "../lib";
+import { IBrowser } from "../interfaces/IBrowser";
+import { Button, elementIsVisible, findByCSS, Selector, WebComponent } from "../lib";
 
 export enum StoreOptions {
 	NoLocalStore="0",
@@ -23,7 +24,7 @@ export class SetHomeStorePopup {
 	@findByCSS("div[class='md-modal md-scale md-show'")
 	private PopupOverlay: WebComponent;
 
-	constructor(protected browser: Browser){ }
+	constructor(protected browser: IBrowser){ }
 
 	/**
 	 * Wait till the popup is visible. 
