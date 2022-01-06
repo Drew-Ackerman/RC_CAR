@@ -1,4 +1,18 @@
 import "reflect-metadata";
+import { ByHash } from "selenium-webdriver";
+
+function elementFactory(target: any, propertyKey: string, selector: ByHash){
+	const selectorString = Object.keys(selector)[0];
+	const type = Reflect.getMetadata("design:type", target, propertyKey);
+	Object.defineProperty(target, propertyKey, {
+		configurable: true,
+		enumerable: true,
+		get: function() {
+			const promise = this.browser.findElement(selector);
+			return new type(promise, selectorString);
+		},
+	});
+};
 
 /**
  * Use as a decorator on a WebComponent property of a POM
@@ -8,15 +22,7 @@ import "reflect-metadata";
  */
 export function findById(idSelector: string){
 	return (target: any, propertyKey: string) => {
-		const type = Reflect.getMetadata("design:type", target, propertyKey);
-		Object.defineProperty(target, propertyKey, {
-			configurable: true,
-			enumerable: true,
-			get: function() {
-				const promise = this.browser.findElement({id:`${idSelector}`});
-				return new type(promise, idSelector);
-			},
-		});
+		elementFactory(target, propertyKey, {id:`${idSelector}`});
 	};
 }
 
@@ -28,15 +34,7 @@ export function findById(idSelector: string){
  */
 export function findByClass(selector: string){
 	return (target: any, propertyKey: string) => {
-		const type = Reflect.getMetadata("design:type", target, propertyKey);
-		Object.defineProperty(target, propertyKey, {
-			configurable: true,
-			enumerable: true,
-			get: function() {
-				const promise = this.browser.findElement({className:`${selector}`});
-				return new type(promise, selector);
-			},
-		});
+		elementFactory(target, propertyKey, {className:`${selector}`});
 	};
 }
 
@@ -68,15 +66,7 @@ export function findAllByClass(selector: string){
  */
 export function findByLinkText(linkText: string){
 	return (target: any, propertyKey: string) => {
-		const type = Reflect.getMetadata("design:type", target, propertyKey);
-		Object.defineProperty(target, propertyKey, {
-			configurable: true,
-			enumerable: true,
-			get: function() {
-				const promise = this.browser.findElement({linkText:`${linkText}`});
-				return new type(promise, linkText);
-			},
-		});
+		elementFactory(target, propertyKey, {linkText:`${linkText}`});
 	};
 }
 
@@ -88,15 +78,7 @@ export function findByLinkText(linkText: string){
  */
 export function findByName(nameValue: string){
 	return (target: any, propertyKey: string) => {
-		const type = Reflect.getMetadata("design:type", target, propertyKey);
-		Object.defineProperty(target, propertyKey, {
-			configurable: true,
-			enumerable: true,
-			get: function() {
-				const promise = this.browser.findElement({name:`${nameValue}`});
-				return new type(promise, nameValue);
-			},
-		});
+		elementFactory(target, propertyKey, {name:`${nameValue}`});
 	};
 }
 
@@ -108,15 +90,7 @@ export function findByName(nameValue: string){
  */
  export function findByPartialLinkText(linkText: string){
 	return (target: any, propertyKey: string) => {
-		const type = Reflect.getMetadata("design:type", target, propertyKey);
-		Object.defineProperty(target, propertyKey, {
-			configurable: true,
-			enumerable: true,
-			get: function() {
-				const promise = this.browser.findElement({partialLinkText:`${linkText}`});
-				return new type(promise, linkText);
-			},
-		});
+		elementFactory(target, propertyKey, {partialLinkText:`${linkText}`});
 	};
 }
 
@@ -129,15 +103,7 @@ export function findByName(nameValue: string){
  */
 export function findByCSS(cssIdentifier: string){
 	return (target: any, propertyKey: string) => {
-		const type = Reflect.getMetadata("design:type", target, propertyKey);
-		Object.defineProperty(target, propertyKey, {
-			configurable: true,
-			enumerable: true,
-			get: function() {
-				const promise = this.browser.findElement({css:`${cssIdentifier}`});
-				return new type(promise, cssIdentifier);
-			},
-		});
+		elementFactory(target, propertyKey, {css:`${cssIdentifier}`});
 	};
 }
 
@@ -149,14 +115,6 @@ export function findByCSS(cssIdentifier: string){
  */
  export function findByXpath(xpath: string){
 	return (target: any, propertyKey: string) => {
-		const type = Reflect.getMetadata("design:type", target, propertyKey);
-		Object.defineProperty(target, propertyKey, {
-			configurable: true,
-			enumerable: true,
-			get: function() {
-				const promise = this.browser.findElement({xpath:`${xpath}`});
-				return new type(promise, xpath);
-			},
-		});
+		elementFactory(target, propertyKey, {xpath:`${xpath}`});
 	};
 }
