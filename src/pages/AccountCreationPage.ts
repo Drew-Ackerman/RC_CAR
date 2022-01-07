@@ -1,23 +1,9 @@
-import { WebElement } from "selenium-webdriver";
-import { WaitCondition, urlContainsValue, findByName, TextInput, findById, findByCSS, Button, Checkbox } from "../lib";
+import { WaitCondition, urlContainsValue, TextInput, findById, findByCSS, Button, Checkbox } from "../lib";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
 export class AccountCreationPage extends Page {
 	
-	private async FindSubscribeCheckbox(browser:IBrowser): Promise<WebElement>{
-		const checkbox = await browser.findElement({css:"input[name='onEmailList']"});
-		const id = await checkbox.getAttribute("id");
-		const label = await browser.findElement({css:`label[for='${id}']`});
-		return label;
-	}
-
-	private async Find2FactorCheckbox(browser:IBrowser): Promise<WebElement>{
-		const checkbox = await browser.findElement({css:"input[name='2FactorOff']"});
-		const id = await checkbox.getAttribute("id");
-		const label = await browser.findElement({css:`label[for='${id}']`});
-		return label;
-	}
 	@findByCSS("label[for='subscribeCheckbox']")
 	public SubscribeCheckbox : Checkbox;
 
@@ -64,7 +50,6 @@ export class AccountCreationPage extends Page {
 		await this.TwoFactorCheckbox.check();
 	
 		await this.SubmitButton.click();
-		//return new ViewPersonalProfile(this.browser);
 	}
 
 	/**
