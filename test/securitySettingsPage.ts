@@ -48,7 +48,6 @@ describe("The Security Settings Page", () => {
 		//Create a new user for each test. 
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
-		await popups.zipcodePopup.waitTillVisible();
 		await popups.zipcodePopup.typeZipcode("84405");
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 

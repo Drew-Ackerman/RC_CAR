@@ -32,8 +32,6 @@ describe("The store map page", () => {
 	it("Allows stores to be filtered by zipcode", async () => {
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
-
-		await popups.zipcodePopup.waitTillVisible();
 		await popups.zipcodePopup.typeZipcode("84405");
 		await popups.informationPopup.appearsAndLeaves();
 

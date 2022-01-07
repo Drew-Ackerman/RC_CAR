@@ -27,10 +27,12 @@ export class ZipcodePopup {
 	}
 
 	/**
+	 * Waits until the zipcode popup is visible, then
 	 * Type the zipcode into the input, and submit. 
 	 * @param zip 
 	 */
 	public async typeZipcode(zip:string) {
+		await this.waitTillVisible();
 		try{
 			const zipInput = await this.PopupOverlay.findElement({css:"input[name='zipCode']"});
 			await zipInput.sendKeys(`${zip}`, Key.ENTER);

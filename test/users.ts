@@ -57,8 +57,6 @@ describe("Users", () => {
 	it("Should be able to checkout a product as a guest", async () => {
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
-
-		await popups.zipcodePopup.waitTillVisible();
 		await popups.zipcodePopup.typeZipcode("84405");
 		await popups.informationPopup.appearsAndLeaves();
 		
@@ -83,8 +81,6 @@ describe("Users", () => {
 	it("Should be able to purchase a giftcard", async () => {
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
-
-		await popups.zipcodePopup.waitTillVisible();
 		await popups.zipcodePopup.typeZipcode("84405");
 		await popups.informationPopup.appearsAndLeaves();
 
