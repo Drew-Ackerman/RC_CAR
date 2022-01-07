@@ -1,4 +1,4 @@
-import { Browser, elementIsVisible, findByCSS, findById, WaitCondition } from "../lib";
+import { Browser, elementIsVisible, findById, WaitCondition } from "../lib";
 import { TextInput, WebComponent, Button } from "../lib/elements";
 import { Page } from "../components/page";
 
