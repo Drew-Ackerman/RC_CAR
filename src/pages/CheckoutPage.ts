@@ -1,5 +1,5 @@
 import { Key, WebElement } from "selenium-webdriver";
-import { TestAddress, time } from "../../config";
+import { TestAddress, waitFor } from "../../config";
 import { Button, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
 import { Page } from "../components/page";
@@ -191,7 +191,7 @@ export class CheckoutPage extends Page {
 	 */
 	public async selectAccountType(accountType: AccountTypes){
 		if(accountType == AccountTypes.Account){
-			await this.browser.wait(elementIsVisible(()=>this.loginToAccountButton), time.TenSeconds);
+			await this.browser.wait(elementIsVisible(()=>this.loginToAccountButton), waitFor.TenSeconds);
 			await this.loginToAccountButton.click();
 		}
 		else{
@@ -208,7 +208,7 @@ export class CheckoutPage extends Page {
 	public async selectDelivery(shippingInformation=TestAddress, shippingOption: ShippingOptions){
 		//Default radio button, dont need to click it.
 		//Fill out address then.
-		await this.browser.wait(elementIsVisible(()=>this.FirstNameField),time.TenSeconds);
+		await this.browser.wait(elementIsVisible(()=>this.FirstNameField),waitFor.TenSeconds);
 		await this.FirstNameField.type(shippingInformation.firstName);
 		await this.LastNameField.type(shippingInformation.lastName);
 		await this.ShippingAddress1Field.type(shippingInformation.streetAddress);
@@ -220,20 +220,20 @@ export class CheckoutPage extends Page {
 		switch(shippingOption){
 		case ShippingOptions.Any:
 			await this.browser.sleep(5);
-			await this.browser.wait(elementIsVisible(()=>this.shippingOptions), time.TenSeconds, "No options available");
+			await this.browser.wait(elementIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
 			const deliveryOptions = await this.browser.findElements({className:"shippingOptions"});
 			await deliveryOptions[0].click();
 			break;
 		case ShippingOptions.InHome:
-			await this.browser.wait(elementIsVisible(()=>this.inHomeDeliveryBtn), time.TenSeconds, "No in home ship option");
+			await this.browser.wait(elementIsVisible(()=>this.inHomeDeliveryBtn), waitFor.TenSeconds, "No in home ship option");
 			await this.inHomeDeliveryBtn.click();
 			break;
 		case ShippingOptions.InHomeAndBlueRewards:
-			await this.browser.wait(elementIsVisible(()=>this.inHomeBlueRewardsDeliveryBtn), time.TenSeconds, "No in home blue rewards ship option");
+			await this.browser.wait(elementIsVisible(()=>this.inHomeBlueRewardsDeliveryBtn), waitFor.TenSeconds, "No in home blue rewards ship option");
 			await this.inHomeBlueRewardsDeliveryBtn.click();
 			break;
 		case ShippingOptions.FreeCurbside:
-			await this.browser.wait(elementIsVisible(()=>this.FreeCurbsideDelivery), time.TenSeconds, "No curbside ship option");
+			await this.browser.wait(elementIsVisible(()=>this.FreeCurbsideDelivery), waitFor.TenSeconds, "No curbside ship option");
 			await this.FreeCurbsideDelivery.click();
 			break;
 		}
@@ -275,7 +275,7 @@ export class CheckoutPage extends Page {
 	 */
 	public async enterPaymentDetails(creditCardInfo:CreditCardInformation){
 		await this.browser.sleep(2);
-		await this.browser.wait(elementIsVisible(() => this.creditCardPaymentContainer), time.TenSeconds, "Couldnt find credit card payment container");
+		await this.browser.wait(elementIsVisible(() => this.creditCardPaymentContainer), waitFor.TenSeconds, "Couldnt find credit card payment container");
 		//Find the cc input frame and type in it.
 		await (await this.browser.switchTo()).defaultContent();
 		const ccinputcont = await this.browser.findElement({id:"creditCard"});

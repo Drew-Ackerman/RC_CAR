@@ -47,7 +47,7 @@ export const TestContactInfo: ContactInformation = {
 /**
  * Time constants for use in browser waits
  */
-export const time = {
+export const waitFor = {
 	Second: 1000,
 	TenSeconds: 1000 * 10,
 };
