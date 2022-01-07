@@ -1,6 +1,6 @@
 import { Key, WebElement } from "selenium-webdriver";
 import { TestAddress, time } from "../../config";
-import { Button, elementIsPresent, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Button, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
