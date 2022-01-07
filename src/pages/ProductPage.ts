@@ -69,9 +69,9 @@ export class ProductPage extends Page {
 	 * @returns Get the product details on this page
 	 */
 	public async getProductDetails(): Promise<ProductDetails>{
-		let sku = await (await this.SKU.getText()).split(":").pop()?.trim() || "Sku not found";
-		let price = await this.Price.getText();
-		let name = await this.browser.findElement(this.findProductNameText).getText();
+		const sku = await (await this.SKU.getText()).split(":").pop()?.trim() || "Sku not found";
+		const price = await this.Price.getText();
+		const name = await this.browser.findElement(this.findProductNameText).getText();
 		return new ProductDetails(sku, price, name);
 	}
 
