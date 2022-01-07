@@ -29,7 +29,7 @@ export class WebComponent {
 			try {
 				await this.element.getDriver().executeScript("arguements[0].click();", this.element);
 			} catch (jsErr) {
-				throw clickErr;
+				throw new Error(`Tried to click on object ${this.selector} with javascript`);
 			}
 		}
 	}
@@ -57,6 +57,10 @@ export class WebComponent {
 	 */
 	public findElements(locator: Locator):Promise<Array<WebElement>>{
 		return this.element.findElements(locator);
+	}
+
+	public getAttribute(attributeName: string):Promise<string>{
+		return this.element.getAttribute(attributeName);
 	}
 }
 
