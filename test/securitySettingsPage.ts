@@ -69,7 +69,7 @@ describe("The Security Settings Page", () => {
 
 		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
 		await browser.wait(pageHasLoaded(pages.accountSecurityPage), 10);
-		await pages.accountSecurityPage.changePassword(password, newPassword);
+		await pages.accountSecurityPage.changePassword(newPassword);
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		await pages.accountHomePage.header.logout();

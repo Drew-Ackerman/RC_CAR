@@ -11,9 +11,6 @@ export class AccountSecurityPage implements IPage{
 	@findById("changeEmailBtn")
 	private changeEmailButton: Button;
 
-	@findById("oldPassword")
-	private oldPasswordInput: TextInput;
-
 	@findById("newPassword")
 	private newPasswordInput: TextInput;	
 
@@ -26,8 +23,8 @@ export class AccountSecurityPage implements IPage{
 	@findByCSS("label[for='2FactorOff']")
 	private twoFactorAuthentictionCheckbox: Checkbox;
 
-	constructor(private browser: IBrowser){	}
 	header: IHeader;
+	constructor(private browser: IBrowser){	}
 
 	navigate(): Promise<void> {
 		throw new Error("Method not implemented.");
@@ -39,7 +36,6 @@ export class AccountSecurityPage implements IPage{
 	/**
 	 * Change the users email. The changed email is what they then login with. 
 	 * @param newEmail 
-	 * @returns 
 	 */
 	public async changeEmail(newEmail:string): Promise<void>{
 		await this.newEmailInput.clear();
@@ -49,23 +45,19 @@ export class AccountSecurityPage implements IPage{
 
 	/**
 	 * Change the users password to a new one. 
-	 * @param oldPassword 
 	 * @param newPassword 
-	 * @returns 
 	 */
-	public async changePassword(oldPassword:string, newPassword:string){
+	public async changePassword(newPassword:string){
 		await this.newPasswordInput.type(newPassword);
 		await this.confirmPasswordInput.type(newPassword);
-		//await this.oldPasswordInput.type(oldPassword);
 		await this.changePasswordButton.click();
 	}
 
 	/**
 	 * Turn two factor authentication for the user on and off
-	 * @param check True->On, False->Off. 
-	 * @returns 
+	 * @param check True->Check, False->Uncheck. 
 	 */
-	public async twoFactorAuthentication(check:boolean){
+	public async checkTwoFactorAuthentication(check:boolean){
 		if(check){
 			await this.twoFactorAuthentictionCheckbox.check();
 		}
