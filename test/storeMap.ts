@@ -1,10 +1,10 @@
 import { AllPages } from "../src/pages";
+import { AllPopups } from "../src/popups";
 import { Browser, snapshot } from "../src/lib";
 import { SupportedBrowsers } from "../config";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
-import { ZipcodePopup } from "../src/popups/ZipcodePopup";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -18,6 +18,7 @@ describe("The store map page", () => {
 
 	let browser: Browser;
 	let pages: AllPages;
+	let popups: AllPopups;
 
 	/**
 	 * Before all tests are run
@@ -25,14 +26,17 @@ describe("The store map page", () => {
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
 		pages = new AllPages(browser);
+		popups = new AllPopups(browser);
 	});
 
 	it("Allows stores to be filtered by zipcode", async () => {
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
-		const zipcodePopup = new ZipcodePopup(browser);
-		await zipcodePopup.waitTillVisible();
-		await zipcodePopup.typeZipcode("84405");
+
+		await popups.zipcodePopup.waitTillVisible();
+		await popups.zipcodePopup.typeZipcode("84405");
+		await popups.informationPopup.appearsAndLeaves();
+
 		await pages.homePage.header.clickLocationButton();
 		await pages.storeLocationsPage.clickAllStoresMapButton();
 		
