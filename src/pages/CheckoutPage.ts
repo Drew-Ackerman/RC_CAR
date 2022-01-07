@@ -1,6 +1,6 @@
-import { Key, WebElement } from "selenium-webdriver";
+import { Key, WebElement, WebElementPromise } from "selenium-webdriver";
 import { TestAddress, waitFor } from "../../config";
-import { Button, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Button, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
@@ -217,12 +217,13 @@ export class CheckoutPage extends Page {
 		await this.ShippingState.type(shippingInformation.state);
 		await this.ShippingZip.type(shippingInformation.zip, Key.ENTER);
 
+		await this.browser.sleep(5);
 		await this.browser.wait(elementIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
-		const deliveryOptions = await this.browser.findElements({className:"shippingOptions"});
+		const firstDeliveryOption = new WebComponent(this.browser.findElement({className:"shippingOptions"}), "shippingOptions");
 
 		switch(shippingOption){
 		case ShippingOptions.Any:
-			await deliveryOptions[0].click();
+			await firstDeliveryOption.click();
 			break;
 		case ShippingOptions.InHome:
 			await this.browser.wait(elementIsVisible(()=>this.inHomeDeliveryBtn), waitFor.TenSeconds, "No in home ship option");
@@ -309,8 +310,10 @@ export class CheckoutPage extends Page {
 	 * @param personalMessage A personalized message to put into the email
 	 */
 	public async enterGiftCardDeliveryOptions(email: string, personalMessage: string){
+		await this.browser.sleep(2);
 		await this.browser.wait(elementIsVisible(() => this.giftCardEmailInput), waitFor.TenSeconds);
 		await this.giftCardEmailInput.type(email);
+		await this.browser.wait(elementIsVisible(() => this.personalMessageInput), waitFor.TenSeconds);
 		await this.personalMessageInput.type(personalMessage);
 		await this.browser.wait(elementIsVisible(() => this.DeliveryContinueButton), waitFor.TenSeconds);
 		await this.DeliveryContinueButton.click();
