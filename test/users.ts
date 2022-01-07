@@ -4,10 +4,10 @@ import { TestAddress, SupportedBrowsers, TestContactInfo, TestCreditCard } from 
 import { snapshot } from "../src/lib";
 import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
 import { GiftCardStyleSets } from "../src/pages/GiftCardPage";
-import { ZipcodePopup } from "../src/popups/ZipcodePopup";
 
 import chai = require("chai");
 import chaiAsPromised = require("chai-as-promised");
+import { AllPopups } from "../src/popups";
 chai.use(chaiAsPromised);
 const expect = chai.expect;
 
@@ -21,6 +21,8 @@ describe("Users", () => {
 
 	let browser: Browser;
 	let pages: AllPages;
+	let popups: AllPopups;
+
 	/**
 	 * Before all tests are run
 	 */
@@ -29,6 +31,7 @@ describe("Users", () => {
 		await browser.maximize();
 
 		pages = new AllPages(browser);
+		popups = new AllPopups(browser);
 	});
 
 	it("Should be able to search for products", async() => {
@@ -55,9 +58,9 @@ describe("Users", () => {
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
 
-		const zipCodePopup = new ZipcodePopup(browser);
-		await zipCodePopup.waitTillVisible();
-		await zipCodePopup.typeZipcode("84405");
+		await popups.zipcodePopup.waitTillVisible();
+		await popups.zipcodePopup.typeZipcode("84405");
+		await popups.informationPopup.appearsAndLeaves();
 		
 		await pages.shoppingCartPage.header.searchForItem("");
 		const productsList = await pages.productSearchPage.findAllProductsOnPage();
@@ -81,9 +84,9 @@ describe("Users", () => {
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
 
-		const zipCodePopup = new ZipcodePopup(browser);
-		await zipCodePopup.waitTillVisible();
-		await zipCodePopup.typeZipcode("84405");
+		await popups.zipcodePopup.waitTillVisible();
+		await popups.zipcodePopup.typeZipcode("84405");
+		await popups.informationPopup.appearsAndLeaves();
 
 		await pages.shoppingCartPage.header.searchForItem("gift card");
 		(await pages.productSearchPage.findAllProductsOnPage())[0].Click();
