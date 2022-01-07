@@ -217,11 +217,11 @@ export class CheckoutPage extends Page {
 		await this.ShippingState.type(shippingInformation.state);
 		await this.ShippingZip.type(shippingInformation.zip, Key.ENTER);
 
+		await this.browser.wait(elementIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
+		const deliveryOptions = await this.browser.findElements({className:"shippingOptions"});
+
 		switch(shippingOption){
 		case ShippingOptions.Any:
-			await this.browser.sleep(5);
-			await this.browser.wait(elementIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
-			const deliveryOptions = await this.browser.findElements({className:"shippingOptions"});
 			await deliveryOptions[0].click();
 			break;
 		case ShippingOptions.InHome:
@@ -309,10 +309,10 @@ export class CheckoutPage extends Page {
 	 * @param personalMessage A personalized message to put into the email
 	 */
 	public async enterGiftCardDeliveryOptions(email: string, personalMessage: string){
-		await this.browser.wait(elementIsVisible(() => this.giftCardEmailInput));
+		await this.browser.wait(elementIsVisible(() => this.giftCardEmailInput), waitFor.TenSeconds);
 		await this.giftCardEmailInput.type(email);
 		await this.personalMessageInput.type(personalMessage);
-		await this.browser.wait(elementIsVisible(() => this.DeliveryContinueButton));
+		await this.browser.wait(elementIsVisible(() => this.DeliveryContinueButton), waitFor.TenSeconds);
 		await this.DeliveryContinueButton.click();
 	}
 
