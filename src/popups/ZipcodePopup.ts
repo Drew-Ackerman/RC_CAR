@@ -1,5 +1,6 @@
 import { Key } from "selenium-webdriver";
-import { Browser, elementIsVisible, findByCSS, WebComponent } from "../lib";
+import { IBrowser } from "../interfaces/IBrowser";
+import { elementIsVisible, findByCSS, WebComponent } from "../lib";
 
 
 /**
@@ -10,7 +11,7 @@ export class ZipcodePopup {
 	@findByCSS("div[class='md-modal md-scale md-show'")
 	private PopupOverlay: WebComponent;
 
-	constructor(protected browser: Browser){
+	constructor(protected browser: IBrowser){
 
 	}
 
@@ -33,7 +34,6 @@ export class ZipcodePopup {
 		try{
 			const zipInput = await this.PopupOverlay.findElement({css:"input[name='zipCode']"});
 			await zipInput.sendKeys(`${zip}`, Key.ENTER);
-			await this.browser.sleep(5);
 		} catch(error){
 			console.error("Couldnt type zip into zipcode popup:", error);
 		}

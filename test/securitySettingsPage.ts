@@ -1,8 +1,8 @@
 import { AllPages } from "../src/pages";
+import { AllPopups } from "../src/popups";
 import { Browser, pageHasLoaded } from "../src/lib";
 import { SupportedBrowsers, TestAddress, TestContactInfo, time } from "../config";
 import { snapshot } from "../src/lib";
-import { ZipcodePopup } from "../src/popups/ZipcodePopup";
 import { MenuOptions } from "../src/components/AccountSideBar";
 
 import chai = require("chai"); 
@@ -32,6 +32,7 @@ describe("The Security Settings Page", () => {
 	const password = "Password1!";
 
 	let pages:AllPages;
+	let popups:AllPopups;
 
 	/**
 	 * Before all tests are run
@@ -42,13 +43,14 @@ describe("The Security Settings Page", () => {
 		//Create browser for each test
 		browser = await new Browser(SupportedBrowsers.Chrome);
 		pages = new AllPages(browser);
-		const zipCodePopup = new ZipcodePopup(browser);
+		popups = new AllPopups(browser);
 
 		//Create a new user for each test. 
 		await pages.homePage.navigate();
 		await pages.homePage.header.changeHomeStore();
-		await zipCodePopup.waitTillVisible();
-		await zipCodePopup.typeZipcode("84405");
+		await popups.zipcodePopup.waitTillVisible();
+		await popups.zipcodePopup.typeZipcode("84405");
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
 
 		//Create new account for each test.
 		await pages.homePage.GoToLoginPage();
@@ -57,10 +59,10 @@ describe("The Security Settings Page", () => {
 		await pages.accountCreationPage.CreateNewAccount(testEmail, password, "answer");
 		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage), time.TenSeconds);
 		await pages.viewPersonalProfilePage.CompleteUserData(TestAddress,TestContactInfo);
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
 
 		//Starting point for tests is a logged in account on the account home page.
 		await browser.wait(pageHasLoaded(pages.accountHomePage), time.TenSeconds);		
-		await browser.sleep(4);
 	});
 
 	it("Should allow customers to change their password", async() => {
@@ -69,10 +71,12 @@ describe("The Security Settings Page", () => {
 		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
 		await browser.wait(pageHasLoaded(pages.accountSecurityPage), 10);
 		await pages.accountSecurityPage.changePassword(password, newPassword);
-		await browser.sleep(6);
-		await pages.accountHomePage.header.logout();
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
 
-		await browser.sleep(6);
+		await pages.accountHomePage.header.logout();
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
+
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
 		await pages.loginPage.Login(testEmail, newPassword);
@@ -84,9 +88,11 @@ describe("The Security Settings Page", () => {
 
 		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
 		await pages.accountSecurityPage.changeEmail(newEmail);
-		await browser.sleep(6);
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
+
 		await pages.accountHomePage.header.logout();
-		await browser.sleep(6);
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
+		await popups.informationPopup.appearsAndLeaves(time.TenSeconds);
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();

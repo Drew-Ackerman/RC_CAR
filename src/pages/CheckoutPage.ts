@@ -1,6 +1,6 @@
 import { Key, WebElement } from "selenium-webdriver";
 import { TestAddress, time } from "../../config";
-import { Button, elementIsPresent, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Button, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
@@ -62,14 +62,17 @@ export class CheckoutPage extends Page {
 		}
 		throw new Error("Couldnt find a visible continue button");
 	}
+	@findById("continueAsGuestButton")
+	private containueAsGuestButton: Button;
+
+	@findById("loginToAccountButton")
+	private loginToAccountButton: WebComponent;
+
 	@findById("giftCardEmail1")
 	private giftCardEmailInput: TextInput;
 
 	@findById("personalMessage1")
 	private personalMessageInput: TextInput;
-
-	@findByCSS("a[href='#loginForm']")
-	private AccountLoginButton: Button;
 
 	@findById("states")
 	private StateSelector: Selector;
@@ -187,16 +190,13 @@ export class CheckoutPage extends Page {
 	 * @param accountType 
 	 */
 	public async selectAccountType(accountType: AccountTypes){
-		const loginButtonDiv = new WebComponent(this.browser.findElement({css:"div[class~='login-buttons']"}), "div[class~='login-buttons']");
-		await this.browser.wait(elementIsPresent(()=>loginButtonDiv));
-
 		if(accountType == AccountTypes.Account){
-			await this.AccountLoginButton.click();
+			await this.browser.wait(elementIsVisible(()=>this.loginToAccountButton), time.TenSeconds);
+			await this.loginToAccountButton.click();
 		}
 		else{
-			const guestButton = await loginButtonDiv.findElement({css:"button[type='button']"});
-			//await this.browser.wait(elementIsVisible(()=>guestButton));
-			await guestButton.click();
+			await this.browser.wait(elementIsVisible(()=>this.containueAsGuestButton));
+			await this.containueAsGuestButton.click();
 		}
 	}
 
