@@ -1,6 +1,27 @@
 import "reflect-metadata";
 import { ByHash } from "selenium-webdriver";
 
+/**
+ * When this code is used inside a property decorator what is happening is a class property 
+ * is created. The property will be of whatever type is given to typescript via: 
+ * 
+ * So when used like 
+ * findById("myId")
+ * private myPageElement: Button
+ * 
+ * A property is attached to the POM class where the name is 
+ * myPageElement, it is of type Button, and then a get function is 
+ * created that returns a NEW Button.
+ * 
+ * This promise part is important. It means that when a Page Object Model (POM) is created, 
+ * that the elements of those pages are defined, but those elements are not searched for 
+ * UNTIL the property is used. So everytime a POM property is used like myPageElement.click(), the element on the page 
+ * is searched for, again.
+ * 
+ * @param target The class being effected. 
+ * @param propertyKey The name of the property to change
+ * @param selector A find by selector for the element
+ */
 function elementFactory(target: any, propertyKey: string, selector: ByHash){
 	const selectorString = Object.keys(selector)[0];
 	const type = Reflect.getMetadata("design:type", target, propertyKey);
