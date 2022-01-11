@@ -1,5 +1,5 @@
 import { AllPages } from "../src/pages";
-import { Browser, urlContainsValue } from "../src/lib";
+import { Browser, pageHasLoaded, urlContainsValue } from "../src/lib";
 import { SupportedBrowsers } from "../config";
 import { snapshot } from "../src/lib";
 
@@ -32,6 +32,7 @@ describe("The product search page", () => {
 	it("should allow product filtering", async() => {
 		await pages.homePage.navigate();
 		await pages.homePage.Search("");
+		await browser.wait(pageHasLoaded(pages.productSearchPage));
 		const productList = await pages.productSearchPage.findAllProductsOnPage();
 		await pages.productSearchPage.selectFilterOption("Furniture");
 		await browser.wait(urlContainsValue(browser, "Furniture"));
