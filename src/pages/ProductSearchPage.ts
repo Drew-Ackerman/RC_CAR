@@ -1,6 +1,7 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findAllByClass, findByClass, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../components/page";
+import { FilterBar } from "../components/FilterBar";
 
 export class ProductDetails {
 	constructor(public sku:string, public price:string, public productName: string){}
@@ -62,8 +63,10 @@ export class ProductSearchPage extends Page {
 	@findAllByClass("product")
 	private PageProducts : WebComponents;
 
+	private filterBar;
 	constructor(browser:Browser){
 		super(browser);
+		this.filterBar = new FilterBar(this.browser);
 	}
 
 	/**
@@ -108,4 +111,9 @@ export class ProductSearchPage extends Page {
 	public loadCondition(): WaitCondition {
 		return elementIsVisible(() => this.MainPageTitle);
 	}
+
+	public selectFilterOption(filterOption: string){
+		return this.filterBar.selectTextFilterOption(filterOption);
+	}
 }
+

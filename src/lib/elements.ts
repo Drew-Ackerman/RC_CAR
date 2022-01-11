@@ -125,6 +125,11 @@ export class Checkbox extends WebComponent {
 		super(element, selector);
 	}
 
+	public async isChecked(): Promise<boolean>{
+		const isChecked = await this.element.getAttribute("checked");
+		return isChecked ? true : false;
+	}
+
 	/**
 	 * Check the checkbox if it is checked, otherwise no-op
 	 */
