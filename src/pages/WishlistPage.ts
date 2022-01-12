@@ -14,7 +14,7 @@ export type WishListDetails = {
  */
 export class WishListItem{
 	@findByCSS("a[class~='prodName']")
-	private ProductNameText: WebComponent;
+	private productNameText: WebComponent;
 
 	@findByCSS("div[class~='prodInfo']")
 	private productInfoText: WebComponent;
@@ -30,16 +30,16 @@ export class WishListItem{
 		this.browser = element;
 	}
 
-	public async ProductName(): Promise<string>{
+	public async productName(): Promise<string>{
 		try{
-			return await this.ProductNameText.getText();
+			return await this.productNameText.getText();
 		}catch(error){
 			console.error("Error getting wish list product name", error);
 			throw error;
 		}
 	}
 
-	public async ProductInfo(): Promise<string>{
+	public async productInfo(): Promise<string>{
 		try{
 			return await this.productInfoText.getText();
 		}catch(error){
@@ -50,8 +50,8 @@ export class WishListItem{
 
 	public async productDetails(): Promise<WishListDetails>{
 		try{
-			const name = await this.ProductName();
-			const info = await this.ProductInfo();
+			const name = await this.productName();
+			const info = await this.productInfo();
 			return {productName:name, productInfo:info};
 		} catch(error){
 			console.error(error);
