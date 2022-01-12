@@ -73,7 +73,7 @@ describe("The Security Settings Page", () => {
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		await pages.accountHomePage.header.logout();
-		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
+		await popups.informationPopup.appearsAndLeaves(waitFor.ThirtySeconds);
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		await pages.homePage.navigate();
