@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, elementIsVisible, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
 import { Page } from "../components/page";
 
@@ -68,7 +68,10 @@ export class WishListItem{
 export class WishlistPage extends Page {
 	
 	@findById("shoppingCart")
-	private ShoppingCart: WebComponent;
+	private shoppingCart: WebComponent;
+
+	@findById("cartHeader")
+	private shoppingCartHeader: WebComponent;
 
 	constructor(browser:Browser){
 		super(browser);
@@ -77,6 +80,7 @@ export class WishlistPage extends Page {
 	
 	public loadCondition(): WaitCondition {
 		return urlContainsValue(this.browser, "Shopping-Cart?listName=");
+		//return elementIsVisible(()=>this.shoppingCartHeader);
 	}
 
 	public async wishlistIsEmpty(): Promise<boolean>{
@@ -88,7 +92,8 @@ export class WishlistPage extends Page {
 	}
 
 	public async getWishlistItems(): Promise<Array<WishListItem>>{
-		const items = await this.ShoppingCart.findElements({css:"div[class~='cartItem']"});
+		await this.browser.wait(elementIsVisible(() => this.shoppingCart));
+		const items = await this.shoppingCart.findElements({css:"div[class~='cartItem']"});
 		if(items.shift() == undefined){
 			throw new Error("No wish list items");
 		}

@@ -1,5 +1,6 @@
 
 import { AllPages } from "../src/pages";
+import { AllPopups } from "../src/popups";
 import { Browser } from "../src/lib";
 import { SupportedBrowsers, waitFor } from "../config";
 import { snapshot } from "../src/lib";
@@ -19,28 +20,35 @@ describe("The wishlist page", () => {
 
 	let browser: Browser;
 	let pages: AllPages;
+	let popups: AllPopups;
 	/**
 	 * Before all tests are run
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
 		pages = new AllPages(browser);
+		popups = new AllPopups(browser);
+
+		await pages.homePage.navigate();
+		await pages.homePage.header.changeHomeStore();
+		await popups.zipcodePopup.typeZipcode("84405");
+		await popups.informationPopup.appearsAndLeaves();
+
 	});
 
 	it("Allows products to be added from a wish list", async () => {
-		await pages.homePage.navigate();
 		await pages.homePage.header.searchForItem("");
 		const products = await pages.productSearchPage.findAllProductsOnPage();
 		const firstProduct = products[0];
 		const productDetails = await firstProduct.getProductDetails();	
 		await pages.productSearchPage.selectProduct(firstProduct);
+		
 		await pages.productPage.addProductToWishlist("Add to Wish List");
 		const productAvailable = await pages.wishlistPage.checkProductIsInWishlist(productDetails);
 		expect(productAvailable).to.be.true;
 	});
 
 	it("Allows products to be removed from a wish list", async () => {
-		await pages.homePage.navigate();
 		await pages.homePage.header.searchForItem("");
 		const products = await pages.productSearchPage.findAllProductsOnPage();
 		const firstProduct = products[0];
@@ -54,7 +62,6 @@ describe("The wishlist page", () => {
 	});
 
 	it("Allows wishlist items to be added to the cart", async () => {
-		await pages.homePage.navigate();
 		await pages.homePage.header.searchForItem("");
 		
 		const products = await pages.productSearchPage.findAllProductsOnPage();

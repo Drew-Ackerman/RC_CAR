@@ -1,8 +1,7 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, findByClass, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, elementIsVisible, findByClass, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
 import { Page } from "../components/page";
-
 export class CartItem {
 
 	@findByClass("prodName")
@@ -42,6 +41,9 @@ export class ShoppingCartPage extends Page {
 		throw new Error("Couldnt find a visible checkout button");
 	}
 
+	@findById("shoppingCart")
+	private shoppingCart: WebComponent;
+
 	constructor(protected browser:Browser){
 		super(browser);
 	}
@@ -70,7 +72,7 @@ export class ShoppingCartPage extends Page {
 	 * @returns Cart items with the blue rewards item removed. 
 	 */
 	private async filterOutBlueRewardsCartItem(cartItems: Array<CartItem>){
-		let filteredArray = [];
+		const filteredArray = [];
 		for(const cartItem of cartItems){
 			try{
 				await cartItem.element.findElement({className:"blue-rewards-container"});
@@ -86,8 +88,8 @@ export class ShoppingCartPage extends Page {
 	 * @returns Get all valid {@link CartItem}s in the cart
 	 */
 	public async getCartItems(): Promise<Array<CartItem>>{
-		const shoppingCart = await this.browser.findElement({id:"shoppingCart"});
-		const cartItemElements = await shoppingCart.findElements({className:"cartItem"});
+		await this.browser.wait(elementIsVisible(() => this.shoppingCart));
+		const cartItemElements = await this.shoppingCart.findElements({className:"cartItem"});
 		const cartItems = cartItemElements.map((itemElement) => {
 			return new CartItem(itemElement);
 		});	
