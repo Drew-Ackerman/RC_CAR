@@ -78,7 +78,7 @@ describe("The Security Settings Page", () => {
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
-		await pages.loginPage.Login(testEmail, newPassword);
+		await pages.loginPage.login(testEmail, newPassword);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
@@ -95,7 +95,7 @@ describe("The Security Settings Page", () => {
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
-		await pages.loginPage.Login(newEmail, password);
+		await pages.loginPage.login(newEmail, password);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
