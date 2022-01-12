@@ -31,14 +31,14 @@ export class Header implements IHeader{
 	@findById("searchBox")
 	public SearchBoxInput : TextInput;
 
-	@findByLinkText("Cart")
-	public CartButton: Button;
+	@findById("cartHeaderIcon")
+	private cartButton: Button;
 
 	@findByLinkText("Logout")
-	public LogoutButton: Button;
+	public logoutButton: Button;
 
-	@findByLinkText("Locations")
-	public LocationButton: Button;
+	@findById("locationsHeaderIcon")
+	private locationButton: Button;
 
 	@findByClass("homeStoreCity")
 	public homeStoreLocationChangeLink: WebComponent;
@@ -81,8 +81,8 @@ export class Header implements IHeader{
 	public async logout(){
 		if(await this.AccountButton.isDisplayed()){
 			await this.AccountButton.click();
-			await this.browser.wait(elementIsVisible(()=>this.LogoutButton));
-			await this.LogoutButton.click();
+			await this.browser.wait(elementIsVisible(()=>this.logoutButton));
+			await this.logoutButton.click();
 			await this.browser.wait(elementIsVisible(()=>this.LoginButton));
 		}
 		else{
@@ -104,7 +104,7 @@ export class Header implements IHeader{
 	 * Changes the page to a {@link StoreLocationsPage}
 	 */
 	public async clickLocationButton(){
-		await this.LocationButton.click();
+		await this.locationButton.click();
 	}
 
 	/**
@@ -112,6 +112,6 @@ export class Header implements IHeader{
 	 * Changes the page to a {@link ShoppingCartPage}
 	 */
 	public async clickShoppingCartButton(){
-		await this.CartButton.click();
+		await this.cartButton.click();
 	}
 }
