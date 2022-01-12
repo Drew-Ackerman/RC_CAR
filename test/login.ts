@@ -1,4 +1,5 @@
 import { AllPages } from "../src/pages";
+import { AllPopups } from "../src/popups";
 import { Browser, pageHasLoaded, snapshot } from "../src/lib";
 import { config, SupportedBrowsers, TestAddress, TestContactInfo, waitFor} from "../config";
 
@@ -29,6 +30,7 @@ describe("The login page", () => {
 	const password = "Password1!";
 
 	let pages:AllPages;
+	let popups:AllPopups;
 
 	/**
 	 * Before all tests are run
@@ -36,10 +38,15 @@ describe("The login page", () => {
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
 		pages = new AllPages(browser);
+		popups = new AllPopups(browser);
+
+		await pages.homePage.navigate();
+		await pages.homePage.header.changeHomeStore();
+		await popups.zipcodePopup.typeZipcode("84405");
+		await popups.informationPopup.appearsAndLeaves();
 	});
 
 	it("Should allow an account to be created", async() => {
-		await pages.homePage.navigate();
 		await pages.homePage.header.clickAccountButton();
 		await pages.loginPage.setupNewAccount();
 		await pages.accountHelpPage.CreateAccountLink.click();
@@ -51,15 +58,14 @@ describe("The login page", () => {
 	});
 
 	it("Should allow customers to login", async() => {
-		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
-		await pages.loginPage.Login(demoEmail, password);
+		await pages.loginPage.login(demoEmail, password);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
 	it("Should allow employees to login", async() => {
-		await pages.homePage.navigate();
-		await pages.loginPage.Login(`${config.testEmployee.username}`, `${config.testEmployee.password}`);
+		await pages.homePage.GoToLoginPage();
+		await pages.loginPage.login(`${config.testEmployee.username}`, `${config.testEmployee.password}`);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
