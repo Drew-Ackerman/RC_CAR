@@ -90,6 +90,9 @@ class FilterGroup {
 	@findByClass("rowToggleChild")
 	protected filterOptionsContainer: WebComponent;
 
+	@findByClass("filtervalues")
+	private filterValuesContainer: WebComponent;
+
 	protected browser;
 	constructor(protected element: WebElement){
 		this.browser = element;
@@ -106,16 +109,13 @@ class FilterGroup {
 	/**
 	 * Determines if the filter group has been expanded or if
 	 * it remains collapsed and hidden.
+	 * 
+	 * Aria-hidden will be false if nothing is hidden, true if it is hidden.
 	 * @returns True if group is expanded, false otherwise.
 	 */
 	public async isExpanded(){
-		const val = await this.filterGroupName.getAttribute("aria-expanded");
-		if(val === "true"){
-			return true;
-		}
-		else{
-			return false;
-		}
+		const val = await this.filterValuesContainer.getAttribute("aria-hidden");
+		return val === "false";
 	}
 
 	/**
@@ -190,7 +190,7 @@ class TextFilterGroup extends FilterGroup{
 	 * @param filterOption The filter option to select
 	 */
 	public async selectTextFilterOption(filterOption: string){
-		if(await this.isExpanded() == false){
+		if(!await this.isExpanded()){
 			await this.expandFilterGroup();
 		}
 
@@ -214,7 +214,7 @@ class TextFilterGroup extends FilterGroup{
 	 * @returns 
 	 */
 	public async deselectFilterOption(filterOption: string){
-		if(await this.isExpanded() == false){
+		if(!await this.isExpanded()){
 			await this.expandFilterGroup();
 		}
 
