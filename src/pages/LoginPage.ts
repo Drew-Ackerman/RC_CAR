@@ -8,19 +8,19 @@ import { Page } from "../components/page";
 export class LoginPage extends Page{
 
 	@findById("j_password")
-	private PasswordInput : TextInput;
+	private passwordInput : TextInput;
 
 	@findById("j_username")
-	private UsernameInput : TextInput;
+	private usernameInput : TextInput;
 
 	@findById("login")
-	private LoginForm : WebComponent;
+	private loginForm : WebComponent;
 
 	@findById("signInButton")
-	private SignInButton : Button;
+	private signInButton : Button;
 
 	@findById("setupNewAccountButton")
-	private SetupNewAccountBtn : WebComponent;
+	private setupNewAccountBtn : WebComponent;
 
 	constructor(browser: Browser){
 		super(browser);
@@ -32,10 +32,10 @@ export class LoginPage extends Page{
 	 * @param password The password to use
 	 * Successful login changes page to account home page.
 	 */
-	public async Login(username:string, password:string): Promise<void>{
-		await this.UsernameInput.type(username);
-		await this.PasswordInput.type(password);
-		await this.SignInButton.click();
+	public async login(username:string, password:string): Promise<void>{
+		await this.usernameInput.type(username);
+		await this.passwordInput.type(password);
+		await this.signInButton.click();
 	}
 
 	/**
@@ -43,7 +43,7 @@ export class LoginPage extends Page{
 	 * @returns A promise
 	 */
 	public loadCondition(): WaitCondition {
-		return elementIsVisible(() => this.LoginForm);
+		return elementIsVisible(() => this.loginForm);
 	}
 
 	/**
@@ -51,6 +51,6 @@ export class LoginPage extends Page{
 	 * Page should change to AccountHelpPage
 	 */
 	public async setupNewAccount(): Promise<void> {
-		await this.SetupNewAccountBtn.click();
+		await this.setupNewAccountBtn.click();
 	}
 }

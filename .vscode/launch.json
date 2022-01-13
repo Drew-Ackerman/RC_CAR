@@ -4,15 +4,14 @@
     // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
     "version": "0.2.0",
     "configurations": [
-
         {            
-            "name": "Debug Wishlist Tests",
+            "name": "Debug Login Tests",
             "type": "node",
             "protocol": "inspector",
             "request": "launch",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
-            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/wishlist.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
+            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/login.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
             "cwd": "${workspaceRoot}"
         },
         {            
@@ -36,13 +35,13 @@
             "cwd": "${workspaceRoot}"
         },
         {            
-            "name": "Debug User UI Tests",
+            "name": "Debug Security Settings Page UI Tests",
             "type": "node",
             "protocol": "inspector",
             "request": "launch",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
-            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/users.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
+            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/securitySettingsPage.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
             "cwd": "${workspaceRoot}"
         },
         {            
@@ -56,13 +55,23 @@
             "cwd": "${workspaceRoot}"
         },
         {            
-            "name": "Debug Security Settings Page UI Tests",
+            "name": "Debug User UI Tests",
             "type": "node",
             "protocol": "inspector",
             "request": "launch",
             "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
             "stopOnEntry": false,
-            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/securitySettingsPage.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
+            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/users.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
+            "cwd": "${workspaceRoot}"
+        },
+        {            
+            "name": "Debug Wishlist Tests",
+            "type": "node",
+            "protocol": "inspector",
+            "request": "launch",
+            "program": "${workspaceRoot}/node_modules/mocha/bin/_mocha",
+            "stopOnEntry": false,
+            "args": [ "-r", "ts-node/register", "${workspaceRoot}/test/**/wishlist.ts", "--no-timeouts", "--exit", "--reporter mochawesome"],
             "cwd": "${workspaceRoot}"
         },
         {

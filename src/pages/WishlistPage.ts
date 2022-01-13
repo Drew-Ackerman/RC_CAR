@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, elementIsVisible, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
 import { Page } from "../components/page";
 
@@ -14,7 +14,7 @@ export type WishListDetails = {
  */
 export class WishListItem{
 	@findByCSS("a[class~='prodName']")
-	private ProductNameText: WebComponent;
+	private productNameText: WebComponent;
 
 	@findByCSS("div[class~='prodInfo']")
 	private productInfoText: WebComponent;
@@ -30,16 +30,16 @@ export class WishListItem{
 		this.browser = element;
 	}
 
-	public async ProductName(): Promise<string>{
+	public async productName(): Promise<string>{
 		try{
-			return await this.ProductNameText.getText();
+			return await this.productNameText.getText();
 		}catch(error){
 			console.error("Error getting wish list product name", error);
 			throw error;
 		}
 	}
 
-	public async ProductInfo(): Promise<string>{
+	public async productInfo(): Promise<string>{
 		try{
 			return await this.productInfoText.getText();
 		}catch(error){
@@ -50,8 +50,8 @@ export class WishListItem{
 
 	public async productDetails(): Promise<WishListDetails>{
 		try{
-			const name = await this.ProductName();
-			const info = await this.ProductInfo();
+			const name = await this.productName();
+			const info = await this.productInfo();
 			return {productName:name, productInfo:info};
 		} catch(error){
 			console.error(error);
@@ -68,7 +68,10 @@ export class WishListItem{
 export class WishlistPage extends Page {
 	
 	@findById("shoppingCart")
-	private ShoppingCart: WebComponent;
+	private shoppingCart: WebComponent;
+
+	@findById("cartHeader")
+	private shoppingCartHeader: WebComponent;
 
 	constructor(browser:Browser){
 		super(browser);
@@ -77,6 +80,7 @@ export class WishlistPage extends Page {
 	
 	public loadCondition(): WaitCondition {
 		return urlContainsValue(this.browser, "Shopping-Cart?listName=");
+		//return elementIsVisible(()=>this.shoppingCartHeader);
 	}
 
 	public async wishlistIsEmpty(): Promise<boolean>{
@@ -88,7 +92,8 @@ export class WishlistPage extends Page {
 	}
 
 	public async getWishlistItems(): Promise<Array<WishListItem>>{
-		const items = await this.ShoppingCart.findElements({css:"div[class~='cartItem']"});
+		await this.browser.wait(elementIsVisible(() => this.shoppingCart));
+		const items = await this.shoppingCart.findElements({css:"div[class~='cartItem']"});
 		if(items.shift() == undefined){
 			throw new Error("No wish list items");
 		}

@@ -50,6 +50,8 @@ export const TestContactInfo: ContactInformation = {
 export const waitFor = {
 	Second: 1000,
 	TenSeconds: 1000 * 10,
+	ThirtySeconds: 1000 * 10 * 3,
+	OneMinute: 1000 * 100
 };
 
 

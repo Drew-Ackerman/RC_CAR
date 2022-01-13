@@ -91,17 +91,17 @@ export class ProductPage extends Page {
 
 
 	public async addProductToWishlist(wishlistName: string): Promise<void>{
+		await this.browser.wait(elementIsVisible(()=>this.WishlistAddButton));
+		await this.browser.sleep(1);
 		await this.WishlistAddButton.click();
 		const possibleWishlists = await this.browser.findElements({css:"a[class~='icon-heart']"});
 		for(let i=0; i < possibleWishlists.length;i++){
 			const text = await possibleWishlists[i].getText();
 			if(text.includes(wishlistName)){
-				try{
-					await possibleWishlists[i].click();
-				} catch(error){
-					console.error(error);
-				}
+				await possibleWishlists[i].click();
+				return;
 			}
 		}
+		throw new Error("Could not find wishlist");
 	}
 }

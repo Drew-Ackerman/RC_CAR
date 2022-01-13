@@ -22,11 +22,7 @@ export interface IHeader{
 
 	SearchBoxInput : TextInput;
 
-	CartButton: Button;
-
-	LogoutButton: Button;
-
-	LocationButton: Button;
+	logoutButton: Button;
 
 	homeStoreLocationChangeLink: WebComponent;
 

@@ -73,12 +73,12 @@ describe("The Security Settings Page", () => {
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		await pages.accountHomePage.header.logout();
-		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
+		await popups.informationPopup.appearsAndLeaves(waitFor.ThirtySeconds);
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
-		await pages.loginPage.Login(testEmail, newPassword);
+		await pages.loginPage.login(testEmail, newPassword);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
@@ -95,7 +95,7 @@ describe("The Security Settings Page", () => {
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
-		await pages.loginPage.Login(newEmail, password);
+		await pages.loginPage.login(newEmail, password);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
