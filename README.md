@@ -73,3 +73,6 @@ Slow tests are test unrun. Some tests *have* to be slow, most dont. If you have 
 ### Test often
 Make testing a part of the development process. Ensure tests are done by the developer themselves before they release code for review. It is easier and less expensive to fix a bug before review and definitely before the code is in production. 
 
+### Setup
+`npm install` - this will need to be run any time there are changes to the package.json
+`npm run test` - It will automatically run against test, if you want it to run against your local then change the baseUrl in config.ts
