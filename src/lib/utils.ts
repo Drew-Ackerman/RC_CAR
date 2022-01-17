@@ -23,7 +23,7 @@ import { ByHash } from "selenium-webdriver";
  * @param selector A find by selector for the element
  */
 function elementFactory(target: any, propertyKey: string, selector: ByHash){
-	const selectorString = Object.keys(selector)[0];
+	const selectorString = `Type: ${Object.keys(selector)[0]}, Selector: ${Object.keys(selector)[1]}`;
 	const type = Reflect.getMetadata("design:type", target, propertyKey);
 	Object.defineProperty(target, propertyKey, {
 		configurable: true,
@@ -109,7 +109,7 @@ export function findByName(nameValue: string){
  * @param linkText The links tags text
  * @returns Nothing. 
  */
- export function findByPartialLinkText(linkText: string){
+export function findByPartialLinkText(linkText: string){
 	return (target: any, propertyKey: string) => {
 		elementFactory(target, propertyKey, {partialLinkText:`${linkText}`});
 	};
@@ -134,7 +134,7 @@ export function findByCSS(cssIdentifier: string){
  * @param xpath The xpath to find the element
  * @returns Nothing. 
  */
- export function findByXpath(xpath: string){
+export function findByXpath(xpath: string){
 	return (target: any, propertyKey: string) => {
 		elementFactory(target, propertyKey, {xpath:`${xpath}`});
 	};
