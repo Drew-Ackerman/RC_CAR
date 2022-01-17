@@ -1,11 +1,14 @@
 import { IHeader } from "../interfaces/IHeader";
 import { IPage } from "../interfaces/IPage";
-import { Browser, urlContainsValue, WaitCondition } from "../lib";
+import { Browser, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 
 export class OrderThanksPage implements IPage {
 	
 	header: IHeader;
 	url: string;
+
+	@findById("orderConfirmationP")
+	private orderConfirmationText: WebComponent;
 
 	constructor(protected browser:Browser){
 
@@ -21,6 +24,11 @@ export class OrderThanksPage implements IPage {
 	
 	public loadCondition(): WaitCondition {
 		return urlContainsValue(this.browser, "Order-Thanks");
+	}
+
+	public async getOrderNumber(): Promise<string>{
+		const orderNumberElem = await this.orderConfirmationText.findElement({css:"strong"});
+		return orderNumberElem.getText();
 	}
 
 }
