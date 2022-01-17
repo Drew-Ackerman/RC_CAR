@@ -43,6 +43,9 @@ export class Header implements IHeader{
 	@findByClass("homeStoreCity")
 	public homeStoreLocationChangeLink: WebComponent;
 
+	@findByCSS("nav[aria-label='Account Menu']")
+	private accountMenu: WebComponent;
+
 	/**
 	 * Click the account button. 
 	 * This will either go to the login page, 
@@ -113,5 +116,23 @@ export class Header implements IHeader{
 	 */
 	public async clickShoppingCartButton(){
 		await this.cartButton.click();
+	}
+
+	/**
+	 * Select an account menu option, only accessible if a user is logged in. 
+	 * @param optionToSelect The option in the account menu
+	 */
+	public async selectAccountMenuOption(optionToSelect: string): Promise<void>{
+		await this.clickAccountButton();
+		await this.browser.wait(elementIsVisible(()=>this.accountMenu));
+		const accountMenuElements = await this.accountMenu.findElements({css:"li"});
+		for(const menuOption of accountMenuElements){
+			const menuOptionText = await menuOption.getText();
+			if(menuOptionText == optionToSelect){
+				await menuOption.click();
+				return;
+			}
+		}
+		throw new Error(`Account menu option: ${optionToSelect} not present`);
 	}
 }
