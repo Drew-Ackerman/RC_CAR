@@ -18,6 +18,10 @@ export const enum States {
 export const enum Stores {
 	UtahWarehouse = "Utah Warehouse",
 	Layton = "Layton",
+	SouthSaltLake = "South Salt Lake",
+	Riverdale = "Riverdale",
+	Draper = "Draper",
+	University = "University Place Orem"
 }
 
 /**
@@ -44,6 +48,12 @@ export const enum ShippingOptions {
 	InHome,
 	InHomeAndBlueRewards,
 	Any
+}
+
+export const enum PaymentMethods {
+	StoreCashier,
+	CreditCard,
+	PayPal
 }
 
 /**
@@ -173,6 +183,24 @@ export class CheckoutPage extends Page {
 	@findById("backToCart")
 	private BackToCartButton: Button;
 
+	@findByCSS("label[for='inStorePickupRadio']")
+	private inStorePickupOption: WebComponent;
+
+	@findById("states")
+	private stateSelector: Selector;
+
+	@findById("loationId")
+	private storeSelector: Selector;
+
+	@findByCSS("label[for='CARD0']")
+	private cardSelector: WebComponent;
+
+	@findByCSS("label[for='PAYP0']")
+	private paypalSelector: WebComponent;
+
+	@findByCSS("label[for='storeCashier0']")
+	private storeCashierSelector: WebComponent;
+
 	constructor(public browser:IBrowser){
 		super(browser);
 	}
@@ -209,12 +237,19 @@ export class CheckoutPage extends Page {
 		//Default radio button, dont need to click it.
 		//Fill out address then.
 		await this.browser.wait(elementIsVisible(()=>this.FirstNameField),waitFor.TenSeconds);
+		await this.FirstNameField.clear();
 		await this.FirstNameField.type(shippingInformation.firstName);
+		await this.LastNameField.clear();
 		await this.LastNameField.type(shippingInformation.lastName);
+		await this.ShippingAddress1Field.clear();
 		await this.ShippingAddress1Field.type(shippingInformation.streetAddress);
+		await this.ShippingAddress2Field.clear();
 		await this.ShippingAddress2Field.type(shippingInformation.streetAddress2);
+		await this.ShippingCity.clear();
 		await this.ShippingCity.type(shippingInformation.city);
+		await this.ShippingState.clear();
 		await this.ShippingState.type(shippingInformation.state);
+		await this.ShippingZip.clear();
 		await this.ShippingZip.type(shippingInformation.zip, Key.ENTER);
 
 		await this.browser.sleep(5);
@@ -242,13 +277,33 @@ export class CheckoutPage extends Page {
 		await this.DeliveryContinueButton.click();
 	}
 
+	public async selectInStorePickup(state?:States, store?:Stores){
+		await this.browser.wait(elementIsVisible(()=>this.inStorePickupOption));
+		await this.inStorePickupOption.click();
+		if(state){
+			await this.stateSelector.selectOptionByText(state);
+		}
+		if(store){
+			await this.storeSelector.selectOptionByText(store);
+		}
+		await this.browser.wait(elementIsVisible(() => this.DeliveryContinueButton));
+		await this.DeliveryContinueButton.click();
+	}
+
 	public async enterBillingDetails(address:Address){
+		await this.billingFirstName.clear();
 		await this.billingFirstName.type(address.firstName);
+		await this.billingLastName.clear();
 		await this.billingLastName.type(address.lastName);
+		await this.billingStreet1.clear();
 		await this.billingStreet1.type(address.streetAddress);
+		await this.billingStreet2.clear();
 		await this.billingStreet2.type(address.streetAddress2);
+		await this.billingCity.clear();
 		await this.billingCity.type(address.city);
+		await this.billingState.clear();
 		await this.billingState.type(address.state);
+		await this.billingZip.clear();
 		await this.billingZip.type(address.zip);
 	}
 
@@ -259,11 +314,15 @@ export class CheckoutPage extends Page {
 	 */
 	public async enterContactInfo(contactInformation:ContactInformation){
 		await this.browser.wait(elementIsVisible(()=>this.EmailInput));
+		await this.EmailInput.clear();
 		await this.EmailInput.type(contactInformation.email);
+		await this.HomePhoneInput.clear();
 		await this.HomePhoneInput.type(contactInformation.homePhone);
+		await this.MobilePhoneInput.clear();
 		await this.MobilePhoneInput.type(contactInformation.mobilePhone);
+		await this.WorkPhoneInput.clear();
 		await this.WorkPhoneInput.type(contactInformation.workPhone);
-		const continueButton = new Button(this.browser.findElement(this.findContactInformationContinueButton), "function");
+		const continueButton = new Button(this.browser.findElement({id:"contactInfoContinueButton"}), "id:contactInfoContinueButton");
 		await this.browser.wait(elementIsVisible(() => continueButton));
 		await continueButton.click();
 	}
@@ -302,6 +361,25 @@ export class CheckoutPage extends Page {
 		await cscinput.sendKeys(creditCardInfo.creditCardCSV);
 
 		await (await this.browser.switchTo()).parentFrame();
+	}
+
+	public async selectPaymentMethod(paymentMethod:PaymentMethods){
+		//const paymentMethodContainer = await this.browser.findElement({id:"paymentMethod0"});
+		
+		switch(paymentMethod){
+		case PaymentMethods.CreditCard:
+			await this.browser.wait(elementIsVisible(()=>this.cardSelector));
+			await this.cardSelector.click();
+			break;
+		case PaymentMethods.PayPal:
+			await this.browser.wait(elementIsVisible(()=>this.paypalSelector));
+			await this.paypalSelector.click();
+			break;
+		case PaymentMethods.StoreCashier:
+			await this.browser.wait(elementIsVisible(()=>this.storeCashierSelector));
+			await this.storeCashierSelector.click();
+			break;
+		}
 	}
 
 	/**
