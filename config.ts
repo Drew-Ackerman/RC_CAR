@@ -8,7 +8,7 @@ import { CreditCardInformation } from "./src/types/PaymentInformation";
 export const config = {
 	// baseUrl: process.env.BASE_URL || "https://localhost:8443/",
 	baseUrl: process.env.BASE_URL || "https://rcwtest.rcwilley.com/",
-	testEmployee: {username:"web.adminone", password:"WILLRESETPASSWORD1@q"},
+	testEmployee: {username:"web.adminone", password:"I'malittleteapot"}, //The last four digits of this account are 9667, relevant when resetting passwords sometimes.
 	testAddress: {street:"DemoStree", city:"democity", zip:"84405"}
 
 };
