@@ -16,6 +16,7 @@ import { StoreMapPage } from "./StoreMapPage";
 import { ViewPersonalProfile } from "./ViewPersonalProfile";
 import { WishlistPage } from "./WishlistPage";
 import { Browser } from "../lib";
+import { AccountActivityPage } from "./AccountActivityPage";
 
 export {
 	AccountHomePage,
@@ -38,6 +39,7 @@ export {
 
 
 export class AllPages {
+	public accountActivityPage: AccountActivityPage;
 	public accountHomePage: AccountHomePage;
 	public accountSecurityPage: AccountSecurityPage;
 	public accountCreationPage: AccountCreationPage;
@@ -56,6 +58,7 @@ export class AllPages {
 	public wishlistPage: WishlistPage;
 
 	constructor(public browser: Browser){
+		this.accountActivityPage = new AccountActivityPage(browser);
 		this.accountHomePage = new AccountHomePage(browser);
 		this.accountSecurityPage = new AccountSecurityPage(browser);
 		this.accountCreationPage = new AccountCreationPage(browser);

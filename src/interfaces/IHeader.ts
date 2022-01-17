@@ -59,4 +59,7 @@ export interface IHeader{
 	 * @returns A {@link ShoppingCartPage}
 	 */
 	clickShoppingCartButton():Promise<void>;
+
+	selectAccountMenuOption(optionToSelect: string):Promise<void>;
+
 }
