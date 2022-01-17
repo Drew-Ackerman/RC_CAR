@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, elementIsVisible, findAllByClass, findByClass, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Browser, elementIsVisible, findAllByClass, findByClass, urlChanged, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../components/page";
 import { FilterBar } from "../components/FilterBar";
 
@@ -112,8 +112,12 @@ export class ProductSearchPage extends Page {
 		return elementIsVisible(() => this.MainPageTitle);
 	}
 
-	public selectFilterOption(filterOption: string){
-		return this.filterBar.selectTextFilterOption(filterOption);
+	public async selectFilterOption(filterOption: string){
+		const currentUrl = await this.browser.currentUrl();
+		await this.filterBar.waitTillVisible();
+		const selectedOption = await this.filterBar.selectTextFilterOption(filterOption);
+		await this.browser.wait(urlChanged(this.browser, currentUrl));
+		return selectedOption;
 	}
 }
 
