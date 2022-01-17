@@ -32,7 +32,7 @@ describe("Users", () => {
 
 		pages = new AllPages(browser);
 		popups = new AllPopups(browser);
-	});
+	});  
 
 	it("Should be able to search for products", async() => {
 		await pages.homePage.navigate();
@@ -100,6 +100,41 @@ describe("Users", () => {
 		await pages.checkoutPage.placeOrder();
 		return expect(pageHasLoaded(pages.orderThanksPage));
 	});
+
+	it("Should be able to checkout a local and drop shipped product", async () => {
+		await pages.homePage.navigate();
+		await pages.homePage.header.changeHomeStore();
+		await popups.zipcodePopup.typeZipcode("84405");
+		await popups.informationPopup.appearsAndLeaves();
+		
+		//Grab the first item.
+		await pages.homePage.header.searchForItem("");
+		await pages.productSearchPage.selectFilterOption("In Stock");
+		await pages.productSearchPage.selectFilterOption("Sale");
+		let productsList = await pages.productSearchPage.findAllProductsOnPage();
+		const firstProduct = productsList[0];
+		await pages.productSearchPage.selectProduct(firstProduct);
+		await pages.productPage.addToCart();
+		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
+
+		await pages.shoppingCartPage.header.searchForItem("");
+		await pages.productSearchPage.selectFilterOption("Direct From Manufacturer");
+		productsList = await pages.productSearchPage.findAllProductsOnPage();
+		const secondProduct = productsList[0];
+		await pages.productSearchPage.selectProduct(secondProduct);
+		await pages.productPage.addToCart();
+		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
+
+		await pages.shoppingCartPage.Checkout();
+		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
+		await pages.checkoutPage.selectDelivery(TestAddress, ShippingOptions.Any);
+		await pages.checkoutPage.enterContactInfo(TestContactInfo);
+		await pages.checkoutPage.enterPaymentDetails(TestCreditCard);
+		await pages.checkoutPage.selectSameBillingAddress();
+		await pages.checkoutPage.submitPaymentInformation();
+		await pages.checkoutPage.placeOrder();
+		return expect(pageHasLoaded(pages.orderThanksPage));
+	}); 
 
 	/**
 	 * After all tests are run

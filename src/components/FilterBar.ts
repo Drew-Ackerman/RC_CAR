@@ -1,8 +1,9 @@
 import { WebElement } from "selenium-webdriver";
 import { FilterOptionError } from "../exceptions/FilterOptionError";
 import { IBrowser } from "../interfaces/IBrowser";
+import { elementIsVisible } from "../lib";
 import { Button, Checkbox, WebComponent } from "../lib/elements";
-import { findByClass, findById } from "../lib/utils";
+import { findByClass, findByCSS, findById } from "../lib/utils";
 
 /**
  * The filter bar is used in the product search page
@@ -72,6 +73,10 @@ export class FilterBar {
 			}
 		}
 		return filterGroups;
+	}
+
+	public async waitTillVisible(){
+		await this.browser.wait(elementIsVisible(()=>this.container));
 	}
 }
 
@@ -238,7 +243,7 @@ class TextFilterGroup extends FilterGroup{
  */
 class TextFilterOption{
 
-	@findById("form")
+	@findByCSS("input[type='checkbox']")
 	private checkbox: Checkbox;
 
 	private browser;
