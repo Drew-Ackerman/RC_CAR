@@ -23,7 +23,7 @@ import { ByHash } from "selenium-webdriver";
  * @param selector A find by selector for the element
  */
 function elementFactory(target: any, propertyKey: string, selector: ByHash){
-	const selectorString = `Type: ${Object.keys(selector)[0]}, Selector: ${Object.keys(selector)[1]}`;
+	const selectorString = `By: ${Object.keys(selector)[0]}, On: ${Object.values(selector)[0]}`;
 	const type = Reflect.getMetadata("design:type", target, propertyKey);
 	Object.defineProperty(target, propertyKey, {
 		configurable: true,
