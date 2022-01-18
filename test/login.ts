@@ -37,6 +37,8 @@ describe("The login page", () => {
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
+		await browser.maximize();
+
 		pages = new AllPages(browser);
 		popups = new AllPopups(browser);
 
@@ -50,9 +52,9 @@ describe("The login page", () => {
 		await pages.homePage.header.clickAccountButton();
 		await pages.loginPage.setupNewAccount();
 		await pages.accountHelpPage.CreateAccountLink.click();
-		await pages.accountCreationPage.CreateNewAccount(demoEmail, password, "demo");
-		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage));
-		await pages.viewPersonalProfilePage.CompleteUserData(TestAddress, TestContactInfo);
+		await pages.accountCreationPage.createNewAccount(demoEmail, password, "demo");
+		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage), waitFor.TenSeconds);
+		await pages.viewPersonalProfilePage.completeUserData(TestAddress, TestContactInfo);
 		await browser.wait(pageHasLoaded(pages.accountHomePage), waitFor.TenSeconds);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
