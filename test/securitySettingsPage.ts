@@ -42,6 +42,8 @@ describe("The Security Settings Page", () => {
 
 		//Create browser for each test
 		browser = await new Browser(SupportedBrowsers.Chrome);
+		await browser.maximize();
+
 		pages = new AllPages(browser);
 		popups = new AllPopups(browser);
 
