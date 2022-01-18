@@ -14,8 +14,8 @@ export class InformationPopup {
 	}
 
 	public async appearsAndLeaves(optionalTimeout?:number){
-		await this.browser.wait(elementIsVisible(()=>this.overlay), optionalTimeout);
-		await this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout);
+		await this.browser.wait(elementIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
+		await this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
 		return;
 	}
 
@@ -25,7 +25,7 @@ export class InformationPopup {
 	 * @returns 
 	 */
 	public async waitTillNotPresent(optionalTimeout?:number){
-		return this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout);
+		return this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
 	}
 
 	public async getMessage(){
