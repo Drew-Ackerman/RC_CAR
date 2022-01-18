@@ -17,7 +17,9 @@ require("chromedriver");
  * A smoke test suite to ensure basic site functionality 
  * is operational.
  */
-describe("Users", () => {  
+describe("Users", function () {  
+	//Change timeout to longer because this some tests here takes a bit longer
+	this.timeout(180000);
 
 	let browser: Browser;
 	let pages: AllPages;
