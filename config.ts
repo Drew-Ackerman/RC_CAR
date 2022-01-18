@@ -2,16 +2,6 @@ import { Address } from "./src/types";
 import { ContactInformation } from "./src/types/ContactInformation";
 import { CreditCardInformation } from "./src/types/PaymentInformation";
 
-/**
- * A configuration object for common variables used throughout RC_CAR
- */
-export const config = {
-	// baseUrl: process.env.BASE_URL || "https://localhost:8443/",
-	baseUrl: process.env.BASE_URL || "https://rcwtest.rcwilley.com/",
-	testEmployee: {username:"web.adminone", password:"I'malittleteapot"}, //The last four digits of this account are 9667, relevant when resetting passwords sometimes.
-	testAddress: {street:"DemoStree", city:"democity", zip:"84405"}
-
-};
 
 /**
  * An address useful for testing.
@@ -19,11 +9,11 @@ export const config = {
 export const TestAddress: Address = {
 	firstName: "Demo",
 	lastName: "Lition",
-	streetAddress: "Demo",
-	streetAddress2: "Demo",
-	city: "DemoCity",
+	streetAddress: "2301 S 300 W",
+	streetAddress2: "Unit 1",
+	city: "Salt Lake City",
 	state: "UT",
-	zip: "84405",
+	zip: "84115",
 };
 
 /**
@@ -63,3 +53,13 @@ export enum SupportedBrowsers {
 	Chrome = "chrome",
 	Firefox = "firefox",
 }
+
+/**
+ * A configuration object for common variables used throughout RC_CAR
+ */
+export const config = {
+	// baseUrl: process.env.BASE_URL || "https://localhost:8443/",
+	baseUrl: process.env.BASE_URL || "https://rcwtest.rcwilley.com/",
+	testEmployee: {username:"web.adminone", password:"I'malittleteapot"}, //The last four digits of this account are 9667, relevant when resetting passwords sometimes.
+	testAddress: TestAddress
+};
