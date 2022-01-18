@@ -29,7 +29,7 @@ export class WebComponent {
 			try {
 				await this.element.getDriver().executeScript("arguements[0].click();", this.element);
 			} catch (jsErr) {
-				throw new Error(`Tried to click on object ${this.selector} with javascript`);
+				throw new Error(`Tried to click on object with selector ${this.selector}, with javascript, item isnt present, or another element is in the way.`);
 			}
 		}
 	}
@@ -164,7 +164,7 @@ export class TextInput extends WebComponent {
 	constructor(element: WebElementPromise, selector: string){
 		super(element,selector);
 	}
-
+	
 	/**
 	 * 
 	 * @param text The text to type into the input field.
@@ -180,6 +180,11 @@ export class TextInput extends WebComponent {
 	 */
 	public clear(): Promise<void>{
 		return this.element.clear();
+	}
+
+	public async clearAndType(...varArgs:(string|number|Promise<string|number>)[]): Promise<void>{
+		await this.clear();
+		return this.type(...varArgs);
 	}
 }
 
