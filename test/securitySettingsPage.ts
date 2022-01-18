@@ -55,9 +55,9 @@ describe("The Security Settings Page", () => {
 		await pages.homePage.GoToLoginPage();
 		await pages.loginPage.setupNewAccount();
 		await pages.accountHelpPage.gotoAccountCreation();
-		await pages.accountCreationPage.CreateNewAccount(testEmail, password, "answer");
+		await pages.accountCreationPage.createNewAccount(testEmail, password, "answer");
 		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage), waitFor.TenSeconds);
-		await pages.viewPersonalProfilePage.CompleteUserData(TestAddress,TestContactInfo);
+		await pages.viewPersonalProfilePage.completeUserData(TestAddress,TestContactInfo);
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		//Starting point for tests is a logged in account on the account home page.

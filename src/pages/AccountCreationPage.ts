@@ -5,28 +5,28 @@ import { IBrowser } from "../interfaces/IBrowser";
 export class AccountCreationPage extends Page {
 	
 	@findByCSS("label[for='subscribeCheckbox']")
-	public SubscribeCheckbox : Checkbox;
+	private subscribeCheckbox : Checkbox;
 
 	@findByCSS("label[for='twoFactorCheckbox']")
-	public TwoFactorCheckbox : Checkbox;
+	private twoFactorCheckbox : Checkbox;
 
 	@findById("email")
-	public EmailAddressInput : TextInput;
+	private emailAddressInput : TextInput;
 
 	@findById("newPassword")
-	public NewPasswordInput : TextInput;
+	private newPasswordInput : TextInput;
 
 	@findById("newPassword2")
-	public NewPassword2Input : TextInput;
+	private newPassword2Input : TextInput;
 
 	@findById("answer1")
-	public AnswerInput : TextInput;
+	private answerInput : TextInput;
 
 	@findById("answer2")
-	public Answer2Input : TextInput;
+	private answer2Input : TextInput;
 
-	@findByCSS("button[type='submit']")
-	public SubmitButton : Button;
+	@findById("accountCreationSubmitButton")
+	private submitButton : Button;
 
 	constructor (browser : IBrowser){
 		super(browser);
@@ -39,17 +39,17 @@ export class AccountCreationPage extends Page {
 	 * @param answer 
 	 * @returns The personal profile page that should appear upon successful account creation
 	 */
-	public async CreateNewAccount(email:string, password:string, answer:string){
-		await this.EmailAddressInput.type(email);
-		await this.NewPasswordInput.type(password);
-		await this.NewPassword2Input.type(password);
-		await this.AnswerInput.type(answer);
-		await this.Answer2Input.type(answer);
+	public async createNewAccount(email:string, password:string, answer:string){
+		await this.emailAddressInput.clearAndType(email);
+		await this.newPasswordInput.clearAndType(password);
+		await this.newPassword2Input.clearAndType(password);
+		await this.answerInput.clearAndType(answer);
+		await this.answer2Input.clearAndType(answer);
 
-		await this.SubscribeCheckbox.check();
-		await this.TwoFactorCheckbox.check();
+		await this.subscribeCheckbox.uncheck();
+		await this.twoFactorCheckbox.check();
 	
-		await this.SubmitButton.click();
+		await this.submitButton.click();
 	}
 
 	/**

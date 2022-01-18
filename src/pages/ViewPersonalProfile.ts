@@ -1,42 +1,41 @@
-import { Browser, findByCSS, findById, TextInput, urlContainsValue, WaitCondition, WebComponent, Button, pageHasLoaded } from "../lib";
+import { Browser, findByCSS, findById, TextInput, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
 import { Address, ContactInformation } from "../types";
-import { AccountHomePage } from "./AccountHomePage";
 import { Page } from "../components/page";
 
 export class ViewPersonalProfile extends Page {
 
 	@findById("customer.billingPerson.firstName")
-	public FirstNameInput: TextInput;
+	public firstNameInput: TextInput;
 
 	@findById("customer.billingPerson.lastName")
-	public LastNameInput: TextInput;
+	public lastNameInput: TextInput;
 
 	@findById("homePhone")
-	public HomePhoneInput: TextInput;
+	public homePhoneInput: TextInput;
 
 	@findById("mobilePhone")
-	public MobilePhoneInput: TextInput;
+	public mobilePhoneInput: TextInput;
 	
 	@findById("workPhone")
-	public WorkPhoneInput: TextInput;
+	public workPhoneInput: TextInput;
 	
 	@findById("customer.billingPerson.contact.address.address1")
-	public BillingAddress1: TextInput;
+	public billingAddress1: TextInput;
 
 	@findById("customer.billingPerson.contact.address.city")
-	public BillingCity: TextInput;
+	public billingCity: TextInput;
 
 	@findById("customer.billingPerson.contact.address.state")
-	public BillingState: TextInput;
+	public billingState: TextInput;
 
 	@findById("zipCode")
-	public BillingZip: TextInput;
+	public billingZip: TextInput;
 
 	@findByCSS("label[for='sameAsBilling']")
-	public SameAddressCheckbox: WebComponent;
+	public sameAddressCheckbox: WebComponent;
 
 	@findById("submitPersonalProfileChanges")
-	public SubmitButton: Button;
+	public submitButton: Button;
 
 	constructor(browser: Browser){
 		super(browser);
@@ -48,24 +47,21 @@ export class ViewPersonalProfile extends Page {
 	 * @param contactInfo
 	 * @returns The account home page that should appear upon successful update of user data
 	 */
-	public async CompleteUserData(billingInformation: Address, contactInfo: ContactInformation){
-		await this.FirstNameInput.type(billingInformation.firstName);
-		await this.LastNameInput.type(billingInformation.lastName);
+	public async completeUserData(billingInformation: Address, contactInfo: ContactInformation){
+		await this.firstNameInput.clearAndType(billingInformation.firstName);
+		await this.lastNameInput.clearAndType(billingInformation.lastName);
 
-		await this.HomePhoneInput.type(contactInfo.homePhone);
-		await this.MobilePhoneInput.type(contactInfo.mobilePhone);
-		await this.WorkPhoneInput.type(contactInfo.workPhone);
+		await this.homePhoneInput.clearAndType(contactInfo.homePhone);
+		await this.mobilePhoneInput.clearAndType(contactInfo.mobilePhone);
+		await this.workPhoneInput.clearAndType(contactInfo.workPhone);
 
-		await this.BillingAddress1.type(billingInformation.streetAddress);
-		await this.BillingCity.clear();
-		await this.BillingCity.type(billingInformation.city);
-		await this.BillingState.clear();
-		await this.BillingState.type(billingInformation.state);
-		await this.BillingZip.clear();
-		await this.BillingZip.type(billingInformation.zip);
+		await this.billingAddress1.clearAndType(billingInformation.streetAddress);
+		await this.billingCity.clearAndType(billingInformation.city);
+		await this.billingState.clearAndType(billingInformation.state);
+		await this.billingZip.clearAndType(billingInformation.zip);
 
-		await this.SameAddressCheckbox.click();
-		await this.SubmitButton.click();
+		await this.sameAddressCheckbox.click();
+		await this.submitButton.click();
 	}
 
 	public loadCondition(): WaitCondition {
