@@ -21,7 +21,7 @@ export const enum Stores {
 	SouthSaltLake = "South Salt Lake",
 	Riverdale = "Riverdale",
 	Draper = "Draper",
-	University = "University Place Orem"
+	University = "University Place Orem",
 }
 
 /**
@@ -276,7 +276,7 @@ export class CheckoutPage extends Page {
 
 		await this.DeliveryContinueButton.click();
 	}
-
+	
 	public async selectInStorePickup(state?:States, store?:Stores){
 		await this.browser.wait(elementIsVisible(()=>this.inStorePickupOption));
 		await this.inStorePickupOption.click();
