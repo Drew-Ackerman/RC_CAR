@@ -1,5 +1,5 @@
 import { IBrowser } from "../interfaces/IBrowser";
-import { elementIsNotVisible, elementIsVisible, findByClass, findById, WebComponent } from "../lib";
+import { elementHasText, elementIsNotVisible, elementIsVisible, findByClass, findById, WebComponent } from "../lib";
 
 export class InformationPopup {
 
@@ -15,6 +15,13 @@ export class InformationPopup {
 
 	public async appearsAndLeaves(optionalTimeout?:number){
 		await this.browser.wait(elementIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
+		await this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
+		return;
+	}
+
+	public async displaysAndLeaves(expectedText:string, optionalTimeout?:number){
+		await this.browser.wait(elementIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
+		await this.browser.wait(elementHasText(()=>this.overlay, expectedText), optionalTimeout, `Infomation popup did not contain text: ${expectedText}`);
 		await this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
 		return;
 	}
