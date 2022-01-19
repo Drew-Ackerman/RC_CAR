@@ -1,9 +1,9 @@
 import { AllPages } from "../src/pages";
 import { AllPopups } from "../src/popups";
 import { Browser, pageHasLoaded } from "../src/lib";
-import { SupportedBrowsers, TestContactInfo, config } from "../config";
+import { SupportedBrowsers, TestContactInfo, config, TestAddress, TestCreditCard } from "../config";
 import { snapshot } from "../src/lib";
-import { PaymentMethods } from "../src/pages/CheckoutPage";
+import { PaymentMethods, ShippingOptions } from "../src/pages/CheckoutPage";
 
 import chai = require("chai");
 import chaiAsPromised = require("chai-as-promised");
@@ -43,6 +43,8 @@ describe("The Account Activity Page", () => {
 		await pages.loginPage.login(config.testEmployee.username, config.testEmployee.password);
 		await popups.informationPopup.appearsAndLeaves(); //Wait for a login dialog to disappear.
 		await pages.accountHomePage.header.searchForItem("");
+		await pages.productSearchPage.selectFilterOption("In Stock");
+		await pages.productSearchPage.selectFilterOption("Sale");
 		
 		const productsList = await pages.productSearchPage.findAllProductsOnPage();
 		const firstProductCard = productsList[0];
@@ -51,9 +53,10 @@ describe("The Account Activity Page", () => {
 		await pages.productPage.addToCart();
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 		await pages.shoppingCartPage.Checkout();
-		await pages.checkoutPage.selectInStorePickup();
+		await pages.checkoutPage.selectDelivery(TestAddress, ShippingOptions.Any);
 		await pages.checkoutPage.enterContactInfo(TestContactInfo);
-		await pages.checkoutPage.selectPaymentMethod(PaymentMethods.StoreCashier);
+		await pages.checkoutPage.selectPaymentMethod(PaymentMethods.CreditCard);
+		await pages.checkoutPage.enterPaymentDetails(TestCreditCard);
 		await pages.checkoutPage.submitPaymentInformation();
 		await pages.checkoutPage.placeOrder();
 		await browser.wait(pageHasLoaded(pages.orderThanksPage));
