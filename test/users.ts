@@ -63,6 +63,9 @@ describe("Users", function () {
 		await popups.informationPopup.appearsAndLeaves();
 		
 		await pages.shoppingCartPage.header.searchForItem("");
+		await pages.productSearchPage.selectFilterOption("In Stock");
+		await pages.productSearchPage.selectFilterOption("Sale");
+
 		const productsList = await pages.productSearchPage.findAllProductsOnPage();
 		expect(productsList).to.have.length.greaterThan(0);
 		const firstProductCard = productsList[0];
@@ -113,6 +116,7 @@ describe("Users", function () {
 		await pages.homePage.header.searchForItem("");
 		await pages.productSearchPage.selectFilterOption("In Stock");
 		await pages.productSearchPage.selectFilterOption("Sale");
+
 		let productsList = await pages.productSearchPage.findAllProductsOnPage();
 		const firstProduct = productsList[0];
 		await pages.productSearchPage.selectProduct(firstProduct);
