@@ -202,8 +202,9 @@ export class Selector extends WebComponent {
 	 * @param selectedOption 
 	 */
 	public async selectOptionByValue(selectedOption: string){
+		await this.element.click();
 		const options = await this.element.findElements({css:"option"});
-		options.forEach(async (option) => {
+		for(const option of options){
 			if(await option.getAttribute("value") == selectedOption){
 				await option.click();
 				return;
@@ -212,7 +213,7 @@ export class Selector extends WebComponent {
 				await option.click();
 				return;
 			}
-		});
+		}
 		throw new Error(`Option ${selectedOption} not present on element ${this}`);
 	}
 
@@ -221,13 +222,35 @@ export class Selector extends WebComponent {
 	 * @param selectedOption The entire text to match, or a substring. 
 	 */
 	public async selectOptionByText(selectedOption: string){
+		await this.element.click();
 		const options = await this.element.findElements({css:"option"});
-		options.forEach(async (option) => {
+		for(const option of options){
 			if(await (await option.getText()).includes(selectedOption)){
 				await option.click();
 				return;
 			}
-		});
+		}
 		throw new Error(`Option ${selectedOption} not present on element ${this}`);
+	}
+
+	/**
+	 * Attempts to select the first available option in a select list,
+	 * this means the option is visible and not disabled. 
+	 * If an option is available, click it. 
+	 * If no options are available, throw an error.
+	 * @returns The first available option
+	 */
+	public async selectFirstAvailableOption(){
+		await this.element.click();
+		const options = await this.element.findElements({css:"option"});
+		for(const option of options){
+			const disabled = await option.getAttribute("disabled") == "disabled";
+			const visible = await option.isDisplayed();
+			if(visible && !disabled){
+				await option.click();
+				return option;
+			}
+		}
+		throw new Error("Could not find an enabled option");
 	}
 }
