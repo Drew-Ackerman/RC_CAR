@@ -73,10 +73,10 @@ describe("The Security Settings Page", () => {
 		await browser.wait(pageHasLoaded(pages.accountSecurityPage), 10);
 		await pages.accountSecurityPage.changePassword(newPassword);
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
-
 		await pages.accountHomePage.header.logout();
-		await popups.informationPopup.appearsAndLeaves(waitFor.ThirtySeconds);
-		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
+
+		await browser.wait(pageHasLoaded(pages.homePage));
+		await popups.informationPopup.displaysAndLeaves("logged out", waitFor.TenSeconds);
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
@@ -90,10 +90,10 @@ describe("The Security Settings Page", () => {
 		await pages.accountHomePage.sidebar.selectMenuOption(MenuOptions.SecuritySettings);
 		await pages.accountSecurityPage.changeEmail(newEmail);
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
-
 		await pages.accountHomePage.header.logout();
-		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
-		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
+
+		await browser.wait(pageHasLoaded(pages.homePage));
+		await popups.informationPopup.displaysAndLeaves("logged out", waitFor.TenSeconds);
 
 		await pages.homePage.navigate();
 		await pages.homePage.GoToLoginPage();
