@@ -16,7 +16,8 @@ require("chromedriver");
  * A smoke test suite to ensure basic site functionality 
  * is operational.
  */
-describe("The Account Activity Page", () => {  
+describe("The Account Activity Page", function () {  
+	this.timeout(180000); //Sometimes search takes awhile
 
 	let browser: Browser;
 	let pages: AllPages;
