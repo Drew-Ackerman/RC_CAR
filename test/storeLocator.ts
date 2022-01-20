@@ -11,8 +11,7 @@ const expect = chai.expect;
 require("chromedriver");
 
 /**
- * A smoke test suite to ensure basic site functionality 
- * is operational.
+ * UI tests for the store locator page.
  */
 describe("The store locator page", () => {  
 
@@ -24,6 +23,8 @@ describe("The store locator page", () => {
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
+		await browser.maximize();
+
 		pages = new AllPages(browser);
 	});
 

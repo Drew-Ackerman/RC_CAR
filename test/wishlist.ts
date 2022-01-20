@@ -33,7 +33,6 @@ describe("The wishlist page", () => {
 		await pages.homePage.header.changeHomeStore();
 		await popups.zipcodePopup.typeZipcode("84405");
 		await popups.informationPopup.appearsAndLeaves();
-
 	});
 
 	it("Allows products to be added from a wish list", async () => {

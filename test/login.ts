@@ -20,8 +20,7 @@ function createDemoEmail(){
 }
 
 /**
- * A smoke test suite to ensure basic site functionality 
- * is operational.
+ * Tests for the Site Login page.
  */
 describe("The login page", () => {  
 

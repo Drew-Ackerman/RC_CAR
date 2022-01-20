@@ -11,8 +11,7 @@ const expect = chai.expect;
 require("chromedriver");
 
 /**
- * A smoke test suite to ensure basic site functionality 
- * is operational.
+ * UI tests for the store map page.
  */
 describe("The store map page", () => {  
 
@@ -25,6 +24,8 @@ describe("The store map page", () => {
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
+		await browser.maximize();
+
 		pages = new AllPages(browser);
 		popups = new AllPopups(browser);
 	});
@@ -41,7 +42,7 @@ describe("The store map page", () => {
 		const storeListBeforeSearch = (await pages.storeMapPage.getLocations()).map(async (location) => {
 			return await location.getData();
 		});
-		pages.storeMapPage.zipSearch("84405");
+		await pages.storeMapPage.zipSearch("84405");
 		
 		const storeListAfterSearch = (await pages.storeMapPage.getLocations()).map(async (location) => {
 			return await location.getData();

@@ -91,7 +91,7 @@ describe("Users", function () {
 
 		await pages.shoppingCartPage.header.searchForItem("gift card");
 		(await pages.productSearchPage.findAllProductsOnPage())[0].Click();
-		await browser.wait(pageHasLoaded(pages.giftardPage));
+		await browser.wait(pageHasLoaded(pages.giftcardPage));
 		await pages.giftcardPage.selectCardStyleSet(GiftCardStyleSets.Anytime);
 		const cards = await pages.giftcardPage.getCards(GiftCardStyleSets.Anytime);
 		await cards[0].addToCart();

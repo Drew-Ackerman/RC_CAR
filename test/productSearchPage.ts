@@ -11,8 +11,7 @@ const expect = chai.expect;
 require("chromedriver");
 
 /**
- * A smoke test suite to ensure basic site functionality 
- * is operational.
+ * UI tests for the product search page.
  */
 describe("The product search page", () => {  
 
