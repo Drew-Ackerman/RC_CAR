@@ -6,7 +6,7 @@ import { CreditCardInformation } from "./src/types/PaymentInformation";
 /**
  * An address useful for testing.
  */
-export const TestAddress: Address = {
+const TestAddress: Address = {
 	firstName: "Demo",
 	lastName: "Lition",
 	streetAddress: "2301 S 300 W",
@@ -19,7 +19,7 @@ export const TestAddress: Address = {
 /**
  * Useful for testing
  */
-export const TestCreditCard: CreditCardInformation = {
+const TestCreditCard: CreditCardInformation = {
 	creditCardNumber: "4111111111111111",
 	creditCardExp: "1230",
 	creditCardCSV: "411",
@@ -28,7 +28,7 @@ export const TestCreditCard: CreditCardInformation = {
 /**
  * Useful for testing
  */
-export const TestContactInfo: ContactInformation = {
+const TestContactInfo: ContactInformation = {
 	email: "demo@demo.com",
 	homePhone: "8011111111",
 	workPhone: "8011111111",
@@ -60,6 +60,11 @@ export enum SupportedBrowsers {
 export const config = {
 	// baseUrl: process.env.BASE_URL || "https://localhost:8443/",
 	baseUrl: process.env.BASE_URL || "https://rcwtest.rcwilley.com/",
+};
+
+export const testData = {
 	testEmployee: {username:"web.adminone", password:"I'malittleteapot"}, //The last four digits of this account are 9667, relevant when resetting passwords sometimes.
-	testAddress: TestAddress
+	testAddress: TestAddress,
+	testCreditCard: TestCreditCard,
+	testContactInfo: TestContactInfo,
 };

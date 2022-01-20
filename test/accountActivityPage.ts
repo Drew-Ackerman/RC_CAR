@@ -1,7 +1,7 @@
 import { AllPages } from "../src/pages";
 import { AllPopups } from "../src/popups";
 import { Browser, pageHasLoaded } from "../src/lib";
-import { SupportedBrowsers, TestContactInfo, config, TestAddress, TestCreditCard } from "../config";
+import { SupportedBrowsers, testData} from "../config";
 import { snapshot } from "../src/lib";
 import { PaymentMethods, ShippingOptions } from "../src/pages/CheckoutPage";
 
@@ -13,18 +13,17 @@ const expect = chai.expect;
 require("chromedriver");
 
 /**
- * A smoke test suite to ensure basic site functionality 
- * is operational.
+ * UI tests for the Account Activity Page. 
  */
 describe("The Account Activity Page", function () {  
-	this.timeout(180000); //Sometimes search takes awhile
+	this.timeout(180000); //Filtering a search can take a bit of time. 
 
 	let browser: Browser;
 	let pages: AllPages;
 	let popups: AllPopups;
 
 	/**
-	 * Before all tests are run
+	 * Before all tests are run 
 	 */
 	beforeEach(async () => {
 		browser = await new Browser(SupportedBrowsers.Chrome);
@@ -41,7 +40,7 @@ describe("The Account Activity Page", function () {
 		await popups.informationPopup.appearsAndLeaves();
 
 		await pages.homePage.header.clickAccountButton();
-		await pages.loginPage.login(config.testEmployee.username, config.testEmployee.password);
+		await pages.loginPage.login(testData.testEmployee.username, testData.testEmployee.password);
 		await popups.informationPopup.appearsAndLeaves(); //Wait for a login dialog to disappear.
 		await pages.accountHomePage.header.searchForItem("");
 		await pages.productSearchPage.selectFilterOption("In Stock");
@@ -54,10 +53,10 @@ describe("The Account Activity Page", function () {
 		await pages.productPage.addToCart();
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 		await pages.shoppingCartPage.Checkout();
-		await pages.checkoutPage.selectDelivery(TestAddress, ShippingOptions.Any);
-		await pages.checkoutPage.enterContactInfo(TestContactInfo);
+		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
+		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
 		await pages.checkoutPage.selectPaymentMethod(PaymentMethods.CreditCard);
-		await pages.checkoutPage.enterPaymentDetails(TestCreditCard);
+		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
 		await pages.checkoutPage.submitPaymentInformation();
 		await pages.checkoutPage.placeOrder();
 		await browser.wait(pageHasLoaded(pages.orderThanksPage));
@@ -75,7 +74,6 @@ describe("The Account Activity Page", function () {
 	 * After all tests are run
 	 */
 	afterEach(async function () {
-
 		//Check if the test that just ran was not successful
 		if(this.currentTest?.state !== "passed"){
 			snapshot(this,browser);

@@ -1,6 +1,6 @@
 import { AllPages } from "../src/pages";
 import { Browser, pageHasLoaded } from "../src/lib";
-import { TestAddress, SupportedBrowsers, TestContactInfo, TestCreditCard } from "../config";
+import { SupportedBrowsers, testData } from "../config";
 import { snapshot } from "../src/lib";
 import { AccountTypes, ShippingOptions } from "../src/pages/CheckoutPage";
 import { GiftCardStyleSets } from "../src/pages/GiftCardPage";
@@ -74,9 +74,9 @@ describe("Users", function () {
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 		await pages.shoppingCartPage.Checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
-		await pages.checkoutPage.selectDelivery(TestAddress, ShippingOptions.Any);
-		await pages.checkoutPage.enterContactInfo(TestContactInfo);
-		await pages.checkoutPage.enterPaymentDetails(TestCreditCard);
+		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
+		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
+		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
 		await pages.checkoutPage.selectSameBillingAddress();
 		await pages.checkoutPage.submitPaymentInformation();
 		await pages.checkoutPage.placeOrder();
@@ -91,16 +91,16 @@ describe("Users", function () {
 
 		await pages.shoppingCartPage.header.searchForItem("gift card");
 		(await pages.productSearchPage.findAllProductsOnPage())[0].Click();
-		await browser.wait(pageHasLoaded(pages.giftcardPage));
+		await browser.wait(pageHasLoaded(pages.giftardPage));
 		await pages.giftcardPage.selectCardStyleSet(GiftCardStyleSets.Anytime);
 		const cards = await pages.giftcardPage.getCards(GiftCardStyleSets.Anytime);
 		await cards[0].addToCart();
 		await pages.shoppingCartPage.Checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
 		await pages.checkoutPage.enterGiftCardDeliveryOptions("demo@demo.com", "Demo Message");
-		await pages.checkoutPage.enterContactInfo(TestContactInfo);
-		await pages.checkoutPage.enterPaymentDetails(TestCreditCard);
-		await pages.checkoutPage.enterBillingDetails(TestAddress);
+		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
+		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
+		await pages.checkoutPage.enterBillingDetails(testData.testAddress);
 		await pages.checkoutPage.submitPaymentInformation();
 		await pages.checkoutPage.placeOrder();
 		return expect(pageHasLoaded(pages.orderThanksPage));
@@ -133,9 +133,9 @@ describe("Users", function () {
 
 		await pages.shoppingCartPage.Checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
-		await pages.checkoutPage.selectDelivery(TestAddress, ShippingOptions.Any);
-		await pages.checkoutPage.enterContactInfo(TestContactInfo);
-		await pages.checkoutPage.enterPaymentDetails(TestCreditCard);
+		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
+		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
+		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
 		await pages.checkoutPage.selectSameBillingAddress();
 		await pages.checkoutPage.submitPaymentInformation();
 		await pages.checkoutPage.placeOrder();

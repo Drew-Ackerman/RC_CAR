@@ -1,7 +1,7 @@
 import { AllPages } from "../src/pages";
 import { AllPopups } from "../src/popups";
 import { Browser, pageHasLoaded } from "../src/lib";
-import { SupportedBrowsers, TestAddress, TestContactInfo, waitFor } from "../config";
+import { SupportedBrowsers, testData, waitFor } from "../config";
 import { snapshot } from "../src/lib";
 import { MenuOptions } from "../src/components/AccountSideBar";
 
@@ -59,7 +59,7 @@ describe("The Security Settings Page", () => {
 		await pages.accountHelpPage.gotoAccountCreation();
 		await pages.accountCreationPage.createNewAccount(testEmail, password, "answer");
 		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage), waitFor.TenSeconds);
-		await pages.viewPersonalProfilePage.completeUserData(TestAddress,TestContactInfo);
+		await pages.viewPersonalProfilePage.completeUserData(testData.testAddress, testData.testContactInfo);
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		//Starting point for tests is a logged in account on the account home page.

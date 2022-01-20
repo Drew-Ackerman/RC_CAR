@@ -1,7 +1,7 @@
 import { AllPages } from "../src/pages";
 import { AllPopups } from "../src/popups";
 import { Browser, pageHasLoaded, snapshot } from "../src/lib";
-import { config, SupportedBrowsers, TestAddress, TestContactInfo, waitFor} from "../config";
+import { SupportedBrowsers, testData, waitFor} from "../config";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");
@@ -54,7 +54,7 @@ describe("The login page", () => {
 		await pages.accountHelpPage.CreateAccountLink.click();
 		await pages.accountCreationPage.createNewAccount(demoEmail, password, "demo");
 		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage), waitFor.TenSeconds);
-		await pages.viewPersonalProfilePage.completeUserData(TestAddress, TestContactInfo);
+		await pages.viewPersonalProfilePage.completeUserData(testData.testAddress, testData.testContactInfo);
 		await browser.wait(pageHasLoaded(pages.accountHomePage), waitFor.TenSeconds);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
@@ -67,7 +67,7 @@ describe("The login page", () => {
 
 	it("Should allow employees to login", async() => {
 		await pages.homePage.GoToLoginPage();
-		await pages.loginPage.login(`${config.testEmployee.username}`, `${config.testEmployee.password}`);
+		await pages.loginPage.login(`${testData.testEmployee.username}`, `${testData.testEmployee.password}`);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
