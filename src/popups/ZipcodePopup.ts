@@ -2,14 +2,14 @@ import { Key } from "selenium-webdriver";
 import { IBrowser } from "../interfaces/IBrowser";
 import { elementIsVisible, findByCSS, WebComponent } from "../lib";
 
-
 /**
- * For working with the zipcode popup. 
+ * For working with a zipcoded popup,
+ * like the one given when changing stores.
  */
 export class ZipcodePopup {
 
 	@findByCSS("div[class='md-modal md-scale md-show'")
-	private PopupOverlay: WebComponent;
+	private popupOverlay: WebComponent;
 
 	constructor(protected browser: IBrowser){
 
@@ -17,13 +17,10 @@ export class ZipcodePopup {
 
 	/**
 	 * Wait till the popup is visible. 
+	 * @param optionalTimeout How many seconds to wait till the popup is visible.
 	 */
-	public async waitTillVisible(): Promise<void>{
-		try{
-			await this.browser.wait(elementIsVisible(() => this.PopupOverlay));
-		} catch(error){
-			console.error("Couldnt find zip code popup: ", error);
-		}
+	public async waitTillVisible(optionalTimeout?:number): Promise<void>{
+		await this.browser.wait(elementIsVisible(() => this.popupOverlay), optionalTimeout, `Zipcode popup did not appear within ${optionalTimeout} seconds.`);
 	}
 
 	/**
@@ -31,13 +28,13 @@ export class ZipcodePopup {
 	 * Type the zipcode into the input, and submit. 
 	 * @param zip 
 	 */
-	public async typeZipcode(zip:string) {
-		await this.waitTillVisible();
+	public async typeZipcode(zip:string, optionalTimeout?:number) {
+		await this.waitTillVisible(optionalTimeout);
 		try{
-			const zipInput = await this.PopupOverlay.findElement({css:"input[name='zipCode']"});
+			const zipInput = await this.popupOverlay.findElement({css:"input[name='zipCode']"});
 			await zipInput.sendKeys(`${zip}`, Key.ENTER);
 		} catch(error){
-			console.error("Couldnt type zip into zipcode popup:", error);
+			console.error(`Couldnt type zip ${zip} into zipcode popup due to error:`, error);
 		}
 	}
 }
