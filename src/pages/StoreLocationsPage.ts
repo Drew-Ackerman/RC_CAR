@@ -1,5 +1,6 @@
 import { Browser, Button, findById, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../components/page";
+import { WebElement } from "selenium-webdriver";
 
 export class StoreLocationsPage extends Page {
 	
@@ -14,10 +15,10 @@ export class StoreLocationsPage extends Page {
 	 * Returns Webcomponetns that are the root element of each store location card.
 	 * @returns A promise for the locations cards as webcomponents. 
 	 */
-	public async getStoreLocations():Promise<WebComponents> {
+	public async getStoreLocations():Promise<Array<WebElement>> {
 		const slcontainer = new WebComponent(this.browser.findElement({id:"storeLocations"}), "storeLocations");
 		const locations = new WebComponents(slcontainer.findElements({css:"div[class~='locationBox']"}), "div[class~='locationBox']");
-		return locations;
+		return locations.getDisplayed();
 	}
 
 	/**
@@ -25,7 +26,7 @@ export class StoreLocationsPage extends Page {
 	 * This should navigate to {@link StoreMapPage}
 	 */
 	public async clickAllStoresMapButton(){
-		await this.allStoresMapButton.click();;
+		await this.allStoresMapButton.click();
 	}
 	
 	/**
