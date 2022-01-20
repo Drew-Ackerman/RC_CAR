@@ -1,6 +1,11 @@
 import { IBrowser } from "../interfaces/IBrowser";
 import { Button, elementIsVisible, findByCSS, Selector, WebComponent } from "../lib";
 
+/**
+ * A list of store options that the 
+ * select home store select users. The value 
+ * is tied to the values in the selectors option elements. 
+ */
 export enum StoreOptions {
 	NoLocalStore="0",
 	Draper="80",
@@ -18,23 +23,19 @@ export enum StoreOptions {
 }
 
 /**
- * For working with the home store popup
+ * For working with the set home store popup
  */
 export class SetHomeStorePopup {
 	@findByCSS("div[class='md-modal md-scale md-show'")
-	private PopupOverlay: WebComponent;
+	private popupOverlay: WebComponent;
 
 	constructor(protected browser: IBrowser){ }
 
 	/**
 	 * Wait till the popup is visible. 
 	 */
-	public async waitTillVisible(): Promise<void>{
-		try{
-			await this.browser.wait(elementIsVisible(() => this.PopupOverlay));
-		} catch(error){
-			console.error("Couldnt find zip code popup: ", error);
-		}
+	public async waitTillVisible(optionalTimeout?:number): Promise<void>{
+		await this.browser.wait(elementIsVisible(() => this.popupOverlay), optionalTimeout, `Home store popup did not appear within ${optionalTimeout} seconds.`);
 	}
 
 	/**
@@ -42,9 +43,9 @@ export class SetHomeStorePopup {
 	 * @param storeOption The store option to choose from the selector element.
 	 */
 	public async selectHomeStore(storeOption:StoreOptions){
-		const homestoreSelector = new Selector(this.PopupOverlay.findElement({id:"homeStoreSelect"}), "homeStoreSelect");
+		const homestoreSelector = new Selector(this.popupOverlay.findElement({id:"homeStoreSelect"}), "homeStoreSelect");
 		await homestoreSelector.selectOptionByValue(storeOption);
-		const continueButton = new Button(this.PopupOverlay.findElement({css:"button[type='submit']"}), "button[type='submit']");
+		const continueButton = new Button(this.popupOverlay.findElement({css:"button[type='submit']"}), "button[type='submit']");
 		await continueButton.click();
 	}
 }

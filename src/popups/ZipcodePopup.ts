@@ -34,7 +34,7 @@ export class ZipcodePopup {
 			const zipInput = await this.popupOverlay.findElement({css:"input[name='zipCode']"});
 			await zipInput.sendKeys(`${zip}`, Key.ENTER);
 		} catch(error){
-			console.error(`Couldnt type zip ${zip} into zipcode popup due to error:`, error);
+			throw new Error(`Couldnt type zip ${zip} into zipcode popup due to ${error}`);
 		}
 	}
 }
