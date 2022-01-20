@@ -41,11 +41,17 @@ export class SetHomeStorePopup {
 	/**
 	 * Choose a home store option from the selector. 
 	 * @param storeOption The store option to choose from the selector element.
+	 * @param optionalTimeout How long to wait for the popup to appear.
 	 */
-	public async selectHomeStore(storeOption:StoreOptions){
-		const homestoreSelector = new Selector(this.popupOverlay.findElement({id:"homeStoreSelect"}), "homeStoreSelect");
-		await homestoreSelector.selectOptionByValue(storeOption);
-		const continueButton = new Button(this.popupOverlay.findElement({css:"button[type='submit']"}), "button[type='submit']");
-		await continueButton.click();
+	public async selectHomeStore(storeOption:StoreOptions, optionalTimeout?:number){
+		await this.waitTillVisible(optionalTimeout);
+		try{
+			const homestoreSelector = new Selector(this.popupOverlay.findElement({id:"homeStoreSelect"}), "homeStoreSelect");
+			await homestoreSelector.selectOptionByValue(storeOption);
+			const continueButton = new Button(this.popupOverlay.findElement({css:"button[type='submit']"}), "button[type='submit']");
+			await continueButton.click();
+		}catch(error){
+			throw new Error(`Unable to select store option ${storeOption} due to error ${error}`);
+		}
 	}
 }
