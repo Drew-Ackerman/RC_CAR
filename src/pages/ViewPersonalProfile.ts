@@ -2,6 +2,9 @@ import { Browser, findByCSS, findById, TextInput, urlContainsValue, WaitConditio
 import { Address, ContactInformation } from "../types";
 import { Page } from "../components/page";
 
+/**
+ * Page Object Model for the Personal Profile Page.
+ */
 export class ViewPersonalProfile extends Page {
 
 	@findById("customer.billingPerson.firstName")
