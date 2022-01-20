@@ -6,7 +6,7 @@ import { CreditCardInformation } from "./src/types/PaymentInformation";
 /**
  * An address useful for testing.
  */
-const TestAddress: Address = {
+export const TestAddress: Address = {
 	firstName: "Demo",
 	lastName: "Lition",
 	streetAddress: "2301 S 300 W",
@@ -19,7 +19,7 @@ const TestAddress: Address = {
 /**
  * Useful for testing
  */
-const TestCreditCard: CreditCardInformation = {
+export const TestCreditCard: CreditCardInformation = {
 	creditCardNumber: "4111111111111111",
 	creditCardExp: "1230",
 	creditCardCSV: "411",
@@ -28,7 +28,7 @@ const TestCreditCard: CreditCardInformation = {
 /**
  * Useful for testing
  */
-const TestContactInfo: ContactInformation = {
+export const TestContactInfo: ContactInformation = {
 	email: "demo@demo.com",
 	homePhone: "8011111111",
 	workPhone: "8011111111",
