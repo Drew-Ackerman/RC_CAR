@@ -9,14 +9,12 @@ type MapLocationData = {
 
 class MapLocation {
 
-	constructor(private element: WebElement){
-
-	}
+	constructor(private element: WebElement){	}
 
 	/**
 	 * @returns The store name for the Map Location.
 	 */
-	public async storeName(): Promise<string>{
+	private async storeName(): Promise<string>{
 		return this.element.findElement({className:"listDetail"}).getText();
 	}
 
@@ -25,12 +23,16 @@ class MapLocation {
 	 * this letter is dynamically assigned when the loctions are generated.
 	 * The locations list changes depending on what is closest to the user.
 	 */
-	public async locationLetter(): Promise<string>{
+	private async locationLetter(): Promise<string>{
 		const letterCont =  this.element.findElement({className:"listLetter"});
 		const letterProperty = await letterCont.getAttribute("data-letter");
 		return letterProperty;
 	}
 
+	/**
+	 * Get the locationletter and store name for this map location.
+	 * @returns 
+	 */
 	public async getData(): Promise<MapLocationData>{
 		const storeName = await this.storeName();
 		const locLetter = await this.locationLetter();
@@ -54,11 +56,14 @@ export class StoreMapPage extends Page{
 	 * @returns A collection of all visible map locations.
 	 */
 	public async getLocations(){
+		const mapLocations = [];
 		const locationContainer = new WebComponent(this.browser.findElement({id:"locationList"}), "locationList");
-		const locations = new WebComponents(locationContainer.findElements({xpath:".//li"}), ".//li");
-		const mapLocations = (await locations.getDisplayed()).map((location) => {
-			return new MapLocation(location);
-		});
+		await this.browser.sleep(2); //For somereason the locations inside the list are not present when the list container is. Just wait a bit.
+		const components = new WebComponents(locationContainer.findElements({xpath:".//li"}), ".//li");
+		const locations = await components.getDisplayed();
+		for(const location of locations){
+			mapLocations.push(new MapLocation(location));
+		}
 		return mapLocations;
 	}
 

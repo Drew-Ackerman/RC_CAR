@@ -1,4 +1,4 @@
-import { AllPages } from "../src/pages";
+import { AllPages, StoreLocationsPage } from "../src/pages";
 import { AllPopups } from "../src/popups";
 import { Browser, snapshot } from "../src/lib";
 import { SupportedBrowsers } from "../config";
@@ -39,16 +39,22 @@ describe("The store map page", () => {
 		await pages.homePage.header.clickLocationButton();
 		await pages.storeLocationsPage.clickAllStoresMapButton();
 		
-		const storeListBeforeSearch = (await pages.storeMapPage.getLocations()).map(async (location) => {
-			return await location.getData();
-		});
+		const storeListBeforeSearch = await pages.storeMapPage.getLocations();
+		const storeListData = [];
+		for(const storeLocation of storeListBeforeSearch){
+			const data = await storeLocation.getData();
+			storeListData.push(data);
+		}
+		
 		await pages.storeMapPage.zipSearch("84405");
-		
-		const storeListAfterSearch = (await pages.storeMapPage.getLocations()).map(async (location) => {
-			return await location.getData();
-		});
-		
-		expect(storeListBeforeSearch).to.not.equal(storeListAfterSearch);
+
+		const storeListAfterSearch = await pages.storeMapPage.getLocations();
+		const storeListDataAfterSearch = [];
+		for(const storeLocation of storeListAfterSearch){
+			const data = await storeLocation.getData();
+			storeListDataAfterSearch.push(data);
+		}
+		expect(storeListData).to.not.equal(storeListDataAfterSearch);
 	});
 
 	/** 
