@@ -21,21 +21,20 @@ export class ProductPage extends Page {
 				return productNameField;
 			}
 		}
-
 		throw Error("Cannot find product name text");
 	}
 
 	@findById("addToCartBtn")
-	private AddToCardButton: Button;
+	private addToCartButton: Button;
 
 	@findById("sku")
-	private SKU: WebComponent;
+	private sku: WebComponent;
 
 	@findByClass("priceBlock")
-	private Price: WebComponent;
+	private price: WebComponent;
 
 	@findByClass("wishlistActionItem")
-	private WishlistAddButton: Button;
+	private wishlistAddButton: Button;
 
 	private product: ProductCard;
 	constructor(protected browser: Browser){
@@ -46,7 +45,7 @@ export class ProductPage extends Page {
 	 * @returns The page is loaded when the Add to Cart button is visible on the page.
 	 */
 	public loadCondition(): WaitCondition {
-		return elementIsVisible(() => this.AddToCardButton);
+		return elementIsVisible(() => this.addToCartButton);
 	}
 
 	/**
@@ -63,15 +62,15 @@ export class ProductPage extends Page {
 	 * @returns should change the page to the shopping cart page.
 	 */
 	public async addToCart(): Promise<void>{
-		await this.AddToCardButton.click();
+		await this.addToCartButton.click();
 	}
 
 	/**
 	 * @returns Get the product details on this page
 	 */
 	public async getProductDetails(): Promise<ProductDetails>{
-		const sku = await (await this.SKU.getText()).split(":").pop()?.trim() || "Sku not found";
-		const price = await this.Price.getText();
+		const sku = await (await this.sku.getText()).split(":").pop()?.trim() || "Sku not found";
+		const price = await this.price.getText();
 		const name = await this.browser.findElement(this.findProductNameText).getText();
 		return new ProductDetails(sku, price, name);
 	}
@@ -85,22 +84,27 @@ export class ProductPage extends Page {
 		const pageProductDetails = await this.getProductDetails();
 		const sameProduct = await pageProductDetails.equalTo(product);
 		if(!sameProduct){
-			throw Error(`Not the same product. On product page with SKU ${await this.SKU.getText()}, expected ${await this.product.sku()}`);
+			throw Error(`Not the same product. Product on page has SKU ${await this.sku.getText()}, expected ${await this.product.sku()}`);
 		}
 		return true;
 	}
 
 
-	public async addProductToWishlist(wishlistName: string): Promise<void>{
-		await this.browser.wait(elementIsVisible(()=>this.WishlistAddButton));
+	/**
+	 * A this product to a wishlist
+	 * @param wishlistName The wishlist to add to
+	 * @returns The wishlist that was selected
+	 */
+	public async addProductToWishlist(wishlistName: string): Promise<string>{
+		await this.browser.wait(elementIsVisible(()=>this.wishlistAddButton));
 		await this.browser.sleep(1);
-		await this.WishlistAddButton.click();
+		await this.wishlistAddButton.click();
 		const possibleWishlists = await this.browser.findElements({css:"a[class~='icon-heart']"});
-		for(let i=0; i < possibleWishlists.length;i++){
-			const text = await possibleWishlists[i].getText();
+		for(const wishlist of possibleWishlists){
+			const text = await wishlist.getText();
 			if(text.includes(wishlistName)){
-				await possibleWishlists[i].click();
-				return;
+				await wishlist.click();
+				return text;
 			}
 		}
 		throw new Error("Could not find wishlist");
