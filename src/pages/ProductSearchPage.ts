@@ -4,13 +4,16 @@ import { Page } from "../components/page";
 import { FilterBar } from "../components/FilterBar";
 import { ProductDetails } from "../types/ProductDetails";
 
+/**
+ * Every search result is treated as a product card.
+ */
 export class ProductCard {
 
 	@findByClass("price")
-	private PriceText : WebComponent;
+	private priceText : WebComponent;
 
 	@findByClass("productName")
-	private ProductNameText : WebComponent;
+	private productNameText : WebComponent;
 
 	private browser;
 	
@@ -23,38 +26,41 @@ export class ProductCard {
 	 * available or not. 
 	 * @returns 
 	 */
-	public async SKU() : Promise<string>{
+	public async sku() : Promise<string>{
 		const sku = (await this.product.getAttribute("id")).split("-").pop();
 		return sku || "Sku Not Found";
 	}
 
-	public async Price(): Promise<string> {
-		return this.PriceText.getText();
+	public async price(): Promise<string> {
+		return this.priceText.getText();
 	}
 
-	public async ProductName() : Promise<string> {
-		return this.ProductNameText.getText();
+	public async productName() : Promise<string> {
+		return this.productNameText.getText();
 	}
 
-	public async Click(): Promise<void>{
+	public async click(): Promise<void>{
 		await this.product.click();
 	}
 
 	public async getProductDetails() : Promise<ProductDetails>{
-		const price = await this.Price();
-		const sku = await this.SKU();
-		const productName = await this.ProductName();
+		const price = await this.price();
+		const sku = await this.sku();
+		const productName = await this.productName();
 		return new ProductDetails(sku,price,productName);
 	}
 }
 
+/**
+ * The POM for the product search page.
+ */
 export class ProductSearchPage extends Page {
 	
 	@findByClass("mainPageTitle")
-	public MainPageTitle : WebComponent;
+	public mainPageTitle : WebComponent;
 
 	@findAllByClass("product")
-	private PageProducts : WebComponents;
+	private pageProducts : WebComponents;
 
 	private filterBar;
 	constructor(browser:Browser){
@@ -63,8 +69,8 @@ export class ProductSearchPage extends Page {
 	}
 
 	/**
-	 * 
-	 * @returns The filters selected on the products page.
+	 * Grabs the filters from the filter breadcrumbs. 
+	 * @returns A list of applied filters
 	 */
 	public async getActiveFilters(): Promise<Array<string>>{
 		const filterDiv = await this.browser.findElement({className:"filtervalues"});
@@ -75,11 +81,10 @@ export class ProductSearchPage extends Page {
 	}
 
 	/**
-	 * 
 	 * @returns A promise to an array of products that are on the page
 	 */
 	public async findAllProductsOnPage(): Promise<Array<ProductCard>>{
-		const products = await this.PageProducts.getElements();
+		const products = await this.pageProducts.getElements();
 		const productCards = await products.map((element) => {
 			return new ProductCard(element);
 		});
@@ -95,16 +100,21 @@ export class ProductSearchPage extends Page {
 	 * Should change the page to the product page of the selected product. 
 	 */
 	public async selectProduct(product: ProductCard){
-		await product.Click();
+		await product.click();
 	}
 
 	/**
 	 * @returns Page is loaded when the main page title is visible. 
 	 */
 	public loadCondition(): WaitCondition {
-		return elementIsVisible(() => this.MainPageTitle);
+		return elementIsVisible(() => this.mainPageTitle);
 	}
 
+	/**
+	 * Selects a filter option out of the filterbar.
+	 * @param filterOption The wanted filter option
+	 * @returns The selected filter option
+	 */
 	public async selectFilterOption(filterOption: string){
 		const currentUrl = await this.browser.currentUrl();
 		await this.filterBar.waitTillVisible();

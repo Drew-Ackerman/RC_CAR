@@ -85,7 +85,7 @@ export class ProductPage extends Page {
 		const pageProductDetails = await this.getProductDetails();
 		const sameProduct = await pageProductDetails.equalTo(product);
 		if(!sameProduct){
-			throw Error(`Not the same product. On product page with SKU ${await this.SKU.getText()}, expected ${await this.product.SKU()}`);
+			throw Error(`Not the same product. On product page with SKU ${await this.SKU.getText()}, expected ${await this.product.sku()}`);
 		}
 		return true;
 	}

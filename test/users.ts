@@ -46,7 +46,7 @@ describe("Users", function () {
 	it("Should be able to search for a product with tags", async() => {
 		await pages.homePage.navigate();
 		await pages.homePage.Search("Electronics");
-		expect(pages.productSearchPage.MainPageTitle.getText()).to.eventually.contain("Electronics");
+		expect(pages.productSearchPage.mainPageTitle.getText()).to.eventually.contain("Electronics");
 	});
 
 	it("Should be able to set mutliple filters on a product search", async() => {
@@ -90,7 +90,7 @@ describe("Users", function () {
 		await popups.informationPopup.appearsAndLeaves();
 
 		await pages.shoppingCartPage.header.searchForItem("gift card");
-		(await pages.productSearchPage.findAllProductsOnPage())[0].Click();
+		(await pages.productSearchPage.findAllProductsOnPage())[0].click();
 		await browser.wait(pageHasLoaded(pages.giftcardPage));
 		await pages.giftcardPage.selectCardStyleSet(GiftCardStyleSets.Anytime);
 		const cards = await pages.giftcardPage.getCards(GiftCardStyleSets.Anytime);
