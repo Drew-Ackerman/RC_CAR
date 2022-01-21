@@ -2,6 +2,9 @@ import { WaitCondition, urlContainsValue, TextInput, findById, findByCSS, Button
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
+/**
+ * The page for account creation. Starts the signup process. 
+ */
 export class AccountCreationPage extends Page {
 	
 	@findByCSS("label[for='subscribeCheckbox']")
@@ -36,7 +39,7 @@ export class AccountCreationPage extends Page {
 	 * Fill out the form to create a new account.
 	 * @param email 
 	 * @param password 
-	 * @param answer 
+	 * @param answer Will be used for both security question answer fields. 
 	 * @returns The personal profile page that should appear upon successful account creation
 	 */
 	public async createNewAccount(email:string, password:string, answer:string){
@@ -59,5 +62,4 @@ export class AccountCreationPage extends Page {
 	public loadCondition(): WaitCondition {
 		return urlContainsValue(this.browser, "Create-Account-Action");
 	}
-	
 }
