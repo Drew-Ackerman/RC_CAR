@@ -3,6 +3,10 @@ import { findById, urlContainsValue, WaitCondition, WebComponent, Button } from 
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
+/**
+ * A collection of applicable gift card style sets.
+ * A style set contains multiple styles of related giftcards.
+ */
 export const enum GiftCardStyleSets {
 	Anytime="Anytime",
 	BackToSchool="Back-To-School",
@@ -25,12 +29,18 @@ export class GiftCard {
 
 	constructor(protected browser: IBrowser, protected element: WebElement){	}
 
+	/**
+	 * Add this giftcard to the shopping cart.
+	 */
 	public async addToCart(): Promise<void> {
 		await this.element.click();
 		await this.addToCartBtn.click();
 	}
 }
 
+/**
+ * The POM for the gift card page.
+ */
 export class GiftCardPage extends Page {
 
 	@findById("amountOption")
@@ -43,32 +53,43 @@ export class GiftCardPage extends Page {
 		super(browser);
 	}
 
-	public async isAvailable(): Promise<GiftCardPage>
-	{	
-		await this.browser.wait(this.loadCondition());
-		return this;
-	}
-
 	public loadCondition(): WaitCondition {
 		return urlContainsValue(this.browser, "Gift-Cards");
 	}
 
-	public async selectCardAmount(amount:number): Promise<void> {
+	/**
+	 * Select a balance for the gift card 
+	 * @param amount The balance wanted
+	 * @returns The wanted amount if found
+	 * @throws An error if the wanted {@link amount} could not be found on the page
+	 */
+	public async selectCardAmount(amount:number): Promise<number> {
 		const options = await this.amountOptions.findElements({css:".//div"});
-		for(let i = 0; i< options.length; i++){
-			const optionText = await (await options[i].getText()).replace("$","");
+		for(const option of options){
+			const optionText = await (await option.getText()).replace("$","");
 			if(optionText.includes(amount.toString())){
-				options[i].click();
-				return;
+				option.click();
+				return Number(optionText);
 			}
 		}
+		throw new Error(`Couldnt find an amount of ${amount}`);
 	}
 
-	public selectCardStyleSet(styleSet:GiftCardStyleSets): Promise<void>{
-		const cardStyleSet = this.cardStyleSets.findElement({id:styleSet});
+	/**
+	 * Select a style set on the page. A style set is something like a birthday, or holiday. 
+	 * @param styleSet The {@link GiftCardStyleSets} to chose on the page
+	 */
+	public async selectCardStyleSet(styleSet:GiftCardStyleSets): Promise<void>{
+		const cardStyleSet = await this.cardStyleSets.findElement({id:styleSet});
 		return cardStyleSet.click();
 	}
 
+	/**
+	 * Ensure selectCardStyleSet is called first.
+	 * Get a list of giftcards pertaining to the previously selected card style set.
+	 * @param styleSet The style set to get cards from
+	 * @returns A collection of gift cards.
+	 */
 	public async getCards(styleSet:GiftCardStyleSets): Promise<Array<GiftCard>>{
 		const replacedDashes = styleSet.replace("-","");
 		const firstLetterLowercased = replacedDashes.charAt(0).toLowerCase() + replacedDashes.slice(1);
