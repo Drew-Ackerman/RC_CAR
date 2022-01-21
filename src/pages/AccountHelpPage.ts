@@ -2,17 +2,20 @@ import { findByLinkText, urlContainsValue, WaitCondition, WebComponent } from ".
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
+/**
+ * The page users go through to create an account.
+ */
 export class AccountHelpPage extends Page{
 
 	@findByLinkText("click here")
-	public CreateAccountLink : WebComponent;
+	private createAccountLink : WebComponent;
 
 	constructor (browser:IBrowser){
 		super(browser);
 	}
 
 	public async gotoAccountCreation() {
-		await this.CreateAccountLink.click();
+		await this.createAccountLink.click();
 	}
 
 	public loadCondition(): WaitCondition {

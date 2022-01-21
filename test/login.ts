@@ -50,7 +50,7 @@ describe("The login page", () => {
 	it("Should allow an account to be created", async() => {
 		await pages.homePage.header.clickAccountButton();
 		await pages.loginPage.setupNewAccount();
-		await pages.accountHelpPage.CreateAccountLink.click();
+		await pages.accountHelpPage.gotoAccountCreation();
 		await pages.accountCreationPage.createNewAccount(demoEmail, password, "demo");
 		await browser.wait(pageHasLoaded(pages.viewPersonalProfilePage), waitFor.TenSeconds);
 		await pages.viewPersonalProfilePage.completeUserData(testData.testAddress, testData.testContactInfo);
