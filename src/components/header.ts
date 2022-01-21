@@ -17,19 +17,19 @@ export class Header implements IHeader{
 	 * When logged in the account button can be found this way
 	 */
 	@findById("myAccount")
-	public AccountButton: Button;
+	public accountButton: Button;
 
 	/**
 	 * When not logged in the account button can be found this way
 	 */
 	@findByCSS("img[alt='Account Icon']")
-	public LoginButton: Button;
+	public loginButton: Button;
 
 	@findById("header")
-	public HeaderBar: WebComponent;
+	public headerBar: WebComponent;
 
 	@findById("searchBox")
-	public SearchBoxInput : TextInput;
+	public searchBoxInput : TextInput;
 
 	@findById("cartHeaderIcon")
 	private cartButton: Button;
@@ -54,17 +54,17 @@ export class Header implements IHeader{
 	public async clickAccountButton(){
 		let loginButtonPresent = false;
 		try{
-			loginButtonPresent = await this.LoginButton.isDisplayed();
+			loginButtonPresent = await this.loginButton.isDisplayed();
 		} catch(error){
-			console.error("Cannot click account btn");
+			throw new Error(`Cannot click loginButton because of error ${error}`);
 		}
 		
 		if(loginButtonPresent){
-			await this.LoginButton.click();
+			await this.loginButton.click();
 		}
 		//Otherwise user is logged in
 		else{
-			await this.AccountButton.click();
+			await this.accountButton.click();
 		}
 	}
 
@@ -74,19 +74,19 @@ export class Header implements IHeader{
 	 * @param searchText What text to input into the search text box.
 	 */
 	public async searchForItem(searchText:string){
-		await this.SearchBoxInput.type(searchText);
-		await this.SearchBoxInput.type(Key.ENTER);
+		await this.searchBoxInput.type(searchText);
+		await this.searchBoxInput.type(Key.ENTER);
 	}
 
 	/**
 	 * @description Logout of the site
 	 */
 	public async logout(){
-		if(await this.AccountButton.isDisplayed()){
-			await this.AccountButton.click();
+		if(await this.accountButton.isDisplayed()){
+			await this.accountButton.click();
 			await this.browser.wait(elementIsVisible(()=>this.logoutButton));
 			await this.logoutButton.click();
-			await this.browser.wait(elementIsVisible(()=>this.LoginButton));
+			await this.browser.wait(elementIsVisible(()=>this.loginButton));
 		}
 		else{
 			throw Error("The account button is not displayed in the header bar");
