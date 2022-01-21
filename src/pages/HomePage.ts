@@ -1,6 +1,6 @@
 import { Browser, elementIsVisible, findByClass, WebComponent } from "../lib";
 import { config } from "../../config";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 
 /**
  * @classdesc POM for the home page of RC Willey

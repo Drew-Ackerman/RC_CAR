@@ -2,7 +2,7 @@ import { Key, WebElement, WebElementPromise } from "selenium-webdriver";
 import { TestAddress, waitFor } from "../../config";
 import { Button, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
 /**

@@ -1,5 +1,5 @@
 import { Button, findById, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 import { IBrowser } from "../interfaces/IBrowser";
 import { WebElement } from "selenium-webdriver";
 import { ProductDetails } from "../types/ProductDetails";

@@ -1,7 +1,7 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findAllByClass, findByClass, urlChanged, WaitCondition, WebComponent, WebComponents } from "../lib";
-import { Page } from "../components/page";
-import { FilterBar } from "../components/FilterBar";
+import { Page } from "../partials/page";
+import { FilterBar } from "../partials/FilterBar";
 import { ProductDetails } from "../types/ProductDetails";
 
 /**

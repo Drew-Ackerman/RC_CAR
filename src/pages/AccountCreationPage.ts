@@ -1,5 +1,5 @@
 import { WaitCondition, urlContainsValue, TextInput, findById, findByCSS, Button, Checkbox } from "../lib";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
 /**

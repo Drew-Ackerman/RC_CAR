@@ -1,6 +1,6 @@
 import { Browser, findByCSS, findById, TextInput, urlContainsValue, WaitCondition, WebComponent, Button } from "../lib";
 import { Address, ContactInformation } from "../types";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 
 /**
  * Page Object Model for the Personal Profile Page.

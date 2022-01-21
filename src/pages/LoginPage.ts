@@ -1,6 +1,6 @@
 import { Browser, elementIsVisible, findById, WaitCondition } from "../lib";
 import { TextInput, WebComponent, Button } from "../lib/elements";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 
 /**
  * @classdesc POM for the Login page.

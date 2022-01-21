@@ -1,5 +1,5 @@
 import { findByLinkText, urlContainsValue, WaitCondition, WebComponent } from "../lib";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 import { IBrowser } from "../interfaces/IBrowser";
 
 /**

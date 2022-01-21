@@ -3,7 +3,7 @@ import { AllPopups } from "../src/popups";
 import { Browser, pageHasLoaded } from "../src/lib";
 import { SupportedBrowsers, testData, waitFor } from "../config";
 import { snapshot } from "../src/lib";
-import { MenuOptions } from "../src/components/AccountSideBar";
+import { MenuOptions } from "../src/partials/AccountSideBar";
 
 import chai = require("chai"); 
 import chaiAsPromised = require("chai-as-promised");

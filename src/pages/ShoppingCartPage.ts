@@ -1,6 +1,6 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findByClass, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 import { ProductDetails } from "../types/ProductDetails";
 
 /**

@@ -1,5 +1,5 @@
 import { Browser, Button, findById, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
-import { Page } from "../components/page";
+import { Page } from "../partials/page";
 import { WebElement } from "selenium-webdriver";
 
 export class StoreLocationsPage extends Page {

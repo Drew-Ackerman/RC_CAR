@@ -1,5 +1,5 @@
-import { AccountSideBar } from "../components/AccountSideBar";
-import { Page } from "../components/page";
+import { AccountSideBar } from "../partials/AccountSideBar";
+import { Page } from "../partials/page";
 import { IBrowser } from "../interfaces/IBrowser";
 import { findByLinkText, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 
