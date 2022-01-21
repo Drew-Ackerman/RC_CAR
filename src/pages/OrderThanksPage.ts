@@ -2,6 +2,9 @@ import { IHeader } from "../interfaces/IHeader";
 import { IPage } from "../interfaces/IPage";
 import { Browser, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 
+/**
+ * The page given after an order is completed.
+ */
 export class OrderThanksPage implements IPage {
 	
 	header: IHeader;
@@ -10,9 +13,7 @@ export class OrderThanksPage implements IPage {
 	@findById("orderConfirmationP")
 	private orderConfirmationText: WebComponent;
 
-	constructor(protected browser:Browser){
-
-	}
+	constructor(protected browser:Browser){	}
 
 	public navigate(): Promise<void> {
 		return this.browser.navigate(this.url);
@@ -26,9 +27,12 @@ export class OrderThanksPage implements IPage {
 		return urlContainsValue(this.browser, "Order-Thanks");
 	}
 
+	/**
+	 * Parse the purchases order number out of the page.
+	 * @returns The order number of the completed purchase. 
+	 */
 	public async getOrderNumber(): Promise<string>{
 		const orderNumberElem = await this.orderConfirmationText.findElement({css:"strong"});
 		return orderNumberElem.getText();
 	}
-
 }
