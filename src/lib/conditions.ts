@@ -3,6 +3,12 @@ import { IBrowser } from "../interfaces/IBrowser";
 import { IPage } from "../interfaces/IPage";
   
 /**
+ * These conditions are used in conjunciton with the wait method of the browser class. 
+ * These conditions can be used to delay action until something occurs, like an element is visible, 
+ * or certain text becomes present on an element.  
+ */
+
+/**
  * @type alias, take in a Browser, return a promise that will evaluate to a boolean.  
  */
 export type WaitCondition = (browser:IBrowser) => Promise<boolean>;
@@ -16,10 +22,20 @@ export function elementIsVisible(locator: () => WebComponent): WaitCondition {
 	return async () => await locator().isDisplayed();
 }
 
+/**
+ * Wait until a WebComponent is not visible.
+ * @param locator A function returning a {@link WebComponent}
+ * @returns True if not visible, false otherwise. 
+ */
 export function elementIsNotVisible(locator: () => WebComponent): WaitCondition {
 	return async () => await locator().isDisplayed() === false;
 }
 
+/**
+ * A wait condition for waiting till a webcomponent contains certain text.
+ * @param locator A function that returns a webcomponent
+ * @param expectedText The text to look for on the webcomponent.
+ */
 export function elementHasText(locator: () => WebComponent, expectedText:string): WaitCondition {
 	return async () => await (await locator().getText()).includes(expectedText);
 }
@@ -44,7 +60,6 @@ export function urlIsValue(browser: IBrowser, url: string) : WaitCondition {
 }
 
 /**
- * 
  * @param browser The {@link Browser}
  * @param partialUrl 
  * @returns A {@link WaitCondition} promise to be waited upon.
