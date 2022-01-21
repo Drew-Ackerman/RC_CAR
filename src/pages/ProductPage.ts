@@ -1,7 +1,8 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, Button, elementIsVisible, findByClass, findById, WaitCondition, WebComponent } from "../lib";
-import { ProductDetails, ProductCard } from "./ProductSearchPage";
+import { ProductCard } from "./ProductSearchPage";
 import { Page } from "../components/page";
+import { ProductDetails } from "../types/ProductDetails";
 
 export class ProductPage extends Page {
 	

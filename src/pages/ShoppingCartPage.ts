@@ -1,7 +1,7 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findByClass, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
-import { ProductDetails } from "./ProductSearchPage";
 import { Page } from "../components/page";
+import { ProductDetails } from "../types/ProductDetails";
 
 /**
  * An item in the shopping cart. 

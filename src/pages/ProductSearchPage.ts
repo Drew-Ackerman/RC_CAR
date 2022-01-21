@@ -2,14 +2,7 @@ import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findAllByClass, findByClass, urlChanged, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../components/page";
 import { FilterBar } from "../components/FilterBar";
-
-export class ProductDetails {
-	constructor(public sku:string, public price:string, public productName: string){}
-
-	public equalTo(other: ProductDetails){
-		return this.sku === other.sku && this.price === other.price && this.productName === other.productName;
-	}
-}
+import { ProductDetails } from "../types/ProductDetails";
 
 export class ProductCard {
 

@@ -1,7 +1,7 @@
 import { WebElement } from "selenium-webdriver";
 import { Browser, Button, elementIsVisible, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
-import { ProductDetails } from "./ProductSearchPage";
 import { Page } from "../components/page";
+import { ProductDetails } from "../types/ProductDetails";
 
 /**
  * Defines important data the a wishlist item has. Useful when passing objects of data around.

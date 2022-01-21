@@ -1,8 +1,8 @@
 import { Button, findById, TextInput, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Page } from "../components/page";
 import { IBrowser } from "../interfaces/IBrowser";
-import { ProductDetails } from "./ProductSearchPage";
 import { WebElement } from "selenium-webdriver";
+import { ProductDetails } from "../types/ProductDetails";
 
 export class AccountActivityPage extends Page{
 
