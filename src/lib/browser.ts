@@ -32,11 +32,11 @@ export class Browser implements IBrowser{
 	 * @returns The handle for the currently focused window.
 	 */
 	public getCurrentWindowHandle(): Promise<string> {
-		throw new Error("Method not implemented.");
+		return this.driver.getWindowHandle();
 	}
 	
 	public getPageTitle(): Promise<string> {
-		throw new Error("Method not implemented.");
+		return this.driver.getTitle();
 	}
 
 	public maximize(): Promise<void>{
