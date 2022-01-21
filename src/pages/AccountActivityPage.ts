@@ -4,6 +4,9 @@ import { IBrowser } from "../interfaces/IBrowser";
 import { WebElement } from "selenium-webdriver";
 import { ProductDetails } from "../types/ProductDetails";
 
+/**
+ * The page that shows a users most recent purchases.
+ */
 export class AccountActivityPage extends Page{
 
 	@findById("historyContainer")
@@ -19,7 +22,13 @@ export class AccountActivityPage extends Page{
 		super(browser);
 	}
 
-	public async getOrder(orderNumber: string){
+	/**
+	 * Grab a specific order from a list of available orders. 
+	 * @param orderNumber The ordernumber for the wanted order.
+	 * @returns The order if it is available
+	 * @throws An error if the order is not present
+	 */
+	public async getOrder(orderNumber: string): Promise<Order>{
 		const allOrders = await this.getOrders();
 		for(const order of allOrders){
 			const num = await order.getOrderNumber();
@@ -27,20 +36,31 @@ export class AccountActivityPage extends Page{
 				return order;
 			}
 		}
+		throw new Error(`Order with ${orderNumber} is not present`);
 	}
 
-	public async getOrders(){
+	/**
+	 * Grab all orders on the page
+	 * @returns A list of present {@link Order}s 
+	 */
+	public async getOrders(): Promise<Array<Order>>{
 		const orderHeaders = await this.orderContainer.findElements({css:"a[class='pt2x cb grid-full']"});
 		const orderTables = await this.orderContainer.findElements({xpath:".//table"});
 
-		const orders = [];
-		for(let i=0; i < orderHeaders.length; i++){
-			orders.push(new Order(orderHeaders[i], orderTables[i]));
-		}
+		const orders:Array<Order> = [];
+		orderHeaders.forEach((header, index) => {
+			const table = orderTables[index];
+			const order = new Order(header, table);
+			orders.push(order);
+		});
 		return orders;
 	}	
 
-	public async searchOrders(searchTerm:string){
+	/**
+	 * Filter the orders based off the searchTerm
+	 * @param searchTerm What to look for in the orders
+	 */
+	public async searchOrders(searchTerm:string): Promise<void>{
 		await this.searchBox.type(searchTerm);
 		await this.searchButton.click();
 	}
@@ -50,16 +70,26 @@ export class AccountActivityPage extends Page{
 	}
 }
 
+/**
+ * Represents an order. The order number, the order items, the total price.
+ */
 class Order {
 	
 	constructor(private orderHeader: WebElement, private orderTable: WebElement){	}
 
-	public async getOrderNumber(){
+	/**
+	 * @returns The order's order number
+	 */
+	public async getOrderNumber(): Promise<string>{
 		const orderNumElement = await this.orderHeader.findElement({css:"span"});
 		return orderNumElement.getText();
 	}
 
-	public async getOrderItems(){
+	/**
+	 * Each item in the order is converted into product details
+	 * @returns A collection of product details. 
+	 */
+	public async getOrderItems(): Promise<Array<ProductDetails>>{
 		const tableRows = await this.orderTable.findElements({css:"tr"});
 		const rows = tableRows.slice(1,-2);
 		
@@ -74,7 +104,12 @@ class Order {
 		return orderItems;
 	}
 
-	public async containsItem(item: ProductDetails){
+	/**
+	 * Determine if theres a specific item in the order.
+	 * @param item 
+	 * @returns True if present, false otherwise.
+	 */
+	public async containsItem(item: ProductDetails): Promise<boolean>{
 		const orderItems = await this.getOrderItems();
 		for(const orderItem of orderItems){
 			if(orderItem.equalTo(item)){
@@ -84,12 +119,18 @@ class Order {
 		return false;
 	}
 
+	/**
+	 * @returns The orders total price.
+	 */
 	public async getOrderTotal(){
 		const tableRows = await this.orderTable.findElements({css:"tr"});
 		const total = tableRows.at(-2);
 		return total?.getText() || Number.MAX_SAFE_INTEGER;
 	}
 
+	/**
+	 * @returns The total amount paid to the order.
+	 */
 	public async getTotalAmountPaid(){
 		const tableRows = await this.orderTable.findElements({css:"tr"});
 		const paid = tableRows.at(-1);

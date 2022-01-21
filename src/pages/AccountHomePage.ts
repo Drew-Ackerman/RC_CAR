@@ -6,10 +6,10 @@ import { findByLinkText, urlContainsValue, WaitCondition, WebComponent } from ".
 export class AccountHomePage extends Page {
 	
 	@findByLinkText("Statements")
-	public StatementLink: WebComponent;
+	public statementLink: WebComponent;
 
 	@findByLinkText("Account Activity")
-	public AccountActivityLink: WebComponent;
+	public accountActivityLink: WebComponent;
 	
 	public sidebar: AccountSideBar;
 
