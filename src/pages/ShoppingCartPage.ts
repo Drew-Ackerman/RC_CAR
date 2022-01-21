@@ -2,6 +2,10 @@ import { WebElement } from "selenium-webdriver";
 import { Browser, elementIsVisible, findByClass, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { ProductDetails } from "./ProductSearchPage";
 import { Page } from "../components/page";
+
+/**
+ * An item in the shopping cart. 
+ */
 export class CartItem {
 
 	@findByClass("prodName")
@@ -28,6 +32,9 @@ export class CartItem {
 	}
 }
 
+/**
+ * Page Object Model for the shopping cart page.
+ */
 export class ShoppingCartPage extends Page {
 	
 	private async findCheckoutButton(browser: Browser){
@@ -60,7 +67,7 @@ export class ShoppingCartPage extends Page {
 	 * Checkout the product
 	 * Page should change to the checkout page
 	 */
-	public async Checkout(): Promise<void> {
+	public async checkout(): Promise<void> {
 		const checkoutButton = await this.browser.findElement(this.findCheckoutButton);
 		await checkoutButton.click();
 	}

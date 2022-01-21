@@ -52,7 +52,7 @@ describe("The Account Activity Page", function () {
 		await pages.productSearchPage.selectProduct(firstProductCard);
 		await pages.productPage.addToCart();
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
-		await pages.shoppingCartPage.Checkout();
+		await pages.shoppingCartPage.checkout();
 		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
 		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
 		await pages.checkoutPage.selectPaymentMethod(PaymentMethods.CreditCard);

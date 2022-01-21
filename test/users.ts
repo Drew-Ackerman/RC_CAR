@@ -72,7 +72,7 @@ describe("Users", function () {
 		await pages.productSearchPage.selectProduct(firstProductCard);
 		await pages.productPage.addToCart();
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
-		await pages.shoppingCartPage.Checkout();
+		await pages.shoppingCartPage.checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
 		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
 		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
@@ -95,7 +95,7 @@ describe("Users", function () {
 		await pages.giftcardPage.selectCardStyleSet(GiftCardStyleSets.Anytime);
 		const cards = await pages.giftcardPage.getCards(GiftCardStyleSets.Anytime);
 		await cards[0].addToCart();
-		await pages.shoppingCartPage.Checkout();
+		await pages.shoppingCartPage.checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
 		await pages.checkoutPage.enterGiftCardDeliveryOptions("demo@demo.com", "Demo Message");
 		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
@@ -131,7 +131,7 @@ describe("Users", function () {
 		await pages.productPage.addToCart();
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 
-		await pages.shoppingCartPage.Checkout();
+		await pages.shoppingCartPage.checkout();
 		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
 		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
 		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
