@@ -8,7 +8,7 @@ import { Page } from "../components/page";
 export class HomePage extends Page{
 
 	@findByClass("rcwlogo")
-	public RCLogo : WebComponent;
+	public rcLogo : WebComponent;
 
 	constructor(browser: Browser){
 		super(browser);
@@ -19,16 +19,8 @@ export class HomePage extends Page{
 	 * Click the account button
 	 * @returns A promise for a login page POM
 	 */
-	async GoToLoginPage(){
+	async goToLoginPage(){
 		return this.header.clickAccountButton();
-	}
-
-	public async Search(searchText:string){
-		return this.header.searchForItem(searchText);
-	}
-
-	public async ClickShoppingCartButton(){//}: Promise<ShoppingCartPage>{
-		this.header.clickShoppingCartButton();
 	}
 
 	/**
@@ -36,6 +28,6 @@ export class HomePage extends Page{
 	 * @returns A conditon that evaluates when the logo is visible. 
 	 */ 
 	public loadCondition() {
-		return elementIsVisible(() => this.RCLogo);
+		return elementIsVisible(() => this.rcLogo);
 	}
 }

@@ -30,7 +30,7 @@ describe("The product search page", () => {
 
 	it("should allow product filtering", async() => {
 		await pages.homePage.navigate();
-		await pages.homePage.Search("");
+		await pages.homePage.header.searchForItem("");
 		await browser.wait(pageHasLoaded(pages.productSearchPage));
 		const productList = await pages.productSearchPage.findAllProductsOnPage();
 		await pages.productSearchPage.selectFilterOption("Furniture");

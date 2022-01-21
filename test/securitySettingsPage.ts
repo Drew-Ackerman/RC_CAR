@@ -54,7 +54,7 @@ describe("The Security Settings Page", () => {
 		await popups.informationPopup.appearsAndLeaves(waitFor.TenSeconds);
 
 		//Create new account for each test.
-		await pages.homePage.GoToLoginPage();
+		await pages.homePage.goToLoginPage();
 		await pages.loginPage.setupNewAccount();
 		await pages.accountHelpPage.gotoAccountCreation();
 		await pages.accountCreationPage.createNewAccount(testEmail, password, "answer");
@@ -79,7 +79,7 @@ describe("The Security Settings Page", () => {
 		await popups.informationPopup.displaysAndLeaves("logged out", waitFor.TenSeconds);
 
 		await pages.homePage.navigate();
-		await pages.homePage.GoToLoginPage();
+		await pages.homePage.goToLoginPage();
 		await pages.loginPage.login(testEmail, newPassword);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
@@ -96,7 +96,7 @@ describe("The Security Settings Page", () => {
 		await popups.informationPopup.displaysAndLeaves("logged out", waitFor.TenSeconds);
 
 		await pages.homePage.navigate();
-		await pages.homePage.GoToLoginPage();
+		await pages.homePage.goToLoginPage();
 		await pages.loginPage.login(newEmail, password);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});

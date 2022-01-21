@@ -38,20 +38,20 @@ describe("Users", function () {
 
 	it("Should be able to search for products", async() => {
 		await pages.homePage.navigate();
-		await pages.homePage.Search("");
+		await pages.homePage.header.searchForItem("");
 		const productList = await pages.productSearchPage.findAllProductsOnPage();
 		expect(productList).to.have.length.greaterThan(0);
 	});
 
 	it("Should be able to search for a product with tags", async() => {
 		await pages.homePage.navigate();
-		await pages.homePage.Search("Electronics");
+		await pages.homePage.header.searchForItem("Electronics");
 		expect(pages.productSearchPage.mainPageTitle.getText()).to.eventually.contain("Electronics");
 	});
 
 	it("Should be able to set mutliple filters on a product search", async() => {
 		await pages.homePage.navigate();
-		await pages.homePage.Search("Gray Chair");
+		await pages.homePage.header.searchForItem("Gray Chair");
 		const filters = await pages.productSearchPage.getActiveFilters();
 		expect(filters).to.have.length.greaterThan(0);
 	});

@@ -59,13 +59,13 @@ describe("The login page", () => {
 	});
 
 	it("Should allow customers to login", async() => {
-		await pages.homePage.GoToLoginPage();
+		await pages.homePage.goToLoginPage();
 		await pages.loginPage.login(demoEmail, password);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
 
 	it("Should allow employees to login", async() => {
-		await pages.homePage.GoToLoginPage();
+		await pages.homePage.goToLoginPage();
 		await pages.loginPage.login(`${testData.testEmployee.username}`, `${testData.testEmployee.password}`);
 		return expect(browser.currentUrl()).to.eventually.contain("account/Home");
 	});
