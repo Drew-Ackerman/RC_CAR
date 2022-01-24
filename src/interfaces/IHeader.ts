@@ -1,4 +1,4 @@
-import { Button, TextInput, WebComponent } from "../lib/elements";
+import { Button, TextInput, WebComponent } from "../lib/components";
 
 /**
  * @classdesc The header is the part of the page that contains things like 

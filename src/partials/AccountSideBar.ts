@@ -1,4 +1,4 @@
-import { WebComponent } from "../lib/elements";
+import { WebComponent } from "../lib/components";
 import { findById } from "../lib/utils";
 import { IBrowser } from "../interfaces/IBrowser";
 

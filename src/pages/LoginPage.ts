@@ -1,5 +1,5 @@
 import { Browser, elementIsVisible, findById, WaitCondition } from "../lib";
-import { TextInput, WebComponent, Button } from "../lib/elements";
+import { TextInput, WebComponent, Button } from "../lib/components";
 import { Page } from "../partials/page";
 
 /**

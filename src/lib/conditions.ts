@@ -1,4 +1,4 @@
-import { WebComponent} from "./elements";
+import { WebComponent} from "./components";
 import { IBrowser } from "../interfaces/IBrowser";
 import { IPage } from "../interfaces/IPage";
   
