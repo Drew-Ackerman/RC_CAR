@@ -31,8 +31,9 @@ export class OrderThanksPage implements IPage {
 	 * Parse the purchases order number out of the page.
 	 * @returns The order number of the completed purchase. 
 	 */
-	public async getOrderNumber(): Promise<string>{
+	public async getOrderNumber(): Promise<number>{
 		const orderNumberElem = await this.orderConfirmationText.findElement({css:"strong"});
-		return orderNumberElem.getText();
+		const orderNumber = Number(await orderNumberElem.getText());
+		return orderNumber;
 	}
 }
