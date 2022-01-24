@@ -42,7 +42,6 @@ export class WebComponent {
 	}
 
 	/**
-	 * 
 	 * @param locator A selenium By locator hash.
 	 * @returns A {@link WebElementPromise}
 	 */
@@ -51,7 +50,6 @@ export class WebComponent {
 	}
 
 	/**
-	 * 
 	 * @param locator A selenium By locator hash.
 	 * @returns A promise that returns an array of {@link WebElement}
 	 */
@@ -69,10 +67,7 @@ export class WebComponent {
  */
 export class WebComponents {
 
-	constructor(protected elements: Promise<Array<WebElement>>, public selector: string)
-	{
-
-	}
+	constructor(protected elements: Promise<Array<WebElement>>, public selector: string){	}
 
 	/**
 	 * @returns All the elements in this collection
@@ -119,12 +114,19 @@ export class Button extends WebComponent {
 	}
 }
 
+/**
+ * Component for checkbox input elements.
+ */
 export class Checkbox extends WebComponent {
 
 	constructor(element: WebElementPromise, selector: string){
 		super(element, selector);
 	}
 
+	/**
+	 * See if a checkbox is checked. 
+	 * @returns True if checked, otherwise false.
+	 */
 	public async isChecked(): Promise<boolean>{
 		const isChecked = await this.element.getAttribute("checked");
 		return isChecked ? true : false;
