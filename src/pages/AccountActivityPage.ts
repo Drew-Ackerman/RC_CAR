@@ -28,7 +28,7 @@ export class AccountActivityPage extends Page{
 	 * @returns The order if it is available
 	 * @throws An error if the order is not present
 	 */
-	public async getOrder(orderNumber: string): Promise<Order>{
+	public async getOrder(orderNumber: number): Promise<Order>{
 		const allOrders = await this.getOrders();
 		for(const order of allOrders){
 			const num = await order.getOrderNumber();
@@ -80,9 +80,11 @@ class Order {
 	/**
 	 * @returns The order's order number
 	 */
-	public async getOrderNumber(): Promise<string>{
+	public async getOrderNumber(): Promise<number>{
 		const orderNumElement = await this.orderHeader.findElement({css:"span"});
-		return orderNumElement.getText();
+		const orderText = await orderNumElement.getText();
+		const orderNumber = await orderText.split(" ").at(-1);
+		return Number(orderNumber);
 	}
 
 	/**
