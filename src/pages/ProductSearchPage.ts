@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, elementIsVisible, findAllByClass, findByClass, urlChanged, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Browser, componentIsVisible, findAllByClass, findByClass, urlChanged, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Page } from "../partials/page";
 import { FilterBar } from "../partials/FilterBar";
 import { ProductDetails } from "../types/ProductDetails";
@@ -107,7 +107,7 @@ export class ProductSearchPage extends Page {
 	 * @returns Page is loaded when the main page title is visible. 
 	 */
 	public loadCondition(): WaitCondition {
-		return elementIsVisible(() => this.mainPageTitle);
+		return componentIsVisible(() => this.mainPageTitle);
 	}
 
 	/**

@@ -1,4 +1,4 @@
-import { Browser, elementIsVisible, findById, WaitCondition } from "../lib";
+import { Browser, componentIsVisible, findById, WaitCondition } from "../lib";
 import { TextInput, WebComponent, Button } from "../lib/components";
 import { Page } from "../partials/page";
 
@@ -43,7 +43,7 @@ export class LoginPage extends Page{
 	 * @returns A promise
 	 */
 	public loadCondition(): WaitCondition {
-		return elementIsVisible(() => this.loginForm);
+		return componentIsVisible(() => this.loginForm);
 	}
 
 	/**

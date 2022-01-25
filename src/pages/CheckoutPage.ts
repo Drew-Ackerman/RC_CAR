@@ -1,6 +1,6 @@
 import { Key, WebElement, WebElementPromise } from "selenium-webdriver";
 import { TestAddress, waitFor } from "../../config";
-import { Button, elementIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
+import { Button, componentIsVisible, findByCSS, findById, Selector, TextInput, urlContainsValue, WaitCondition, WebComponent, WebComponents } from "../lib";
 import { Address, ContactInformation, CreditCardInformation } from "../types";
 import { Page } from "../partials/page";
 import { IBrowser } from "../interfaces/IBrowser";
@@ -219,11 +219,11 @@ export class CheckoutPage extends Page {
 	 */
 	public async selectAccountType(accountType: AccountTypes){
 		if(accountType == AccountTypes.Account){
-			await this.browser.wait(elementIsVisible(()=>this.loginToAccountButton), waitFor.TenSeconds);
+			await this.browser.wait(componentIsVisible(()=>this.loginToAccountButton), waitFor.TenSeconds);
 			await this.loginToAccountButton.click();
 		}
 		else{
-			await this.browser.wait(elementIsVisible(()=>this.containueAsGuestButton));
+			await this.browser.wait(componentIsVisible(()=>this.containueAsGuestButton));
 			await this.containueAsGuestButton.click();
 		}
 	}
@@ -236,7 +236,7 @@ export class CheckoutPage extends Page {
 	public async selectDelivery(shippingInformation=TestAddress, shippingOption: ShippingOptions){
 		//Default radio button, dont need to click it.
 		//Fill out address then.
-		await this.browser.wait(elementIsVisible(()=>this.FirstNameField),waitFor.TenSeconds);
+		await this.browser.wait(componentIsVisible(()=>this.FirstNameField),waitFor.TenSeconds);
 		await this.FirstNameField.clear();
 		await this.FirstNameField.type(shippingInformation.firstName);
 		await this.LastNameField.clear();
@@ -253,7 +253,7 @@ export class CheckoutPage extends Page {
 		await this.ShippingZip.type(shippingInformation.zip, Key.ENTER);
 
 		await this.browser.sleep(5);
-		await this.browser.wait(elementIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
+		await this.browser.wait(componentIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
 		const firstDeliveryOption = new WebComponent(this.browser.findElement({className:"shippingOptions"}), "shippingOptions");
 
 		switch(shippingOption){
@@ -261,15 +261,15 @@ export class CheckoutPage extends Page {
 			await firstDeliveryOption.click();
 			break;
 		case ShippingOptions.InHome:
-			await this.browser.wait(elementIsVisible(()=>this.inHomeDeliveryBtn), waitFor.TenSeconds, "No in home ship option");
+			await this.browser.wait(componentIsVisible(()=>this.inHomeDeliveryBtn), waitFor.TenSeconds, "No in home ship option");
 			await this.inHomeDeliveryBtn.click();
 			break;
 		case ShippingOptions.InHomeAndBlueRewards:
-			await this.browser.wait(elementIsVisible(()=>this.inHomeBlueRewardsDeliveryBtn), waitFor.TenSeconds, "No in home blue rewards ship option");
+			await this.browser.wait(componentIsVisible(()=>this.inHomeBlueRewardsDeliveryBtn), waitFor.TenSeconds, "No in home blue rewards ship option");
 			await this.inHomeBlueRewardsDeliveryBtn.click();
 			break;
 		case ShippingOptions.FreeCurbside:
-			await this.browser.wait(elementIsVisible(()=>this.FreeCurbsideDelivery), waitFor.TenSeconds, "No curbside ship option");
+			await this.browser.wait(componentIsVisible(()=>this.FreeCurbsideDelivery), waitFor.TenSeconds, "No curbside ship option");
 			await this.FreeCurbsideDelivery.click();
 			break;
 		}
@@ -278,7 +278,7 @@ export class CheckoutPage extends Page {
 	}
 	
 	public async selectInStorePickup(state?:States, store?:Stores){
-		await this.browser.wait(elementIsVisible(()=>this.inStorePickupOption));
+		await this.browser.wait(componentIsVisible(()=>this.inStorePickupOption));
 		await this.inStorePickupOption.click();
 		if(state){
 			await this.stateSelector.selectOptionByText(state);
@@ -286,7 +286,7 @@ export class CheckoutPage extends Page {
 		if(store){
 			await this.storeSelector.selectOptionByText(store);
 		}
-		await this.browser.wait(elementIsVisible(() => this.DeliveryContinueButton));
+		await this.browser.wait(componentIsVisible(() => this.DeliveryContinueButton));
 		await this.DeliveryContinueButton.click();
 	}
 
@@ -313,7 +313,7 @@ export class CheckoutPage extends Page {
 	 * @param phone 
 	 */
 	public async enterContactInfo(contactInformation:ContactInformation){
-		await this.browser.wait(elementIsVisible(()=>this.EmailInput));
+		await this.browser.wait(componentIsVisible(()=>this.EmailInput));
 		await this.EmailInput.clear();
 		await this.EmailInput.type(contactInformation.email);
 		await this.HomePhoneInput.clear();
@@ -323,7 +323,7 @@ export class CheckoutPage extends Page {
 		await this.WorkPhoneInput.clear();
 		await this.WorkPhoneInput.type(contactInformation.workPhone);
 		const continueButton = new Button(this.browser.findElement({id:"contactInfoContinueButton"}), "id:contactInfoContinueButton");
-		await this.browser.wait(elementIsVisible(() => continueButton));
+		await this.browser.wait(componentIsVisible(() => continueButton));
 		await continueButton.click();
 	}
 
@@ -335,7 +335,7 @@ export class CheckoutPage extends Page {
 	 */
 	public async enterPaymentDetails(creditCardInfo:CreditCardInformation){
 		await this.browser.sleep(2);
-		await this.browser.wait(elementIsVisible(() => this.creditCardPaymentContainer), waitFor.TenSeconds, "Couldnt find credit card payment container");
+		await this.browser.wait(componentIsVisible(() => this.creditCardPaymentContainer), waitFor.TenSeconds, "Couldnt find credit card payment container");
 		//Find the cc input frame and type in it.
 		await (await this.browser.switchTo()).defaultContent();
 		const ccinputcont = await this.browser.findElement({id:"creditCard"});
@@ -368,15 +368,15 @@ export class CheckoutPage extends Page {
 		
 		switch(paymentMethod){
 		case PaymentMethods.CreditCard:
-			await this.browser.wait(elementIsVisible(()=>this.cardSelector));
+			await this.browser.wait(componentIsVisible(()=>this.cardSelector));
 			await this.cardSelector.click();
 			break;
 		case PaymentMethods.PayPal:
-			await this.browser.wait(elementIsVisible(()=>this.paypalSelector));
+			await this.browser.wait(componentIsVisible(()=>this.paypalSelector));
 			await this.paypalSelector.click();
 			break;
 		case PaymentMethods.StoreCashier:
-			await this.browser.wait(elementIsVisible(()=>this.storeCashierSelector));
+			await this.browser.wait(componentIsVisible(()=>this.storeCashierSelector));
 			await this.storeCashierSelector.click();
 			break;
 		}
@@ -389,11 +389,11 @@ export class CheckoutPage extends Page {
 	 */
 	public async enterGiftCardDeliveryOptions(email: string, personalMessage: string){
 		await this.browser.sleep(2);
-		await this.browser.wait(elementIsVisible(() => this.giftCardEmailInput), waitFor.TenSeconds);
+		await this.browser.wait(componentIsVisible(() => this.giftCardEmailInput), waitFor.TenSeconds);
 		await this.giftCardEmailInput.type(email);
-		await this.browser.wait(elementIsVisible(() => this.personalMessageInput), waitFor.TenSeconds);
+		await this.browser.wait(componentIsVisible(() => this.personalMessageInput), waitFor.TenSeconds);
 		await this.personalMessageInput.type(personalMessage);
-		await this.browser.wait(elementIsVisible(() => this.DeliveryContinueButton), waitFor.TenSeconds);
+		await this.browser.wait(componentIsVisible(() => this.DeliveryContinueButton), waitFor.TenSeconds);
 		await this.DeliveryContinueButton.click();
 	}
 
@@ -411,7 +411,7 @@ export class CheckoutPage extends Page {
 	 * @returns 
 	 */
 	public async submitPaymentInformation(): Promise<void> {
-		await this.browser.wait(elementIsVisible(()=>this.ContinuePaymentButton));
+		await this.browser.wait(componentIsVisible(()=>this.ContinuePaymentButton));
 		return this.ContinuePaymentButton.click();
 	}
 
@@ -420,7 +420,7 @@ export class CheckoutPage extends Page {
 	 * @returns 
 	 */
 	public async placeOrder(): Promise<void> {
-		await this.browser.wait(elementIsVisible(()=>this.PlaceOrderButton));
+		await this.browser.wait(componentIsVisible(()=>this.PlaceOrderButton));
 		return this.PlaceOrderButton.click();
 	}
 }

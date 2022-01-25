@@ -1,7 +1,7 @@
 import { Key } from "selenium-webdriver";
 import { IBrowser } from "../interfaces/IBrowser";
 import { IHeader } from "../interfaces/IHeader";
-import { Button, elementIsVisible, findByClass, findByCSS, findById, findByLinkText, TextInput, WebComponent } from "../lib";
+import { Button, componentIsVisible, findByClass, findByCSS, findById, findByLinkText, TextInput, WebComponent } from "../lib";
 
 /**
  * @classdesc The header is the part of the page that contains things like 
@@ -84,9 +84,9 @@ export class Header implements IHeader{
 	public async logout(){
 		if(await this.accountButton.isDisplayed()){
 			await this.accountButton.click();
-			await this.browser.wait(elementIsVisible(()=>this.logoutButton));
+			await this.browser.wait(componentIsVisible(()=>this.logoutButton));
 			await this.logoutButton.click();
-			await this.browser.wait(elementIsVisible(()=>this.loginButton));
+			await this.browser.wait(componentIsVisible(()=>this.loginButton));
 		}
 		else{
 			throw Error("The account button is not displayed in the header bar");
@@ -124,7 +124,7 @@ export class Header implements IHeader{
 	 */
 	public async selectAccountMenuOption(optionToSelect: string): Promise<void>{
 		await this.clickAccountButton();
-		await this.browser.wait(elementIsVisible(()=>this.accountMenu));
+		await this.browser.wait(componentIsVisible(()=>this.accountMenu));
 		const accountMenuElements = await this.accountMenu.findElements({css:"li"});
 		for(const menuOption of accountMenuElements){
 			const menuOptionText = await menuOption.getText();

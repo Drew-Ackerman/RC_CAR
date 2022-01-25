@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, elementIsVisible, findByClass, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, componentIsVisible, findByClass, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Page } from "../partials/page";
 import { ProductDetails } from "../types/ProductDetails";
 
@@ -95,7 +95,7 @@ export class ShoppingCartPage extends Page {
 	 * @returns Get all valid {@link CartItem}s in the cart
 	 */
 	public async getCartItems(): Promise<Array<CartItem>>{
-		await this.browser.wait(elementIsVisible(() => this.shoppingCart));
+		await this.browser.wait(componentIsVisible(() => this.shoppingCart));
 		const cartItemElements = await this.shoppingCart.findElements({className:"cartItem"});
 		const cartItems = cartItemElements.map((itemElement) => {
 			return new CartItem(itemElement);

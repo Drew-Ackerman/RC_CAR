@@ -1,4 +1,4 @@
-import { Browser, elementIsVisible, findByClass, WebComponent } from "../lib";
+import { Browser, componentIsVisible, findByClass, WebComponent } from "../lib";
 import { config } from "../../config";
 import { Page } from "../partials/page";
 
@@ -28,6 +28,6 @@ export class HomePage extends Page{
 	 * @returns A conditon that evaluates when the logo is visible. 
 	 */ 
 	public loadCondition() {
-		return elementIsVisible(() => this.rcLogo);
+		return componentIsVisible(() => this.rcLogo);
 	}
 }

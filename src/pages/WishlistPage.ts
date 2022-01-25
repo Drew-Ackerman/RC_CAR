@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, componentIsVisible, findByCSS, findById, urlContainsValue, WaitCondition, WebComponent } from "../lib";
 import { Page } from "../partials/page";
 import { ProductDetails } from "../types/ProductDetails";
 
@@ -117,7 +117,7 @@ export class WishlistPage extends Page {
 	 * @throws An error if there are no wishlist items on the page.
 	 */
 	public async getWishlistItems(): Promise<Array<WishListItem>>{
-		await this.browser.wait(elementIsVisible(() => this.shoppingCart));
+		await this.browser.wait(componentIsVisible(() => this.shoppingCart));
 		const items = await this.shoppingCart.findElements({css:"div[class~='cartItem']"});
 		if(items.shift() == undefined){
 			throw new Error("No wish list items");

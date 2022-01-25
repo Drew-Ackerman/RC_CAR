@@ -1,5 +1,5 @@
 import { WebElement } from "selenium-webdriver";
-import { Browser, Button, elementIsVisible, findByClass, findById, WaitCondition, WebComponent } from "../lib";
+import { Browser, Button, componentIsVisible, findByClass, findById, WaitCondition, WebComponent } from "../lib";
 import { ProductCard } from "./ProductSearchPage";
 import { Page } from "../partials/page";
 import { ProductDetails } from "../types/ProductDetails";
@@ -45,7 +45,7 @@ export class ProductPage extends Page {
 	 * @returns The page is loaded when the Add to Cart button is visible on the page.
 	 */
 	public loadCondition(): WaitCondition {
-		return elementIsVisible(() => this.addToCartButton);
+		return componentIsVisible(() => this.addToCartButton);
 	}
 
 	/**
@@ -96,7 +96,7 @@ export class ProductPage extends Page {
 	 * @returns The wishlist that was selected
 	 */
 	public async addProductToWishlist(wishlistName: string): Promise<string>{
-		await this.browser.wait(elementIsVisible(()=>this.wishlistAddButton));
+		await this.browser.wait(componentIsVisible(()=>this.wishlistAddButton));
 		await this.browser.sleep(1);
 		await this.wishlistAddButton.click();
 		const possibleWishlists = await this.browser.findElements({css:"a[class~='icon-heart']"});

@@ -1,6 +1,6 @@
 import { waitFor } from "../../config";
 import { IBrowser } from "../interfaces/IBrowser";
-import { elementHasText, elementIsNotVisible, elementIsVisible, findByClass, findById, WebComponent } from "../lib";
+import { componentHasText, componentIsNotVisible, componentIsVisible, findByClass, findById, WebComponent } from "../lib";
 
 /**
  * For working with the general information popups that occur after 
@@ -21,8 +21,8 @@ export class InformationPopup {
 	 * @param optionalTimeout The maximum amount of time to wait.
 	 */
 	public async appearsAndLeaves(optionalTimeout?:number){
-		await this.browser.wait(elementIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
-		await this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
+		await this.browser.wait(componentIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
+		await this.browser.wait(componentIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
 		return;
 	}
 
@@ -32,9 +32,9 @@ export class InformationPopup {
 	 * @param optionalTimeout How long to wait for it to appear and for it to leave
 	 */
 	public async displaysAndLeaves(expectedText:string, optionalTimeout?:number): Promise<void>{
-		await this.browser.wait(elementIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
-		await this.browser.wait(elementHasText(()=>this.overlay, expectedText), optionalTimeout, `Infomation popup did not contain text: ${expectedText}`);
-		await this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
+		await this.browser.wait(componentIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
+		await this.browser.wait(componentHasText(()=>this.overlay, expectedText), optionalTimeout, `Infomation popup did not contain text: ${expectedText}`);
+		await this.browser.wait(componentIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
 	}
 
 	/**
@@ -42,7 +42,7 @@ export class InformationPopup {
 	 * @param optionalTimeout How long to wait for the timeout, optional.
 	 */
 	public async waitTillNotPresent(optionalTimeout?:number): Promise<void>{
-		return this.browser.wait(elementIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
+		return this.browser.wait(componentIsNotVisible(()=>this.overlay), optionalTimeout, `Information popup did not leave within ${optionalTimeout} seconds`);
 	}
 
 	/**
@@ -50,7 +50,7 @@ export class InformationPopup {
 	 * @param optionalTimeout How long to wait
 	 */
 	public async waitTillPresent(optionalTimeout?:number): Promise<void>{
-		return this.browser.wait(elementIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
+		return this.browser.wait(componentIsVisible(()=>this.overlay), optionalTimeout, `Information popup did not appear within ${optionalTimeout} seconds`);
 	}
 
 	/**

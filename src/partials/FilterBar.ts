@@ -1,7 +1,7 @@
 import { WebElement } from "selenium-webdriver";
 import { FilterOptionError } from "../exceptions/FilterOptionError";
 import { IBrowser } from "../interfaces/IBrowser";
-import { elementIsVisible } from "../lib";
+import { componentIsVisible } from "../lib";
 import { Button, Checkbox, WebComponent } from "../lib/components";
 import { findByClass, findByCSS, findById } from "../lib/utils";
 
@@ -76,7 +76,7 @@ export class FilterBar {
 	}
 
 	public async waitTillVisible(){
-		await this.browser.wait(elementIsVisible(()=>this.container));
+		await this.browser.wait(componentIsVisible(()=>this.container));
 	}
 }
 

@@ -1,5 +1,5 @@
 import { IBrowser } from "../interfaces/IBrowser";
-import { Button, elementIsVisible, findByCSS, Selector, WebComponent } from "../lib";
+import { Button, componentIsVisible, findByCSS, Selector, WebComponent } from "../lib";
 
 /**
  * A list of store options that the 
@@ -35,7 +35,7 @@ export class SetHomeStorePopup {
 	 * Wait till the popup is visible. 
 	 */
 	public async waitTillVisible(optionalTimeout?:number): Promise<void>{
-		await this.browser.wait(elementIsVisible(() => this.popupOverlay), optionalTimeout, `Home store popup did not appear within ${optionalTimeout} seconds.`);
+		await this.browser.wait(componentIsVisible(() => this.popupOverlay), optionalTimeout, `Home store popup did not appear within ${optionalTimeout} seconds.`);
 	}
 
 	/**

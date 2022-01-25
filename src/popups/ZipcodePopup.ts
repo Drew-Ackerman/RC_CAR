@@ -1,6 +1,6 @@
 import { Key } from "selenium-webdriver";
 import { IBrowser } from "../interfaces/IBrowser";
-import { elementIsVisible, findByCSS, WebComponent } from "../lib";
+import { componentIsVisible, findByCSS, WebComponent } from "../lib";
 
 /**
  * For working with a zipcoded popup,
@@ -20,7 +20,7 @@ export class ZipcodePopup {
 	 * @param optionalTimeout How many seconds to wait till the popup is visible.
 	 */
 	public async waitTillVisible(optionalTimeout?:number): Promise<void>{
-		await this.browser.wait(elementIsVisible(() => this.popupOverlay), optionalTimeout, `Zipcode popup did not appear within ${optionalTimeout} seconds.`);
+		await this.browser.wait(componentIsVisible(() => this.popupOverlay), optionalTimeout, `Zipcode popup did not appear within ${optionalTimeout} seconds.`);
 	}
 
 	/**

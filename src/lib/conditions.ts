@@ -18,7 +18,7 @@ export type WaitCondition = (browser:IBrowser) => Promise<boolean>;
  * @param locator A function returning a {@link WebComponent}
  * @returns True if visible, false otherwise. 
  */
-export function elementIsVisible(locator: () => WebComponent): WaitCondition {
+export function componentIsVisible(locator: () => WebComponent): WaitCondition {
 	return async () => await locator().isDisplayed();
 }
 
@@ -27,7 +27,7 @@ export function elementIsVisible(locator: () => WebComponent): WaitCondition {
  * @param locator A function returning a {@link WebComponent}
  * @returns True if not visible, false otherwise. 
  */
-export function elementIsNotVisible(locator: () => WebComponent): WaitCondition {
+export function componentIsNotVisible(locator: () => WebComponent): WaitCondition {
 	return async () => await locator().isDisplayed() === false;
 }
 
@@ -36,7 +36,7 @@ export function elementIsNotVisible(locator: () => WebComponent): WaitCondition 
  * @param locator A function that returns a webcomponent
  * @param expectedText The text to look for on the webcomponent.
  */
-export function elementHasText(locator: () => WebComponent, expectedText:string): WaitCondition {
+export function componentHasText(locator: () => WebComponent, expectedText:string): WaitCondition {
 	return async () => await (await locator().getText()).includes(expectedText);
 }
 
@@ -45,7 +45,7 @@ export function elementHasText(locator: () => WebComponent, expectedText:string)
  * @param locator The WebComponent
  * @returns A promise to be waited upon.  
  */
-export function elementIsPresent(locator: () => WebComponent): WaitCondition {
+export function componentIsPresent(locator: () => WebComponent): WaitCondition {
 	return async () => await locator() !== undefined;
 }
 
