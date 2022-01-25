@@ -14,6 +14,21 @@ import { IPage } from "../interfaces/IPage";
 export type WaitCondition = (browser:IBrowser) => Promise<boolean>;
 
 /**
+ * Wait for a WebComponent to be disabled
+ * @param locator A function returning a {@link Webcomponent}
+ * @returns True if the components attribute "disabled" is true, otherwise false.
+ */
+export function componentIsDisabled(locator: () => WebComponent): WaitCondition {
+	return async function () {
+		try {
+			return await locator().getAttribute("disabled") === "disabled";
+		} catch (ex) {
+			return false;
+		}
+	};
+}
+
+/**
  * Wait for a WebComponent to be displayed
  * @param locator A function returning a {@link WebComponent}
  * @returns True if visible, false otherwise. 
