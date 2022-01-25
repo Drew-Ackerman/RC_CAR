@@ -1,4 +1,5 @@
 import { Locator, WebElement, WebElementPromise } from "selenium-webdriver";
+import { findByXpath } from ".";
 
 /**
  * @classdesc A wrapper for all possible html elements.
@@ -256,3 +257,64 @@ export class Selector extends WebComponent {
 		throw new Error("Could not find an enabled option");
 	}
 }
+
+export class Table extends WebComponent {
+
+	@findByXpath(".//thead")
+	private tableHead: TableHeader;
+
+	@findByXpath(".//tbody")
+	private tableBody: TableBody;
+
+	private browser;
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+		this.browser = element;
+	}
+
+	public async tableHeaders(){
+		return this.tableHead.getHeaderColumns();
+	}
+
+	public async tableRows(){
+		return this.tableBody.getTableRows();
+	}
+
+	public async tableCells(){
+		return this.tableBody.getTableCells();
+	}
+}
+
+class TableHeader extends WebComponent {
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+	}
+
+	public async getHeaderColumns(){
+		const headerRow = await this.element.findElement({xpath:".//tr"});
+		const headerColumns = await headerRow.findElements({xpath:".//th"});
+		return headerColumns;
+	}
+}
+
+class TableBody extends WebComponent {	
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+	}
+
+	public async getTableRows(){
+		const rows = await this.element.findElements({xpath:".//tr"});
+		return rows;
+	}
+
+	public async getTableCells(){
+		const tablesCells = [];
+		const rows = await this.getTableRows();
+		for(const row of rows){
+			const cells = await row.findElements({xpath:".//td"});
+			tablesCells.push(...cells);
+		}
+		return tablesCells;
+	}
+}
+
