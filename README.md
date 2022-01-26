@@ -68,11 +68,51 @@ Because UI tests take longer than most and are prone to fragility, it is importa
 
 Reliable tests should be not return differnt results between executions. If a test fails half the time, then its either poorly written or its going about the testing in an unreliable way. 
 
-Slow tests are test unrun. Some tests *have* to be slow, most dont. If you have several slow tests, figure out why they are slow and if there is any way to speed them up while also keeping them _reliable_ and _meaningful_. If that means the tests are still slow, then consider how often the slow tests need to be ran.
+Slow tests are test unrun. Some tests *have* to be slow, most dont. If you have several slow tests, figure out why they are slow and if there is any way to speed them up while also keeping them _reliable_ and _meaningful_. If that means the tests are still slow, then consider how often the slow tests need to be ran. *Key note* - slow is relative, if a testing a purchase takes 2 minutes, thats okay. If a login takes 2 minutes, thats a problem. 
+
+Its important to realize that creating these high level tests is an opprotunity to see what its like to use the product from the prospective of a user. If something feels difficult, ask yourself, "Why is this feature like this? Why do I have to do 3 steps when 2 would work?". This gives insight into improvments that are not seen when developing to fit a specific feature set. 
 
 ### Test often
 Make testing a part of the development process. Ensure tests are done by the developer themselves before they release code for review. It is easier and less expensive to fix a bug before review and definitely before the code is in production. 
 
 ### Setup
+The following things are needed before the program can be run
+1. Have node.js installed and updated.
+2. Have npm installed and updated.
+3. Run the following commands:
 `npm install` - this will need to be run any time there are changes to the package.json
+4. Then to run tests: 
 `npm run test` - It will automatically run against test, if you want it to run against your local then change the baseUrl in config.ts
+## Project layout
+
+### src
+Holds all the supporting framework code. 
+
+#### exceptions
+Holds custom exceptions that extend Error. Making a custom exception system is useful, but `throw new Error("Message")` works just fine to. Especially since a majority of Errors should be used to hault a test and provide useful information in debugging. Example, throwing an error when a specific item is not found in a collection of items.
+
+#### interfaces
+Interfaces are used here to prevent circular dependency issues in the code. If one wants to check for circular dependencies for the project, run `npm run init-depcruiser`, followed by `npm run check-dependencies`. Both of the scripts being run are defined in package.json.
+
+#### lib
+This is a collection of files that make up the backbone of this framework. Each file within lib contains a header that should provide additional information. 
+
+#### pages
+Contains a list of POMs. Essentially a page on the website is represented by a Page Object Model. 
+
+##### Adding pages
+1. Define your page. This is where you make a class, extend the class from Page, and start defining Components and Actions on that page. 
+2. Add this new page to the AllPages class; add it to the class' properties and then instatiate it in the class' constructor.
+
+#### partials
+Contains content that is reused throughout multiple pages, like the header bar, or things that are complex and large, like the datepicker.
+
+#### popups
+Similar design concept to POMs, but as a popup. 
+
+##### Adding popups
+1. Define the popup. 
+2. Add the popup to the AllPopups class. 
+
+#### types
+Defining complex types that are reused throughout the project? Go here. If the type is only relevant to a single page, place the type in that pages file. 
