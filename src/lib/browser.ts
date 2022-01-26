@@ -6,8 +6,8 @@ import { writeFile } from "fs";
 import { IBrowser } from "../interfaces/IBrowser";
 
 /**
- * @classdesc A wrapper for the selenium browser driver. 
- * This class allows interacting with the browser, finding elements
+ * A wrapper for the selenium driver. 
+ * This class allows interacting with the browser, finding elements,
  * navigating to pages with urls, working with browser windows, etc. 
  */
 export class Browser implements IBrowser{
