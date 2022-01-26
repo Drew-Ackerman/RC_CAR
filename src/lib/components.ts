@@ -1,5 +1,11 @@
 import { Locator, WebElement, WebElementPromise } from "selenium-webdriver";
 
+/** Components allow interacting with html elements in an easier fashion. 
+ * Its best to keep html elements and components 1 to 1. So a button and a selector element 
+ * can be a component. A wishlist? Thats not a single html element, its a group of elements and data.
+ * So its better to put something complex, like a wishlist, into the partials folder.   
+*/
+
 /**
  * @classdesc A wrapper for all possible html elements.
  */
