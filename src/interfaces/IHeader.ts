@@ -13,11 +13,6 @@ export interface IHeader{
 	 */
 	accountButton: Button;
 
-	/**
-	 * When not logged in the account button can be found this way
-	 */
-	loginButton: Button;
-
 	headerBar: WebComponent;
 
 	searchBoxInput : TextInput;

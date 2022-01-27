@@ -16,14 +16,8 @@ export class Header implements IHeader{
 	/**
 	 * When logged in the account button can be found this way
 	 */
-	@findById("myAccount")
+	@findById("accountHeaderIcon")
 	public accountButton: Button;
-
-	/**
-	 * When not logged in the account button can be found this way
-	 */
-	@findByCSS("img[alt='Account Icon']")
-	public loginButton: Button;
 
 	@findById("header")
 	public headerBar: WebComponent;
@@ -52,20 +46,7 @@ export class Header implements IHeader{
 	 * or if logged in, will go to the account page.
 	 */
 	public async clickAccountButton(){
-		let loginButtonPresent = false;
-		try{
-			loginButtonPresent = await this.loginButton.isDisplayed();
-		} catch(error){
-			throw new Error(`Cannot click loginButton because of error ${error}`);
-		}
-		
-		if(loginButtonPresent){
-			await this.loginButton.click();
-		}
-		//Otherwise user is logged in
-		else{
-			await this.accountButton.click();
-		}
+		await this.accountButton.click();
 	}
 
 	/**
@@ -86,7 +67,7 @@ export class Header implements IHeader{
 			await this.accountButton.click();
 			await this.browser.wait(componentIsVisible(()=>this.logoutButton));
 			await this.logoutButton.click();
-			await this.browser.wait(componentIsVisible(()=>this.loginButton));
+			await this.browser.wait(componentIsVisible(()=>this.accountButton));
 		}
 		else{
 			throw Error("The account button is not displayed in the header bar");
