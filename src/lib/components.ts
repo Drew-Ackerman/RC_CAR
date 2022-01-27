@@ -208,12 +208,16 @@ export class Selector extends WebComponent {
 		await this.element.click();
 		const options = await this.element.findElements({css:"option"});
 		for(const option of options){
-			if(await option.getAttribute("value") == selectedOption){
+			const text = await option.getText();
+			const value = await option.getAttribute("value");
+			if(value == selectedOption){
 				await option.click();
+				await this.element.click();
 				return;
 			}
-			if(await (await option.getText()).includes(selectedOption)){
+			if(text.includes(selectedOption)){
 				await option.click();
+				await this.element.click();
 				return;
 			}
 		}
@@ -228,8 +232,10 @@ export class Selector extends WebComponent {
 		await this.element.click();
 		const options = await this.element.findElements({css:"option"});
 		for(const option of options){
-			if(await (await option.getText()).includes(selectedOption)){
+			const text = await option.getText();
+			if(text.includes(selectedOption)){
 				await option.click();
+				await this.element.click();
 				return;
 			}
 		}
@@ -255,33 +261,6 @@ export class Selector extends WebComponent {
 			}
 		}
 		throw new Error("Could not find an enabled option");
-	}
-}
-
-export class Table extends WebComponent {
-
-	@findByXpath(".//thead")
-	private tableHead: TableHeader;
-
-	@findByXpath(".//tbody")
-	private tableBody: TableBody;
-
-	private browser;
-	constructor(element: WebElementPromise, selector: string){
-		super(element,selector);
-		this.browser = element;
-	}
-
-	public async tableHeaders(){
-		return this.tableHead.getHeaderColumns();
-	}
-
-	public async tableRows(){
-		return this.tableBody.getTableRows();
-	}
-
-	public async tableCells(){
-		return this.tableBody.getTableCells();
 	}
 }
 
@@ -317,4 +296,33 @@ class TableBody extends WebComponent {
 		return tablesCells;
 	}
 }
+
+export class Table extends WebComponent {
+
+	@findByXpath(".//thead")
+	private tableHead: TableHeader;
+
+	@findByXpath(".//tbody")
+	private tableBody: TableBody;
+
+	private browser;
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+		this.browser = element;
+	}
+
+	public async tableHeaders(){
+		return this.tableHead.getHeaderColumns();
+	}
+
+	public async tableRows(){
+		return this.tableBody.getTableRows();
+	}
+
+	public async tableCells(){
+		return this.tableBody.getTableCells();
+	}
+}
+
+
 
