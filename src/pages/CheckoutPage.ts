@@ -170,10 +170,10 @@ export class CheckoutPage extends Page {
 	@findByCSS("label[for='inStorePickupRadio']")
 	private inStorePickupOption: WebComponent;
 
-	@findById("states")
+	@findByCSS("select[id='states']")
 	private stateSelector: Selector;
 
-	@findById("loationId")
+	@findById("locationId")
 	private storeSelector: Selector;
 
 	@findByCSS("label[for='CARD0']")
@@ -185,11 +185,13 @@ export class CheckoutPage extends Page {
 	@findByCSS("label[for='storeCashier0']")
 	private storeCashierSelector: WebComponent;
 
-	@findById("ui-datepicker-div")
-	private datepicker: DatePicker;
+	@findById("pickupDate")
+	public datepickerInput: WebComponent;
 
+	private datepicker: DatePicker;
 	constructor(public browser:IBrowser){
 		super(browser);
+		this.datepicker = new DatePicker(this.browser);
 	}
 	
 	/**
@@ -274,6 +276,9 @@ export class CheckoutPage extends Page {
 			await this.storeSelector.selectOptionByText(store);
 		}
 		await this.browser.wait(componentIsVisible(() => this.deliveryContinueButton));
+		await this.browser.wait(componentIsVisible(()=>this.datepickerInput));
+		await this.datepickerInput.click();
+		await this.datepicker.selectNextAvailableDate();
 		await this.deliveryContinueButton.click();
 	}
 
