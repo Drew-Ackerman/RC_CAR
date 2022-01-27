@@ -73,13 +73,13 @@ describe("Users", function () {
 		await pages.productPage.addToCart();
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 		await pages.shoppingCartPage.checkout();
-		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
-		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
-		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
-		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
-		await pages.checkoutPage.selectSameBillingAddress();
-		await pages.checkoutPage.submitPaymentInformation();
-		await pages.checkoutPage.placeOrder();
+		await pages.checkoutPage.accountSection.continueAsGuest();
+		await pages.checkoutPage.shippingSection.selectDelivery(testData.testAddress, ShippingOptions.Any);
+		await pages.checkoutPage.contactInfoSection.enterContactInfo(testData.testContactInfo);
+		await pages.checkoutPage.paymentSection.enterPaymentDetails(testData.testCreditCard);
+		await pages.checkoutPage.paymentSection.selectSameBillingAddress();
+		await pages.checkoutPage.paymentSection.submitPaymentInformation();
+		await pages.checkoutPage.orderReviewSection.placeOrder();
 		return expect(pageHasLoaded(pages.orderThanksPage));
 	});   
 
@@ -96,13 +96,13 @@ describe("Users", function () {
 		const cards = await pages.giftcardPage.getCards(GiftCardStyleSets.Anytime);
 		await cards[0].addToCart();
 		await pages.shoppingCartPage.checkout();
-		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
-		await pages.checkoutPage.enterGiftCardDeliveryOptions("demo@demo.com", "Demo Message");
-		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
-		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
-		await pages.checkoutPage.enterBillingDetails(testData.testAddress);
-		await pages.checkoutPage.submitPaymentInformation();
-		await pages.checkoutPage.placeOrder();
+		await pages.checkoutPage.accountSection.continueAsGuest();
+		await pages.checkoutPage.shippingSection.enterGiftCardDeliveryOptions("demo@demo.com", "Demo Message");
+		await pages.checkoutPage.contactInfoSection.enterContactInfo(testData.testContactInfo);
+		await pages.checkoutPage.paymentSection.enterPaymentDetails(testData.testCreditCard);
+		await pages.checkoutPage.paymentSection.enterBillingDetails(testData.testAddress);
+		await pages.checkoutPage.paymentSection.submitPaymentInformation();
+		await pages.checkoutPage.orderReviewSection.placeOrder();
 		return expect(pageHasLoaded(pages.orderThanksPage));
 	});
 
@@ -132,13 +132,13 @@ describe("Users", function () {
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 
 		await pages.shoppingCartPage.checkout();
-		await pages.checkoutPage.selectAccountType(AccountTypes.Guest);
-		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
-		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
-		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
-		await pages.checkoutPage.selectSameBillingAddress();
-		await pages.checkoutPage.submitPaymentInformation();
-		await pages.checkoutPage.placeOrder();
+		await pages.checkoutPage.accountSection.continueAsGuest();
+		await pages.checkoutPage.shippingSection.selectDelivery(testData.testAddress, ShippingOptions.Any);
+		await pages.checkoutPage.contactInfoSection.enterContactInfo(testData.testContactInfo);
+		await pages.checkoutPage.paymentSection.enterPaymentDetails(testData.testCreditCard);
+		await pages.checkoutPage.paymentSection.selectSameBillingAddress();
+		await pages.checkoutPage.paymentSection.submitPaymentInformation();
+		await pages.checkoutPage.orderReviewSection.placeOrder();
 		return expect(pageHasLoaded(pages.orderThanksPage));
 	}); 
 

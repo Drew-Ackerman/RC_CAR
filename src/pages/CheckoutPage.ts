@@ -5,6 +5,7 @@ import { Address, ContactInformation, CreditCardInformation } from "../types";
 import { Page } from "../partials/page";
 import { IBrowser } from "../interfaces/IBrowser";
 import { DatePicker } from "../partials/DatePicker";
+import { LoginPopup } from "../popups/LoginPopup";
 
 /**
  * @description Valid states
@@ -62,20 +63,62 @@ export const enum PaymentMethods {
  */
 export class CheckoutPage extends Page {
 
+	public accountSection;
+	public shippingSection;
+	public contactInfoSection;
+	public paymentSection;
+	public orderReviewSection;
+
+	constructor(public browser:IBrowser){
+		super(browser);
+		this.accountSection = new AccountSelectionSection(browser);
+		this.shippingSection = new ShippingOptionSection(browser);
+		this.contactInfoSection = new ContactInformationSection(browser);
+		this.paymentSection = new PaymentSection(browser);
+		this.orderReviewSection = new ReviewOrderSection(browser);	
+	}
+	
+	/**
+	 * Waits until part of the browser url contains 'Proceed-To-Checkout'
+	 * @returns WaitCondition
+	 */
+	public loadCondition(): WaitCondition {
+		return urlContainsValue(this.browser, "Proceed-To-Checkout");
+	}
+}
+
+class AccountSelectionSection {
+
 	@findById("continueAsGuestButton")
 	private containueAsGuestButton: Button;
 
 	@findById("loginToAccountButton")
 	private loginToAccountButton: WebComponent;
 
-	@findById("giftCardEmail1")
-	private giftCardEmailInput: TextInput;
+	private loginPopup;
+	constructor(private browser: IBrowser){
+		this.loginPopup = new LoginPopup(browser);
+	}
 
-	@findById("personalMessage1")
-	private personalMessageInput: TextInput;
+	/**
+	 * If not logged into an account, will log into an account for the checkout process.
+	 */
+	public async continueWithAccount(username:string, password:string){
+		await this.browser.wait(componentIsVisible(()=>this.loginToAccountButton), waitFor.TenSeconds);
+		await this.loginToAccountButton.click();
+		await this.loginPopup.login(username,password);
+	}
 
-	@findById("deliveryContinueButton")
-	private deliveryContinueButton: Button;
+	/**
+	 * Completes the section and will continue the rest of the process process as a guest.
+	 */
+	public async continueAsGuest(){
+		await this.browser.wait(componentIsVisible(()=>this.containueAsGuestButton), waitFor.TenSeconds);
+		await this.containueAsGuestButton.click();
+	}
+}
+
+class ShippingOptionSection {
 
 	@findById("shippingFirstName")
 	private firstNameField: TextInput;
@@ -110,8 +153,100 @@ export class CheckoutPage extends Page {
 	@findByCSS("label[for='shipBRO'")
 	private inHomeBlueRewardsDeliveryBtn: Button;
 
+	@findByCSS("label[for='inStorePickupRadio']")
+	private inStorePickupOption: WebComponent;
+
+	@findByCSS("select[id='states']")
+	private stateSelector: Selector;
+
+	@findById("locationId")
+	private storeSelector: Selector;
+
+	@findById("giftCardEmail1")
+	private giftCardEmailInput: TextInput;
+
+	@findById("personalMessage1")
+	private personalMessageInput: TextInput;
+
 	@findById("deliveryContinueButton")
-	private shippingConfirmButton: Button;
+	private deliveryContinueButton: Button;
+
+	@findById("pickupDate")
+	public datepickerInput: WebComponent;
+
+	private datepicker: DatePicker;
+	constructor(private browser: IBrowser){
+		this.datepicker = new DatePicker(browser);	
+	}
+
+	/**
+	 * Fillout delivery
+	 * @param shippingInformation
+	 * @param shippingOption The shipping option
+	 */
+	public async selectDelivery(shippingInformation=TestAddress, shippingOption: ShippingOptions){
+		await this.browser.wait(componentIsVisible(()=>this.firstNameField),waitFor.TenSeconds);
+		await this.firstNameField.clearAndType(shippingInformation.firstName);
+		await this.lastNameField.clearAndType(shippingInformation.lastName);
+		await this.shippingAddress1Field.clearAndType(shippingInformation.streetAddress);
+		await this.shippingAddress2Field.clearAndType(shippingInformation.streetAddress2);
+		await this.shippingCity.clearAndType(shippingInformation.city);
+		await this.shippingState.clearAndType(shippingInformation.state);
+		await this.shippingZip.clearAndType(shippingInformation.zip, Key.ENTER);
+
+		await this.browser.sleep(5);
+		await this.browser.wait(componentIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
+		const firstDeliveryOption = new WebComponent(this.browser.findElement({className:"shippingOptions"}), "shippingOptions");
+
+		switch(shippingOption){
+		case ShippingOptions.Any:
+			await firstDeliveryOption.click();
+			break;
+		case ShippingOptions.InHome:
+			await this.browser.wait(componentIsVisible(()=>this.inHomeDeliveryBtn), waitFor.TenSeconds, "No in home ship option");
+			await this.inHomeDeliveryBtn.click();
+			break;
+		case ShippingOptions.InHomeAndBlueRewards:
+			await this.browser.wait(componentIsVisible(()=>this.inHomeBlueRewardsDeliveryBtn), waitFor.TenSeconds, "No in home blue rewards ship option");
+			await this.inHomeBlueRewardsDeliveryBtn.click();
+			break;
+		case ShippingOptions.FreeCurbside:
+			await this.browser.wait(componentIsVisible(()=>this.freeCurbsideDelivery), waitFor.TenSeconds, "No curbside ship option");
+			await this.freeCurbsideDelivery.click();
+			break;
+		}
+		await this.deliveryContinueButton.click();
+	}
+
+	public async selectInStorePickup(state:States, store:Stores){
+		await this.browser.wait(componentIsVisible(()=>this.inStorePickupOption));
+		await this.inStorePickupOption.click();
+		await this.stateSelector.selectOptionByText(state);
+		await this.storeSelector.selectOptionByText(store);
+		await this.browser.wait(componentIsVisible(()=>this.datepickerInput));
+		await this.datepickerInput.click();
+		await this.datepicker.selectNextAvailableDate();
+		await this.browser.wait(componentIsVisible(() => this.deliveryContinueButton));
+		await this.deliveryContinueButton.click();
+	}
+
+	/**
+	 * Enter the information needed to delivery a giftcard by email.
+	 * @param email Email to send gift card to
+	 * @param personalMessage A personalized message to put into the email
+	 */
+	public async enterGiftCardDeliveryOptions(email: string, personalMessage: string){
+		await this.browser.sleep(2);
+		await this.browser.wait(componentIsVisible(() => this.giftCardEmailInput), waitFor.TenSeconds);
+		await this.giftCardEmailInput.type(email);
+		await this.browser.wait(componentIsVisible(() => this.personalMessageInput), waitFor.TenSeconds);
+		await this.personalMessageInput.type(personalMessage);
+		await this.browser.wait(componentIsVisible(() => this.deliveryContinueButton), waitFor.TenSeconds);
+		await this.deliveryContinueButton.click();
+	}
+}
+
+class ContactInformationSection {
 
 	@findByCSS("input[name='contactEmail']")
 	private emailInput: TextInput;
@@ -125,14 +260,39 @@ export class CheckoutPage extends Page {
 	@findById("workPhone")
 	private workPhoneInput: TextInput;
 
+	@findById("contactInfoContinueButton")
+	private continueButton: Button;
+
+	constructor(private browser: IBrowser){	}
+
+	/**
+	 * Fillout the contact info section
+	 * @param contactInformation Information to use to fillout the contact information form.
+	 */
+	public async enterContactInfo(contactInformation:ContactInformation){
+		await this.browser.wait(componentIsVisible(()=>this.emailInput));
+		await this.emailInput.clearAndType(contactInformation.email);
+		await this.homePhoneInput.clearAndType(contactInformation.homePhone);
+		await this.mobilePhoneInput.clearAndType(contactInformation.mobilePhone);
+		await this.workPhoneInput.clearAndType(contactInformation.workPhone);
+		await this.browser.wait(componentIsVisible(() => this.continueButton));
+		await this.continueButton.click();
+	}
+}
+
+class PaymentSection {
+
+	@findByCSS("label[for='CARD0']")
+	private cardSelector: WebComponent;
+
+	@findByCSS("label[for='PAYP0']")
+	private paypalSelector: WebComponent;
+
+	@findByCSS("label[for='storeCashier0']")
+	private storeCashierSelector: WebComponent;
+
 	@findById("paymentMethod0")
 	private creditCardPaymentContainer: WebComponent;
-
-	@findById("CARD0")
-	private creditCardPaymentSelection: WebComponent;
-
-	@findById("PAPY0")
-	private payPalPaymentSelection: WebComponent;
 
 	@findByCSS("label[for='sameAddress']")
 	private sameAddressCheck: WebComponent;
@@ -161,169 +321,31 @@ export class CheckoutPage extends Page {
 	@findById("continuePaymentButton")
 	private continuePaymentButton: Button;
 
-	@findById("finalSubmit")
-	private placeOrderButton: Button;
+	@findById("gcNumber-1")
+	private giftCardNumberInput: TextInput;
 
-	@findById("backToCart")
-	private backToCartButton: Button;
+	@findById("gcAccess-1")
+	private accessCodeInput: TextInput;
 
-	@findByCSS("label[for='inStorePickupRadio']")
-	private inStorePickupOption: WebComponent;
-
-	@findByCSS("select[id='states']")
-	private stateSelector: Selector;
-
-	@findById("locationId")
-	private storeSelector: Selector;
-
-	@findByCSS("label[for='CARD0']")
-	private cardSelector: WebComponent;
-
-	@findByCSS("label[for='PAYP0']")
-	private paypalSelector: WebComponent;
-
-	@findByCSS("label[for='storeCashier0']")
-	private storeCashierSelector: WebComponent;
-
-	@findById("pickupDate")
-	public datepickerInput: WebComponent;
-
-	private datepicker: DatePicker;
-	constructor(public browser:IBrowser){
-		super(browser);
-		this.datepicker = new DatePicker(this.browser);
-	}
-	
+	constructor(private browser: IBrowser){	}
+		
 	/**
-	 * Waits until part of the browser url contains 'Proceed-To-Checkout'
-	 * @returns WaitCondition
+	 * Enter billing details into the relavent form.
+	 * @param address Address information to put into the form.
 	 */
-	public loadCondition(): WaitCondition {
-		return urlContainsValue(this.browser, "Proceed-To-Checkout");
-	}
-
-	/**
-	 * Complete the account selection section.
-	 * @param accountType 
-	 */
-	public async selectAccountType(accountType: AccountTypes){
-		if(accountType == AccountTypes.Account){
-			await this.browser.wait(componentIsVisible(()=>this.loginToAccountButton), waitFor.TenSeconds);
-			await this.loginToAccountButton.click();
-		}
-		else{
-			await this.browser.wait(componentIsVisible(()=>this.containueAsGuestButton));
-			await this.containueAsGuestButton.click();
-		}
-	}
-
-	/**
-	 * Fillout delivery
-	 * @param shippingInformation
-	 * @param shippingOption The shipping option
-	 */
-	public async selectDelivery(shippingInformation=TestAddress, shippingOption: ShippingOptions){
-		//Default radio button, dont need to click it.
-		//Fill out address then.
-		await this.browser.wait(componentIsVisible(()=>this.firstNameField),waitFor.TenSeconds);
-		await this.firstNameField.clear();
-		await this.firstNameField.type(shippingInformation.firstName);
-		await this.lastNameField.clear();
-		await this.lastNameField.type(shippingInformation.lastName);
-		await this.shippingAddress1Field.clear();
-		await this.shippingAddress1Field.type(shippingInformation.streetAddress);
-		await this.shippingAddress2Field.clear();
-		await this.shippingAddress2Field.type(shippingInformation.streetAddress2);
-		await this.shippingCity.clear();
-		await this.shippingCity.type(shippingInformation.city);
-		await this.shippingState.clear();
-		await this.shippingState.type(shippingInformation.state);
-		await this.shippingZip.clear();
-		await this.shippingZip.type(shippingInformation.zip, Key.ENTER);
-
-		await this.browser.sleep(5);
-		await this.browser.wait(componentIsVisible(()=>this.shippingOptions), waitFor.TenSeconds, "No options available");
-		const firstDeliveryOption = new WebComponent(this.browser.findElement({className:"shippingOptions"}), "shippingOptions");
-
-		switch(shippingOption){
-		case ShippingOptions.Any:
-			await firstDeliveryOption.click();
-			break;
-		case ShippingOptions.InHome:
-			await this.browser.wait(componentIsVisible(()=>this.inHomeDeliveryBtn), waitFor.TenSeconds, "No in home ship option");
-			await this.inHomeDeliveryBtn.click();
-			break;
-		case ShippingOptions.InHomeAndBlueRewards:
-			await this.browser.wait(componentIsVisible(()=>this.inHomeBlueRewardsDeliveryBtn), waitFor.TenSeconds, "No in home blue rewards ship option");
-			await this.inHomeBlueRewardsDeliveryBtn.click();
-			break;
-		case ShippingOptions.FreeCurbside:
-			await this.browser.wait(componentIsVisible(()=>this.freeCurbsideDelivery), waitFor.TenSeconds, "No curbside ship option");
-			await this.freeCurbsideDelivery.click();
-			break;
-		}
-
-		await this.deliveryContinueButton.click();
-	}
-	
-	public async selectInStorePickup(state?:States, store?:Stores){
-		await this.browser.wait(componentIsVisible(()=>this.inStorePickupOption));
-		await this.inStorePickupOption.click();
-		if(state){
-			await this.stateSelector.selectOptionByText(state);
-		}
-		if(store){
-			await this.storeSelector.selectOptionByText(store);
-		}
-		await this.browser.wait(componentIsVisible(() => this.deliveryContinueButton));
-		await this.browser.wait(componentIsVisible(()=>this.datepickerInput));
-		await this.datepickerInput.click();
-		await this.datepicker.selectNextAvailableDate();
-		await this.deliveryContinueButton.click();
-	}
-
 	public async enterBillingDetails(address:Address){
-		await this.billingFirstName.clear();
-		await this.billingFirstName.type(address.firstName);
-		await this.billingLastName.clear();
-		await this.billingLastName.type(address.lastName);
-		await this.billingStreet1.clear();
-		await this.billingStreet1.type(address.streetAddress);
-		await this.billingStreet2.clear();
-		await this.billingStreet2.type(address.streetAddress2);
-		await this.billingCity.clear();
-		await this.billingCity.type(address.city);
-		await this.billingState.clear();
-		await this.billingState.type(address.state);
-		await this.billingZip.clear();
-		await this.billingZip.type(address.zip);
-	}
-
-	/**
-	 * Fillout the contact info
-	 * @param email 
-	 * @param phone 
-	 */
-	public async enterContactInfo(contactInformation:ContactInformation){
-		await this.browser.wait(componentIsVisible(()=>this.emailInput));
-		await this.emailInput.clear();
-		await this.emailInput.type(contactInformation.email);
-		await this.homePhoneInput.clear();
-		await this.homePhoneInput.type(contactInformation.homePhone);
-		await this.mobilePhoneInput.clear();
-		await this.mobilePhoneInput.type(contactInformation.mobilePhone);
-		await this.workPhoneInput.clear();
-		await this.workPhoneInput.type(contactInformation.workPhone);
-		const continueButton = new Button(this.browser.findElement({id:"contactInfoContinueButton"}), "id:contactInfoContinueButton");
-		await this.browser.wait(componentIsVisible(() => continueButton));
-		await continueButton.click();
+		await this.billingFirstName.clearAndType(address.firstName);
+		await this.billingLastName.clearAndType(address.lastName);
+		await this.billingStreet1.clearAndType(address.streetAddress);
+		await this.billingStreet2.clearAndType(address.streetAddress2);
+		await this.billingCity.clearAndType(address.city);
+		await this.billingState.clearAndType(address.state);
+		await this.billingZip.clearAndType(address.zip);
 	}
 
 	/**
 	 * Fillout the payment details section. 
-	 * @param ccNumber 
-	 * @param cardExp 
-	 * @param csc 
+	 * @param creditCardInfo Relavent info to put into the form.
 	 */
 	public async enterPaymentDetails(creditCardInfo:CreditCardInformation){
 		await this.browser.sleep(2);
@@ -355,9 +377,11 @@ export class CheckoutPage extends Page {
 		await (await this.browser.switchTo()).parentFrame();
 	}
 
-	public async selectPaymentMethod(paymentMethod:PaymentMethods){
-		//const paymentMethodContainer = await this.browser.findElement({id:"paymentMethod0"});
-		
+	/**
+	 * Select a certain payment method.
+	 * @param paymentMethod The payment method to select.
+	 */
+	public async selectPaymentMethod(paymentMethod:PaymentMethods){	
 		switch(paymentMethod){
 		case PaymentMethods.CreditCard:
 			await this.browser.wait(componentIsVisible(()=>this.cardSelector));
@@ -375,23 +399,7 @@ export class CheckoutPage extends Page {
 	}
 
 	/**
-	 * Enter the information needed to delivery a giftcard by email.
-	 * @param email Email to send gift card to
-	 * @param personalMessage A personalized message to put into the email
-	 */
-	public async enterGiftCardDeliveryOptions(email: string, personalMessage: string){
-		await this.browser.sleep(2);
-		await this.browser.wait(componentIsVisible(() => this.giftCardEmailInput), waitFor.TenSeconds);
-		await this.giftCardEmailInput.type(email);
-		await this.browser.wait(componentIsVisible(() => this.personalMessageInput), waitFor.TenSeconds);
-		await this.personalMessageInput.type(personalMessage);
-		await this.browser.wait(componentIsVisible(() => this.deliveryContinueButton), waitFor.TenSeconds);
-		await this.deliveryContinueButton.click();
-	}
-
-	/**
 	 * Select the sameBillingAddress checkbox.
-	 * @returns 
 	 */
 	public selectSameBillingAddress(): Promise<void>{
 		return this.sameAddressCheck.click();
@@ -400,7 +408,6 @@ export class CheckoutPage extends Page {
 	/**
 	 * Wait until the button for this section is visible
 	 * then click it. 
-	 * @returns 
 	 */
 	public async submitPaymentInformation(): Promise<void> {
 		await this.browser.wait(componentIsVisible(()=>this.continuePaymentButton));
@@ -408,11 +415,38 @@ export class CheckoutPage extends Page {
 	}
 
 	/**
+	 * Enter gift card information.
+	 * @param giftCardNumber 
+	 * @param accessCode 
+	 */
+	public async enterGiftCardInformation(giftCardNumber:string, accessCode:string){
+		await this.browser.wait(componentIsVisible(()=>this.giftCardNumberInput));
+		await this.giftCardNumberInput.clearAndType(giftCardNumber);
+		await this.accessCodeInput.clearAndType(accessCode);
+	}	
+}
+
+
+class ReviewOrderSection {
+
+	@findById("finalSubmit")
+	private placeOrderButton: Button;
+
+	@findById("backToCart")
+	private backToCartButton: Button;
+
+	constructor(private browser: IBrowser){	}
+
+	/**
 	 * Finish the checkout process.
-	 * @returns 
 	 */
 	public async placeOrder(): Promise<void> {
 		await this.browser.wait(componentIsVisible(()=>this.placeOrderButton));
 		return this.placeOrderButton.click();
+	}
+
+	public async goBackToCard(): Promise<void> {
+		await this.browser.wait(componentIsVisible(()=>this.backToCartButton));
+		return this.backToCartButton.click();
 	}
 }

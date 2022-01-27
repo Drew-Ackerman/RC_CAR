@@ -53,12 +53,14 @@ describe("The Account Activity Page", function () {
 		await pages.productPage.addToCart();
 		await browser.wait(pageHasLoaded(pages.shoppingCartPage));
 		await pages.shoppingCartPage.checkout();
-		await pages.checkoutPage.selectDelivery(testData.testAddress, ShippingOptions.Any);
-		await pages.checkoutPage.enterContactInfo(testData.testContactInfo);
-		await pages.checkoutPage.selectPaymentMethod(PaymentMethods.CreditCard);
-		await pages.checkoutPage.enterPaymentDetails(testData.testCreditCard);
-		await pages.checkoutPage.submitPaymentInformation();
-		await pages.checkoutPage.placeOrder();
+
+		await pages.checkoutPage.shippingSection.selectDelivery(testData.testAddress, ShippingOptions.Any);
+		await pages.checkoutPage.contactInfoSection.enterContactInfo(testData.testContactInfo);
+		await pages.checkoutPage.paymentSection.selectPaymentMethod(PaymentMethods.CreditCard);
+		await pages.checkoutPage.paymentSection.enterPaymentDetails(testData.testCreditCard);
+		await pages.checkoutPage.paymentSection.submitPaymentInformation();
+		await pages.checkoutPage.orderReviewSection.placeOrder();
+
 		await browser.wait(pageHasLoaded(pages.orderThanksPage));
 		const orderNumber = await pages.orderThanksPage.getOrderNumber();
 
