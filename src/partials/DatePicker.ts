@@ -1,5 +1,5 @@
-import { WebElementPromise } from "selenium-webdriver";
-import { findByClass, findById, Table, WebComponent } from "../lib";
+import { IBrowser } from "../interfaces/IBrowser";
+import { findByClass, findByCSS, Table, WebComponent } from "../lib";
 
 const months = ["january", "february", "march", "april", "may", "june", "july", 
 	"august", "september", "october", "november", "december"];
@@ -7,9 +7,9 @@ const months = ["january", "february", "march", "april", "may", "june", "july",
 /**
  * The datepicker is the calendar seen in the In Store Pickup option of the checkout page process
  */
-export class DatePicker extends WebComponent {
+export class DatePicker {
 
-	@findById("ui-datepicker-div")
+	@findByCSS("div[id='ui-datepicker-div']")
 	private datepickerContainer: WebComponent;
 
 	@findByClass("ui-datepicker-header")
@@ -24,22 +24,19 @@ export class DatePicker extends WebComponent {
 	@findByClass("ui-datepicker-title")
 	private datepickerTitle: WebComponent;
 
-	@findByClass("ui-datepicker-calendar")
+	@findByCSS("table[class='ui-datepicker-calendar']")
 	private calendarBody: Table;
 
 
-	private browser;
-	constructor(element: WebElementPromise, selector: string){
-		super(element,selector);
-		this.browser = element;
-	}
+	constructor(protected browser: IBrowser){	}
 
 	/**
 	 * @returns The currently displayed year
 	 */
 	private async getCurrentlySelectedYear(){
 		const title = await this.datepickerTitle.getText();
-		const year = title.split(" ").at(-1);
+		const splits = title.split(" ");
+		const year = splits.pop();
 		return Number(year);
 	}
 
@@ -91,8 +88,10 @@ export class DatePicker extends WebComponent {
 	private async getCurrentDay(){
 		const days = await this.calendarBody.tableCells();
 		for(const day of days){
-			if((await day.getAttribute("class")).includes("ui-datepicker-today")){
-				const date = Number(day.getText());
+			const isValid = await (await day.getAttribute("class")).includes("ui-datepicker-today");
+			if(isValid){
+				const text = await day.getText();
+				const date = Number(text);
 				return date;
 			}
 		}
@@ -126,13 +125,13 @@ export class DatePicker extends WebComponent {
 	}
 
 	/**
-	 * 
-	 * @param daysAfterToday 
+	 * Selected a date after today
+	 * @param daysAfterToday How many days after today?
 	 */
 	public async selectADateAfterToday(daysAfterToday:number){
 		const currentlySelectedDate = await this.getCurrentlySelectedCalendarDate();
-		const futureDate = new Date(currentlySelectedDate.getDate());
-		futureDate.setDate(futureDate.getDate()+daysAfterToday);
+		const futureDate = new Date();
+		futureDate.setDate(futureDate.getDate() + daysAfterToday);
 
 		//If the future date is NOT within the same month 
 		//Then increment the month
@@ -141,13 +140,34 @@ export class DatePicker extends WebComponent {
 		}
 
 		//Now go and select the day
+		const futureDay = futureDate.getDate();
 		const availableDays = await this.getAvailableDaysInThisMonth();
 		for(const avilableDay of availableDays){
 			const day = Number(await avilableDay.getText());
-			if(day == futureDate.getDay()){
+			if(day == futureDay){
 				await avilableDay.click();
+				return;
 			}
 		}
 		throw new Error(`Was unable to select date ${futureDate.toString()} when attempting to select ${daysAfterToday} days after ${currentlySelectedDate}`);
+	}
+
+	/**
+	 * Select the next available date on the datepicker. 
+	 */
+	public async selectNextAvailableDate(){
+		//First check for availability this month
+		let availableDates = await this.getAvailableDaysInThisMonth();
+		if(availableDates.length == 0){
+			//Check the next month
+			await this.selectNextMonth();
+			availableDates = await this.getAvailableDaysInThisMonth();
+			if(availableDates.length == 0){
+				throw new Error("No available dates available in the calendar");
+			}
+		}
+		//Now with available dates
+		const firstAvailableDate = availableDates[0];
+		await firstAvailableDate.click();	
 	}
 }
