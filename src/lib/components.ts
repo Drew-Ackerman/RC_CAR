@@ -1,4 +1,5 @@
 import { Locator, WebElement, WebElementPromise } from "selenium-webdriver";
+import { findByXpath } from ".";
 
 /** Components allow interacting with html elements in an easier fashion. 
  * Its best to keep html elements and components 1 to 1. So a button and a selector element 
@@ -213,12 +214,16 @@ export class Selector extends WebComponent {
 		await this.element.click();
 		const options = await this.element.findElements({css:"option"});
 		for(const option of options){
-			if(await option.getAttribute("value") == selectedOption){
+			const text = await option.getText();
+			const value = await option.getAttribute("value");
+			if(value == selectedOption){
 				await option.click();
+				await this.element.click();
 				return;
 			}
-			if(await (await option.getText()).includes(selectedOption)){
+			if(text.includes(selectedOption)){
 				await option.click();
+				await this.element.click();
 				return;
 			}
 		}
@@ -233,8 +238,10 @@ export class Selector extends WebComponent {
 		await this.element.click();
 		const options = await this.element.findElements({css:"option"});
 		for(const option of options){
-			if(await (await option.getText()).includes(selectedOption)){
+			const text = await option.getText();
+			if(text.includes(selectedOption)){
 				await option.click();
+				await this.element.click();
 				return;
 			}
 		}
@@ -262,3 +269,66 @@ export class Selector extends WebComponent {
 		throw new Error("Could not find an enabled option");
 	}
 }
+
+class TableHeader extends WebComponent {
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+	}
+
+	public async getHeaderColumns(){
+		const headerRow = await this.element.findElement({xpath:".//tr"});
+		const headerColumns = await headerRow.findElements({xpath:".//th"});
+		return headerColumns;
+	}
+}
+
+class TableBody extends WebComponent {	
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+	}
+
+	public async getTableRows(){
+		const rows = await this.element.findElements({xpath:".//tr"});
+		return rows;
+	}
+
+	public async getTableCells(){
+		const tablesCells = [];
+		const rows = await this.getTableRows();
+		for(const row of rows){
+			const cells = await row.findElements({xpath:".//td"});
+			tablesCells.push(...cells);
+		}
+		return tablesCells;
+	}
+}
+
+export class Table extends WebComponent {
+
+	@findByXpath(".//thead")
+	private tableHead: TableHeader;
+
+	@findByXpath(".//tbody")
+	private tableBody: TableBody;
+
+	private browser;
+	constructor(element: WebElementPromise, selector: string){
+		super(element,selector);
+		this.browser = element;
+	}
+
+	public async tableHeaders(){
+		return this.tableHead.getHeaderColumns();
+	}
+
+	public async tableRows(){
+		return this.tableBody.getTableRows();
+	}
+
+	public async tableCells(){
+		return this.tableBody.getTableCells();
+	}
+}
+
+
+
