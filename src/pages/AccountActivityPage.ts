@@ -83,7 +83,8 @@ class Order {
 	public async getOrderNumber(): Promise<number>{
 		const orderNumElement = await this.orderHeader.findElement({css:"span"});
 		const orderText = await orderNumElement.getText();
-		const orderNumber = await orderText.split(" ").at(-1);
+		const splits = await orderText.split(" ");
+		const orderNumber = splits.pop();
 		return Number(orderNumber);
 	}
 
@@ -135,7 +136,7 @@ class Order {
 	 */
 	public async getTotalAmountPaid(){
 		const tableRows = await this.orderTable.findElements({css:"tr"});
-		const paid = tableRows.at(-1);
+		const paid = tableRows.pop();
 		return paid?.getText() || Number.MAX_SAFE_INTEGER;
 	}
 }
