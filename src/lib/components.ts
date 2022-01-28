@@ -311,7 +311,7 @@ export class Table extends WebComponent {
 	@findByXpath(".//tbody")
 	private tableBody: TableBody;
 
-	private browser;
+	protected browser; //Required to make the findBy function correctly.
 	constructor(element: WebElementPromise, selector: string){
 		super(element,selector);
 		this.browser = element;

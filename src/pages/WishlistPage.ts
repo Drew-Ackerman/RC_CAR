@@ -25,9 +25,7 @@ export class WishListItem{
 	@findByCSS("a[class~='icon-cart']")
 	public moveToCartButton: Button;
 
-	//Find by needs a local browser element, so for now we need one.
-	private browser;
-
+	protected browser; //Required to make the findBy function correctly.
 	constructor(private element: WebElement)
 	{
 		this.browser = element;

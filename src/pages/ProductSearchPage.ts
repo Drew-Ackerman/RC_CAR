@@ -15,8 +15,7 @@ export class ProductCard {
 	@findByClass("productName")
 	private productNameText : WebComponent;
 
-	private browser;
-	
+	protected browser; //Required to make the findBy function correctly.
 	constructor(protected product:WebElement){
 		this.browser = product;
 	}

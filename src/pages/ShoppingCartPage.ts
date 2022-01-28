@@ -14,7 +14,7 @@ export class CartItem {
 	@findByClass("prodInfo")
 	private productInfoText:WebComponent;
 
-	private browser;
+	protected browser; //Required to make the findBy function correctly.
 	constructor(public element: WebElement){
 		this.browser = element;
 	}

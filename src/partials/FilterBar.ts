@@ -14,7 +14,7 @@ export class FilterBar {
 	@findById("browseSidebar")
 	private container: WebComponent;
 
-	private browser;
+	protected browser; //Required to make the findBy function correctly.
 	constructor(protected element: IBrowser){
 		this.browser = element;
 	}
@@ -98,7 +98,7 @@ class FilterGroup {
 	@findByClass("filtervalues")
 	private filterValuesContainer: WebComponent;
 
-	protected browser;
+	protected browser; //Required to make the findBy function correctly.
 	constructor(protected element: WebElement){
 		this.browser = element;
 	}
@@ -246,7 +246,7 @@ class TextFilterOption{
 	@findByCSS("input[type='checkbox']")
 	private checkbox: Checkbox;
 
-	private browser;
+	protected browser; //Required to make the findBy function correctly.
 	constructor(protected element: WebElement){
 		this.browser = element;
 	}
